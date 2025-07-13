@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0E946C40-2A84-4338-BF82-C4B7B465EBA6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{4AF26401-8C62-46A8-9D5E-D87003EFE2B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NadinSoft.CRUD.Domain", "src\NadinSoft.CRUD.Domain\NadinSoft.CRUD.Domain.csproj", "{83EA2DA8-9F48-45AF-8C21-95FA424E5983}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NadinSoft.CRUD.Application", "src\NadinSoft.CRUD.Application\NadinSoft.CRUD.Application.csproj", "{3C0BC18E-5179-4B10-9D83-962FBCA9A448}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NadinSoft.CRUD.Infrastructure", "src\NadinSoft.CRUD.Infrastructure\NadinSoft.CRUD.Infrastructure.csproj", "{484E4F91-7DEE-4A11-9B12-D9258B7BE9E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NadinSoft.CRUD.API", "src\NadinSoft.CRUD.API\NadinSoft.CRUD.API.csproj", "{C407EDBB-299C-402A-89D5-D346FF6CD14D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NadinSoft.CRUD.UnitTest", "tests\NadinSoft.CRUD.UnitTest\NadinSoft.CRUD.UnitTest.csproj", "{AF1AD4B8-8D2C-4DDF-9E94-59E404DE3652}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{83EA2DA8-9F48-45AF-8C21-95FA424E5983} = {0E946C40-2A84-4338-BF82-C4B7B465EBA6}
+		{3C0BC18E-5179-4B10-9D83-962FBCA9A448} = {0E946C40-2A84-4338-BF82-C4B7B465EBA6}
+		{484E4F91-7DEE-4A11-9B12-D9258B7BE9E3} = {0E946C40-2A84-4338-BF82-C4B7B465EBA6}
+		{C407EDBB-299C-402A-89D5-D346FF6CD14D} = {0E946C40-2A84-4338-BF82-C4B7B465EBA6}
+		{AF1AD4B8-8D2C-4DDF-9E94-59E404DE3652} = {4AF26401-8C62-46A8-9D5E-D87003EFE2B3}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{83EA2DA8-9F48-45AF-8C21-95FA424E5983}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83EA2DA8-9F48-45AF-8C21-95FA424E5983}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83EA2DA8-9F48-45AF-8C21-95FA424E5983}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83EA2DA8-9F48-45AF-8C21-95FA424E5983}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C0BC18E-5179-4B10-9D83-962FBCA9A448}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C0BC18E-5179-4B10-9D83-962FBCA9A448}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C0BC18E-5179-4B10-9D83-962FBCA9A448}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C0BC18E-5179-4B10-9D83-962FBCA9A448}.Release|Any CPU.Build.0 = Release|Any CPU
+		{484E4F91-7DEE-4A11-9B12-D9258B7BE9E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{484E4F91-7DEE-4A11-9B12-D9258B7BE9E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{484E4F91-7DEE-4A11-9B12-D9258B7BE9E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{484E4F91-7DEE-4A11-9B12-D9258B7BE9E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C407EDBB-299C-402A-89D5-D346FF6CD14D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C407EDBB-299C-402A-89D5-D346FF6CD14D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C407EDBB-299C-402A-89D5-D346FF6CD14D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C407EDBB-299C-402A-89D5-D346FF6CD14D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF1AD4B8-8D2C-4DDF-9E94-59E404DE3652}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF1AD4B8-8D2C-4DDF-9E94-59E404DE3652}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF1AD4B8-8D2C-4DDF-9E94-59E404DE3652}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF1AD4B8-8D2C-4DDF-9E94-59E404DE3652}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

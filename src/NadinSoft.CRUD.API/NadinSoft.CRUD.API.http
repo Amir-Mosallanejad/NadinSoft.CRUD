@@ -1,0 +1,6 @@
+@NadinSoft.CRUD.API_HostAddress = http://localhost:5168
+
+GET {{NadinSoft.CRUD.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
