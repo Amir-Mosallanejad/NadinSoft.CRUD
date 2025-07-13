@@ -18,18 +18,19 @@ public class CreateProductRequestHandler(
         try
         {
             bool isExist = await productRepository.AnyAsync(x =>
-                x.ManufactureEmail == request.ManufactureEmail &&
-                x.ProduceDate == request.ProduceDate);
+                x.ManufactureEmail == request.Dto.ManufactureEmail &&
+                x.ProduceDate == request.Dto.ProduceDate);
 
             if (isExist)
             {
                 logger.LogWarning("Duplicate product detected: ManufactureEmail={Email}, ProduceDate={Date}",
-                    request.ManufactureEmail, request.ProduceDate);
+                    request.Dto.ManufactureEmail, request.Dto.ProduceDate);
 
                 return new("A product with the same Manufacture Email and Produce Date already exists.");
             }
 
-            Product entity = mapper.Map<Product>(request);
+            Product entity = mapper.Map<Product>(request.Dto);
+            entity.CreatedByUserId = request.CreatedByUserId;
 
             await productRepository.AddAsync(entity);
 
