@@ -1,10 +1,10 @@
 using FluentValidation;
 
-namespace NadinSoft.CRUD.Application.Services.ProductService.Command.CreateProduct;
+namespace NadinSoft.CRUD.Application.Services.ProductService.Command.UpdateProduct;
 
-public class CreateProductRequestValidator : AbstractValidator<CreateProductRequest>
+public class UpdateProductRequestValidator : AbstractValidator<UpdateProductRequest>
 {
-    public CreateProductRequestValidator()
+    public UpdateProductRequestValidator()
     {
         RuleFor(x => x.Dto.Id)
             .NotEmpty().WithMessage("Id is required.");
