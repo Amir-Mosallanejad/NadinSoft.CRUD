@@ -6,4 +6,8 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\NadinSoft.CRUD.Application\NadinSoft.CRUD.Application.csproj" />
+    </ItemGroup>
+
 </Project>
