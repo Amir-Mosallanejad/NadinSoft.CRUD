@@ -1,0 +1,45 @@
+using AutoMapper;
+using MediatR;
+using Microsoft.Extensions.Logging;
+using NadinSoft.CRUD.Application.Common.DTOs;
+using NadinSoft.CRUD.Domain.Entities;
+using NadinSoft.CRUD.Domain.Repository;
+
+namespace NadinSoft.CRUD.Application.Services.ProductService.Command.CreateProduct;
+
+public class CreateProductRequestHandler(
+    IProductRepository productRepository,
+    IMapper mapper,
+    ILogger<CreateProductRequestHandler> logger)
+    : IRequestHandler<CreateProductRequest, ApiResponse<object>>
+{
+    public async Task<ApiResponse<object>> Handle(CreateProductRequest request, CancellationToken cancellationToken)
+    {
+        try
+        {
+            bool isExist = await productRepository.AnyAsync(x =>
+                x.ManufactureEmail == request.ManufactureEmail &&
+                x.ProduceDate == request.ProduceDate);
+
+            if (isExist)
+            {
+                logger.LogWarning("Duplicate product detected: ManufactureEmail={Email}, ProduceDate={Date}",
+                    request.ManufactureEmail, request.ProduceDate);
+
+                return new("A product with the same Manufacture Email and Produce Date already exists.");
+            }
+
+            Product entity = mapper.Map<Product>(request);
+
+            await productRepository.AddAsync(entity);
+
+            return new(new object());
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Unhandled error occurred while processing product create request.");
+
+            return new("An unexpected error occurred.");
+        }
+    }
+}
