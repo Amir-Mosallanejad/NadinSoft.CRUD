@@ -10,4 +10,8 @@
       <ProjectReference Include="..\NadinSoft.CRUD.Application\NadinSoft.CRUD.Application.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.18" />
+    </ItemGroup>
+
 </Project>
