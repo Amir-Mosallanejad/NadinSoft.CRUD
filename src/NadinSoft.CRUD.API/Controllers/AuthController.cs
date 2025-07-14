@@ -1,15 +1,10 @@
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using NadinSoft.CRUD.Application.Common.DTOs;
 using NadinSoft.CRUD.Application.Services.ApplicationUserService.Command.LoginApplicationUser;
 using NadinSoft.CRUD.Application.Services.ApplicationUserService.Command.RegisterApplicationUser;
-using NadinSoft.CRUD.Domain.Entities;
 
 namespace NadinSoft.CRUD.API.Controllers;
 
@@ -17,15 +12,11 @@ namespace NadinSoft.CRUD.API.Controllers;
 [Route("api/[controller]")]
 public class AuthController : ControllerBase
 {
-    private readonly UserManager<ApplicationUser> _userManager;
     private readonly IMediator _mediator;
-    private readonly IConfiguration _config;
 
-    public AuthController(UserManager<ApplicationUser> userManager, IMediator mediator, IConfiguration config)
+    public AuthController(IMediator mediator)
     {
-        _userManager = userManager;
         _mediator = mediator;
-        _config = config;
     }
 
     [HttpPost("register")]

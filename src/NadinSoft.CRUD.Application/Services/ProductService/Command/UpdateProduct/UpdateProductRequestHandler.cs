@@ -33,10 +33,8 @@ public class UpdateProductRequestHandler(
                 return ApiResponse<object>.Fail("You are not owner of this product to update this product.");
             }
 
-            Product model = mapper.Map<Product>(request.Dto);
-            model.CreatedByUserId = request.CreatedByUserId;
-
-            product = model;
+            mapper.Map(request.Dto, product);
+            product.CreatedByUserId = request.CreatedByUserId;
 
             productRepository.Update(product);
 
