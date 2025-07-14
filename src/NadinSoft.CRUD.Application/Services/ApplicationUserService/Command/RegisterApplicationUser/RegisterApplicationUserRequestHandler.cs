@@ -24,7 +24,7 @@ public class
             {
                 logger.LogInformation("Registration attempt failed: User with email {Email} already exists.",
                     request.Email);
-                return new("User with this email already exists.");
+                return ApiResponse<object>.Fail("User with this email already exists.");
             }
 
             ApplicationUser user = mapper.Map<ApplicationUser>(request);
@@ -34,16 +34,16 @@ public class
             {
                 string errorMessages = string.Join(" | ", result.Errors.Select(e => e.Description));
                 logger.LogWarning("User registration failed for email {Email}: {Errors}", request.Email, errorMessages);
-                return new(errorMessages);
+                return ApiResponse<object>.Fail(errorMessages);
             }
 
-            return new(new object());
+            return ApiResponse<object>.Success(new object());
         }
         catch (Exception exception)
         {
             logger.LogError(exception, "Unhandled error occurred while registering request.");
 
-            return new("An unexpected error occurred.");
+            return ApiResponse<object>.Fail("An unexpected error occurred.");
         }
     }
 }

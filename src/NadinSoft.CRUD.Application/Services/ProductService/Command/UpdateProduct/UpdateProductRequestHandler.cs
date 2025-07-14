@@ -21,7 +21,7 @@ public class UpdateProductRequestHandler(
             if (product is null)
             {
                 logger.LogWarning("Product not found with Id: {Id}", request.Dto.Id);
-                return new("Product not found.");
+                return ApiResponse<object>.Fail("Product not found.");
             }
 
             if (product.CreatedByUserId != request.CreatedByUserId)
@@ -30,7 +30,7 @@ public class UpdateProductRequestHandler(
                     "Unauthorized update attempt by user {UserId} on product {ProductId} created by {CreatorId}.",
                     request.CreatedByUserId, product.Id, product.CreatedByUserId);
 
-                return new("You are not owner of this product to update this product.");
+                return ApiResponse<object>.Fail("You are not owner of this product to update this product.");
             }
 
             Product model = mapper.Map<Product>(request.Dto);
@@ -40,13 +40,13 @@ public class UpdateProductRequestHandler(
 
             productRepository.Update(product);
 
-            return new(new object());
+            return ApiResponse<object>.Success(new object());
         }
         catch (Exception exception)
         {
             logger.LogError(exception, "Unhandled error occurred while processing product update request.");
 
-            return new("An unexpected error occurred.");
+            return ApiResponse<object>.Fail("An unexpected error occurred.");
         }
     }
 }

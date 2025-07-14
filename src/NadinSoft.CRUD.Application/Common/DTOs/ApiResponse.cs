@@ -2,24 +2,24 @@ namespace NadinSoft.CRUD.Application.Common.DTOs;
 
 public class ApiResponse<T> where T : class
 {
-    public ApiResponse(T data)
+    private ApiResponse(T? data, bool isSuccess, string? error)
     {
         Data = data;
-        Success = true;
-    }
-
-    public static ApiResponse<T> Fail(IEnumerable<string> errors)
-    {
-        return new ApiResponse<T>(errors.ToList().First());
-    }
-
-    public ApiResponse(string error)
-    {
-        Success = false;
+        IsSuccess = isSuccess;
         Error = error;
     }
 
-    public T? Data { get; set; }
-    public bool Success { get; set; }
-    public string? Error { get; set; }
+    public T? Data { get; }
+    public bool IsSuccess { get; }
+    public string? Error { get; }
+
+    public static ApiResponse<T> Success(T data)
+    {
+        return new ApiResponse<T>(data, true, null);
+    }
+
+    public static ApiResponse<T> Fail(string error)
+    {
+        return new ApiResponse<T>(null, false, error);
+    }
 }

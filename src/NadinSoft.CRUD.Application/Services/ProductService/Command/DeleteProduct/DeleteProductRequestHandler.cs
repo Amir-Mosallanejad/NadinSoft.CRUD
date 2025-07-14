@@ -20,7 +20,7 @@ public class DeleteProductRequestHandler(
             if (product is null)
             {
                 logger.LogWarning("Product not found with Id: {Id}", request.ProductId);
-                return new("Product not found.");
+                return ApiResponse<object>.Fail("Product not found.");
             }
 
             if (product.CreatedByUserId != request.CreatedByUserId)
@@ -29,18 +29,18 @@ public class DeleteProductRequestHandler(
                     "Unauthorized delete attempt by user {UserId} on product {ProductId} created by {CreatorId}.",
                     request.CreatedByUserId, product.Id, product.CreatedByUserId);
 
-                return new("You are not owner of this product to delete this product.");
+                return ApiResponse<object>.Fail("You are not owner of this product to delete this product.");
             }
 
             productRepository.Remove(product);
 
-            return new(new object());
+            return ApiResponse<object>.Success(new object());
         }
         catch (Exception exception)
         {
             logger.LogError(exception, "Unhandled error occurred while processing product delete request.");
 
-            return new("An unexpected error occurred.");
+            return ApiResponse<object>.Fail("An unexpected error occurred.");
         }
     }
 }

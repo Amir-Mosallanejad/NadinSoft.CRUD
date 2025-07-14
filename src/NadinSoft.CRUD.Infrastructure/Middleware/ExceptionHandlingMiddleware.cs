@@ -30,7 +30,7 @@ public class ExceptionHandlingMiddleware
             context.Response.ContentType = "application/json";
 
             List<string> errors = ex.Errors.Select(e => $"{e.ErrorMessage}").ToList();
-            ApiResponse<object> apiResponse = new(string.Join(" | ", errors));
+            ApiResponse<object> apiResponse = ApiResponse<object>.Fail(string.Join(" | ", errors));
 
             string json = JsonSerializer.Serialize(apiResponse);
             await context.Response.WriteAsync(json);
@@ -41,7 +41,7 @@ public class ExceptionHandlingMiddleware
 
             context.Response.ContentType = "application/json";
 
-            ApiResponse<object> apiResponse = new(ex.Message);
+            ApiResponse<object> apiResponse = ApiResponse<object>.Fail(ex.Message);
 
 
             string json = JsonSerializer.Serialize(apiResponse);

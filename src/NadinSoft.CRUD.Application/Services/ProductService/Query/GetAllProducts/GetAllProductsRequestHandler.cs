@@ -29,7 +29,7 @@ public class GetAllProductsRequestHandler(
 
             List<ProductResponseDto> data = customers.Items.Select(mapper.Map<ProductResponseDto>).ToList();
 
-            response = new(
+            response = ApiResponse<PaginatedResponse<ProductResponseDto>>.Success(
                 new PaginatedResponse<ProductResponseDto>
                 {
                     Items = data,
@@ -41,7 +41,8 @@ public class GetAllProductsRequestHandler(
         catch (Exception e)
         {
             logger.LogError(e, "Error occurred while retrieving all products.");
-            return new("An unexpected error occurred while retrieving products.");
+            return ApiResponse<PaginatedResponse<ProductResponseDto>>.Fail(
+                "An unexpected error occurred while retrieving products.");
         }
 
         return response;

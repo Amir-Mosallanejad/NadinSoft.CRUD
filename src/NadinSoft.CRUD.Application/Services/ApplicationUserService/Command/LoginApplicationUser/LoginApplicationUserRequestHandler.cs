@@ -23,18 +23,18 @@ public class LoginApplicationUserRequestHandler(
             ApplicationUser? user = await userManager.FindByEmailAsync(request.Email);
             if (user == null || !await userManager.CheckPasswordAsync(user, request.Password))
             {
-                return new("Invalid credentials.");
+                return ApiResponse<string>.Fail("Invalid credentials.");
             }
 
 
             string token = jwtTokenGenerator.GenerateToken(user);
-            return new(token);
+            return ApiResponse<string>.Success(token);
         }
         catch (Exception exception)
         {
             logger.LogError(exception, "Unhandled error occurred while logging-in request.");
 
-            return new("An unexpected error occurred.");
+            return ApiResponse<string>.Fail("An unexpected error occurred.");
         }
     }
 }

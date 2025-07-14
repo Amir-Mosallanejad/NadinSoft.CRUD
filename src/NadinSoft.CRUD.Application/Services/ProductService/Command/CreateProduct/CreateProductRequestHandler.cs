@@ -26,7 +26,8 @@ public class CreateProductRequestHandler(
                 logger.LogWarning("Duplicate product detected: ManufactureEmail={Email}, ProduceDate={Date}",
                     request.Dto.ManufactureEmail, request.Dto.ProduceDate);
 
-                return new("A product with the same Manufacture Email and Produce Date already exists.");
+                return ApiResponse<object>.Fail(
+                    "A product with the same Manufacture Email and Produce Date already exists.");
             }
 
             Product entity = mapper.Map<Product>(request.Dto);
@@ -34,13 +35,13 @@ public class CreateProductRequestHandler(
 
             await productRepository.AddAsync(entity);
 
-            return new(new object());
+            return ApiResponse<object>.Success(new object());
         }
         catch (Exception exception)
         {
             logger.LogError(exception, "Unhandled error occurred while processing product create request.");
 
-            return new("An unexpected error occurred.");
+            return ApiResponse<object>.Fail("An unexpected error occurred.");
         }
     }
 }
