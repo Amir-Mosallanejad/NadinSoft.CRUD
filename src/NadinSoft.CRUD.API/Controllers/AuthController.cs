@@ -1,11 +1,14 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using NadinSoft.CRUD.Application.Common.DTOs;
+using NadinSoft.CRUD.Application.Services.ApplicationUserService.Command.LoginApplicationUser;
+using NadinSoft.CRUD.Application.Services.ApplicationUserService.Command.RegisterApplicationUser;
 using NadinSoft.CRUD.Domain.Entities;
 
 namespace NadinSoft.CRUD.API.Controllers;
@@ -15,51 +18,26 @@ namespace NadinSoft.CRUD.API.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IMediator _mediator;
     private readonly IConfiguration _config;
 
-    public AuthController(UserManager<ApplicationUser> userManager, IConfiguration config)
+    public AuthController(UserManager<ApplicationUser> userManager, IMediator mediator, IConfiguration config)
     {
         _userManager = userManager;
+        _mediator = mediator;
         _config = config;
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register(RegisterDto dto)
+    public async Task<ApiResponse<object>> Register(RegisterApplicationUserRequest request)
     {
-        ApplicationUser user = new ApplicationUser { UserName = dto.Email, Email = dto.Email };
-        IdentityResult result = await _userManager.CreateAsync(user, dto.Password);
-
-        if (!result.Succeeded)
-            return BadRequest(result.Errors);
-
-        return Ok("User registered.");
+        return await _mediator.Send(request);
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login(LoginDto dto)
+    public async Task<ApiResponse<string>> Login(LoginApplicationUserRequest request)
     {
-        ApplicationUser? user = await _userManager.FindByEmailAsync(dto.Email);
-        if (user == null || !await _userManager.CheckPasswordAsync(user, dto.Password))
-            return Unauthorized();
-
-        Claim[] claims = new[]
-        {
-            new Claim(ClaimTypes.NameIdentifier, user.Id),
-            new Claim(ClaimTypes.Email, user.Email!)
-        };
-
-        SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Authentication:Key"]!));
-        SigningCredentials creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-        JwtSecurityToken token = new JwtSecurityToken(
-            issuer: _config["Authentication:Issuer"],
-            audience: _config["Authentication:Audience"],
-            claims: claims,
-            expires: DateTime.Now.AddHours(3),
-            signingCredentials: creds
-        );
-
-        return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
+        return await _mediator.Send(request);
     }
 
     [Authorize]

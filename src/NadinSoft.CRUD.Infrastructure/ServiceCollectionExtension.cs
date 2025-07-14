@@ -9,11 +9,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using NadinSoft.CRUD.Application;
 using NadinSoft.CRUD.Application.Common.Behaviors;
-using NadinSoft.CRUD.Application.Common.Mappings;
+using NadinSoft.CRUD.Application.Common.Interfaces;
 using NadinSoft.CRUD.Domain.Entities;
 using NadinSoft.CRUD.Domain.Repository;
 using NadinSoft.CRUD.Infrastructure.Data;
 using NadinSoft.CRUD.Infrastructure.Repository;
+using NadinSoft.CRUD.Infrastructure.Services.AuthService;
 
 namespace NadinSoft.CRUD.Infrastructure;
 
@@ -26,6 +27,7 @@ public static class ServiceCollectionExtension
 
     public static void AddCustomService(this IServiceCollection service)
     {
+        service.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
         service.AddIdentity<ApplicationUser, IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
@@ -37,7 +39,7 @@ public static class ServiceCollectionExtension
         service.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ApplicationProjectEntry).Assembly));
         service.AddValidatorsFromAssembly(typeof(ApplicationProjectEntry).Assembly);
         service.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-        service.AddAutoMapper(typeof(ProductProfile));
+        service.AddAutoMapper(typeof(ApplicationProjectEntry).Assembly);
     }
 
     public static void AddAuthenticationService(this IServiceCollection service,

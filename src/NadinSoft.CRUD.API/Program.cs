@@ -1,7 +1,7 @@
 using NadinSoft.CRUD.Infrastructure;
 using NadinSoft.CRUD.Infrastructure.Middleware;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 DotNetEnv.Env.Load();
 
@@ -14,7 +14,7 @@ builder.Services.AddRepositories();
 builder.Services.AddAuthenticationService(builder.Configuration);
 builder.Services.AddCustomSwaggerGen();
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
