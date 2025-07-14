@@ -11,6 +11,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddLogging();
 builder.Services.AddCustomService();
 builder.Services.AddRepositories();
+builder.Services.AddAuthenticationService(builder.Configuration);
+builder.Services.AddCustomSwaggerGen();
 
 var app = builder.Build();
 
@@ -19,6 +21,7 @@ app.UseSwaggerUI();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();

@@ -1,4 +1,3 @@
-using AutoMapper;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using NadinSoft.CRUD.Application.Common.DTOs;
@@ -9,7 +8,6 @@ namespace NadinSoft.CRUD.Application.Services.ProductService.Command.DeleteProdu
 
 public class DeleteProductRequestHandler(
     IProductRepository productRepository,
-    IMapper mapper,
     ILogger<DeleteProductRequestHandler> logger)
     : IRequestHandler<DeleteProductRequest, ApiResponse<object>>
 {
