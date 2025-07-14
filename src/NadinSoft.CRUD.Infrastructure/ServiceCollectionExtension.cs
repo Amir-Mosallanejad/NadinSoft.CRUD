@@ -1,7 +1,6 @@
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NadinSoft.CRUD.Application;
 using NadinSoft.CRUD.Application.Common.Behaviors;
@@ -19,11 +18,11 @@ public static class ServiceCollectionExtension
         services.AddScoped<IProductRepository, ProductRepository>();
     }
 
-    public static void AddCustomService(this IServiceCollection service, IConfigurationManager configuration)
+    public static void AddCustomService(this IServiceCollection service)
     {
         service.AddDbContext<ApplicationDbContext>(opt =>
         {
-            opt.UseSqlServer(configuration.GetConnectionString("Default"));
+            opt.UseSqlServer(Environment.GetEnvironmentVariable("CURRENT_DB_CONNECTION_STRING"));
         });
         service.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ApplicationProjectEntry).Assembly));
         service.AddValidatorsFromAssembly(typeof(ApplicationProjectEntry).Assembly);
