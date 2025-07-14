@@ -1,3 +1,4 @@
+using NadinSoft.CRUD.API;
 using NadinSoft.CRUD.Infrastructure;
 using NadinSoft.CRUD.Infrastructure.Middleware;
 
@@ -19,6 +20,7 @@ WebApplication app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
+app.MigrateDb();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
 app.UseAuthentication();
