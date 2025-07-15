@@ -25,8 +25,5 @@ public class UpdateProductRequestValidator : AbstractValidator<UpdateProductRequ
             .MaximumLength(100).WithMessage("Manufacture email cannot exceed 100 characters.")
             .NotEmpty().WithMessage("Manufacture email is required.")
             .EmailAddress().WithMessage("Invalid email format.");
-
-        RuleFor(x => x.CreatedByUserId)
-            .NotEmpty().WithMessage("CreatedByUserId is required.");
     }
 }

@@ -3,4 +3,4 @@ using NadinSoft.CRUD.Application.Common.DTOs;
 
 namespace NadinSoft.CRUD.Application.Services.ProductService.Command.UpdateProduct;
 
-public record UpdateProductRequest(UpdateProductRequestDto Dto, string CreatedByUserId) : IRequest<ApiResponse<object>>;
+public record UpdateProductRequest(UpdateProductRequestDto Dto) : IRequest<ApiResponse<object>>;

@@ -19,4 +19,10 @@
       <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="8.0.18" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="Microsoft.AspNetCore.Http.Abstractions">
+        <HintPath>..\..\..\..\.nuget\packages\microsoft.aspnetcore.app.ref\8.0.15\ref\net8.0\Microsoft.AspNetCore.Http.Abstractions.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>

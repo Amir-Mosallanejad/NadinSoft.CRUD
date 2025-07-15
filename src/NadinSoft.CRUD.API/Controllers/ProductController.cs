@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,46 +22,28 @@ public class ProductController : ControllerBase
     }
 
     [Authorize]
-    [HttpPost]
+    [HttpPost("create")]
     public async Task<ApiResponse<object>> Create([FromBody] CreateProductRequestDto request)
     {
-        string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (userId is null)
-        {
-            return ApiResponse<object>.Fail("User is unauthorized.");
-        }
-
-        return await _mediator.Send(new CreateProductRequest(request, userId));
+        return await _mediator.Send(new CreateProductRequest(request));
     }
 
     [Authorize]
-    [HttpPut]
+    [HttpPut("update")]
     public async Task<ApiResponse<object>> Update([FromBody] UpdateProductRequestDto request)
     {
-        string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (userId is null)
-        {
-            return ApiResponse<object>.Fail("User is unauthorized.");
-        }
-
-        return await _mediator.Send(new UpdateProductRequest(request, userId));
+        return await _mediator.Send(new UpdateProductRequest(request));
     }
 
     [Authorize]
-    [HttpDelete]
+    [HttpDelete("delete")]
     public async Task<ApiResponse<object>> Delete(Guid productId)
     {
-        string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (userId is null)
-        {
-            return ApiResponse<object>.Fail("User is unauthorized.");
-        }
-
-        return await _mediator.Send(new DeleteProductRequest(productId, userId));
+        return await _mediator.Send(new DeleteProductRequest(productId));
     }
 
     [AllowAnonymous]
-    [HttpGet]
+    [HttpGet("get-all")]
     public async Task<ApiResponse<PaginatedResponse<ProductResponseDto>>> GetAll(
         [FromQuery] GetAllProductsRequest request)
     {

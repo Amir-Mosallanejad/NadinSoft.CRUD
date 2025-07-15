@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using NadinSoft.CRUD.Application.Common.DTOs;
+using NadinSoft.CRUD.Application.Common.Interfaces;
 using NadinSoft.CRUD.Domain.Entities;
 using NadinSoft.CRUD.Domain.Repository;
 
@@ -8,6 +9,7 @@ namespace NadinSoft.CRUD.Application.Services.ProductService.Command.DeleteProdu
 
 public class DeleteProductRequestHandler(
     IProductRepository productRepository,
+    ICurrentUserService currentUserService,
     ILogger<DeleteProductRequestHandler> logger)
     : IRequestHandler<DeleteProductRequest, ApiResponse<object>>
 {
@@ -15,6 +17,12 @@ public class DeleteProductRequestHandler(
     {
         try
         {
+            string? userId = currentUserService.UserId;
+            if (userId is null)
+            {
+                return ApiResponse<object>.Fail("User is unauthorized.");
+            }
+
             Product? product = await productRepository.GetByIdAsync(request.ProductId);
 
             if (product is null)
@@ -23,11 +31,11 @@ public class DeleteProductRequestHandler(
                 return ApiResponse<object>.Fail("Product not found.");
             }
 
-            if (product.CreatedByUserId != request.CreatedByUserId)
+            if (product.CreatedByUserId != userId)
             {
                 logger.LogWarning(
                     "Unauthorized delete attempt by user {UserId} on product {ProductId} created by {CreatorId}.",
-                    request.CreatedByUserId, product.Id, product.CreatedByUserId);
+                    userId, product.Id, product.CreatedByUserId);
 
                 return ApiResponse<object>.Fail("You are not owner of this product to delete this product.");
             }

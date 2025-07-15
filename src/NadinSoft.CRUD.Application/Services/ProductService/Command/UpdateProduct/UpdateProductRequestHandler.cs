@@ -2,6 +2,7 @@ using AutoMapper;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using NadinSoft.CRUD.Application.Common.DTOs;
+using NadinSoft.CRUD.Application.Common.Interfaces;
 using NadinSoft.CRUD.Domain.Entities;
 using NadinSoft.CRUD.Domain.Repository;
 
@@ -9,6 +10,7 @@ namespace NadinSoft.CRUD.Application.Services.ProductService.Command.UpdateProdu
 
 public class UpdateProductRequestHandler(
     IProductRepository productRepository,
+    ICurrentUserService currentUserService,
     IMapper mapper,
     ILogger<UpdateProductRequestHandler> logger) : IRequestHandler<UpdateProductRequest, ApiResponse<object>>
 {
@@ -16,6 +18,12 @@ public class UpdateProductRequestHandler(
     {
         try
         {
+            string? userId = currentUserService.UserId;
+            if (userId is null)
+            {
+                return ApiResponse<object>.Fail("User is unauthorized.");
+            }
+
             Product? product = await productRepository.GetByIdAsync(request.Dto.Id);
 
             if (product is null)
@@ -24,17 +32,17 @@ public class UpdateProductRequestHandler(
                 return ApiResponse<object>.Fail("Product not found.");
             }
 
-            if (product.CreatedByUserId != request.CreatedByUserId)
+            if (product.CreatedByUserId != userId)
             {
                 logger.LogWarning(
                     "Unauthorized update attempt by user {UserId} on product {ProductId} created by {CreatorId}.",
-                    request.CreatedByUserId, product.Id, product.CreatedByUserId);
+                    userId, product.Id, product.CreatedByUserId);
 
                 return ApiResponse<object>.Fail("You are not owner of this product to update this product.");
             }
 
             mapper.Map(request.Dto, product);
-            product.CreatedByUserId = request.CreatedByUserId;
+            product.CreatedByUserId = userId;
 
             productRepository.Update(product);
 

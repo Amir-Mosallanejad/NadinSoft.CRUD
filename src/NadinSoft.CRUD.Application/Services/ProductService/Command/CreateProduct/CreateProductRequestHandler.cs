@@ -2,6 +2,7 @@ using AutoMapper;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using NadinSoft.CRUD.Application.Common.DTOs;
+using NadinSoft.CRUD.Application.Common.Interfaces;
 using NadinSoft.CRUD.Domain.Entities;
 using NadinSoft.CRUD.Domain.Repository;
 
@@ -9,6 +10,7 @@ namespace NadinSoft.CRUD.Application.Services.ProductService.Command.CreateProdu
 
 public class CreateProductRequestHandler(
     IProductRepository productRepository,
+    ICurrentUserService currentUserService,
     IMapper mapper,
     ILogger<CreateProductRequestHandler> logger)
     : IRequestHandler<CreateProductRequest, ApiResponse<object>>
@@ -17,6 +19,12 @@ public class CreateProductRequestHandler(
     {
         try
         {
+            string? userId = currentUserService.UserId;
+            if (userId is null)
+            {
+                return ApiResponse<object>.Fail("User is unauthorized.");
+            }
+
             bool isExist = await productRepository.AnyAsync(x =>
                 x.ManufactureEmail == request.Dto.ManufactureEmail &&
                 x.ProduceDate == request.Dto.ProduceDate);
@@ -31,7 +39,7 @@ public class CreateProductRequestHandler(
             }
 
             Product entity = mapper.Map<Product>(request.Dto);
-            entity.CreatedByUserId = request.CreatedByUserId;
+            entity.CreatedByUserId = userId;
 
             await productRepository.AddAsync(entity);
 

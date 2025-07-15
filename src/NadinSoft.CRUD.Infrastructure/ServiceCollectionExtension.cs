@@ -27,7 +27,9 @@ public static class ServiceCollectionExtension
 
     public static void AddCustomService(this IServiceCollection service)
     {
+        service.AddHttpContextAccessor();
         service.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+        service.AddScoped<ICurrentUserService, CurrentUserService>();
         service.AddIdentity<ApplicationUser, IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();

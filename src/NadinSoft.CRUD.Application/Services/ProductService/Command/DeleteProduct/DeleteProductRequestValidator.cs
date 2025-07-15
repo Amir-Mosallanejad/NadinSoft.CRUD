@@ -8,8 +8,5 @@ public class DeleteProductRequestValidator : AbstractValidator<DeleteProductRequ
     {
         RuleFor(x => x.ProductId)
             .NotEmpty().WithMessage("ProductId is required.");
-
-        RuleFor(x => x.CreatedByUserId)
-            .NotEmpty().WithMessage("CreatedByUserId is required.");
     }
 }
