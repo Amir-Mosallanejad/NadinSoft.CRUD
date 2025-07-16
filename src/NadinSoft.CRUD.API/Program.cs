@@ -4,7 +4,10 @@ using NadinSoft.CRUD.Infrastructure.Middleware;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-DotNetEnv.Env.Load();
+if (builder.Configuration.GetValue<bool>("LoadEnv"))
+{
+    DotNetEnv.Env.Load();
+}
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

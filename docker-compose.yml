@@ -1,0 +1,27 @@
+version: '3.4'
+
+services:
+  api:
+    container_name: NadinSoft_API
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - CURRENT_DB_CONNECTION_STRING=${CURRENT_DB_CONNECTION_STRING}
+
+  db:
+    container_name: NadinSoft_DB
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    environment:
+      SA_PASSWORD: "YourStrong!Passw0rd"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlvolume:/var/opt/mssql
+
+volumes:
+  sqlvolume:
