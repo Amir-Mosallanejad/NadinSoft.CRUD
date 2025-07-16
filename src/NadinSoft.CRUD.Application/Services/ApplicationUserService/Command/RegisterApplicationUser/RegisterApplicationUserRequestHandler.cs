@@ -7,11 +7,10 @@ using NadinSoft.CRUD.Domain.Entities;
 
 namespace NadinSoft.CRUD.Application.Services.ApplicationUserService.Command.RegisterApplicationUser;
 
-public class
-    RegisterApplicationUserRequestHandler(
-        UserManager<ApplicationUser> userManager,
-        IMapper mapper,
-        ILogger<RegisterApplicationUserRequestHandler> logger)
+public class RegisterApplicationUserRequestHandler(
+    UserManager<ApplicationUser> userManager,
+    IMapper mapper,
+    ILogger<RegisterApplicationUserRequestHandler> logger)
     : IRequestHandler<RegisterApplicationUserRequest, ApiResponse<object>>
 {
     public async Task<ApiResponse<object>> Handle(RegisterApplicationUserRequest request,

@@ -1,4 +1,3 @@
-using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
@@ -11,7 +10,6 @@ namespace NadinSoft.CRUD.Application.Services.ApplicationUserService.Command.Log
 public class LoginApplicationUserRequestHandler(
     UserManager<ApplicationUser> userManager,
     IJwtTokenGenerator jwtTokenGenerator,
-    IMapper mapper,
     ILogger<LoginApplicationUserRequestHandler> logger)
     : IRequestHandler<LoginApplicationUserRequest, ApiResponse<string>>
 {
