@@ -37,7 +37,6 @@ public class CreateProductRequestHandlerTests
         _currentUserMock.Setup(x => x.UserId).Returns((string?)null);
         CreateProductRequest request =
             new CreateProductRequest(new CreateProductRequestDto(
-                Guid.NewGuid(),
                 "Test",
                 DateTime.UtcNow,
                 "+989121234567",
@@ -57,7 +56,6 @@ public class CreateProductRequestHandlerTests
     {
         CreateProductRequestDto dto =
             new CreateProductRequestDto(
-                Guid.NewGuid(),
                 "Test",
                 DateTime.UtcNow,
                 "+989121234567",
@@ -83,7 +81,6 @@ public class CreateProductRequestHandlerTests
     {
         CreateProductRequestDto dto =
             new CreateProductRequestDto(
-                Guid.NewGuid(),
                 "Test",
                 DateTime.UtcNow,
                 "+989121234567",
@@ -114,7 +111,6 @@ public class CreateProductRequestHandlerTests
     {
         CreateProductRequestDto dto =
             new CreateProductRequestDto(
-                Guid.NewGuid(),
                 "Test",
                 DateTime.UtcNow,
                 "+989121234567",
