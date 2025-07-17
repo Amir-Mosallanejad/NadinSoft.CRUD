@@ -7,22 +7,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\NadinSoft.CRUD.Domain\NadinSoft.CRUD.Domain.csproj" />
+        <ProjectReference Include="..\NadinSoft.CRUD.Domain\NadinSoft.CRUD.Domain.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="AutoMapper" Version="12.0.0" />
-      <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
-      <PackageReference Include="FluentValidation" Version="12.0.0" />
-      <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
-      <PackageReference Include="MediatR" Version="13.0.0" />
-      <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="8.0.18" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="Microsoft.AspNetCore.Http.Abstractions">
-        <HintPath>..\..\..\..\.nuget\packages\microsoft.aspnetcore.app.ref\8.0.15\ref\net8.0\Microsoft.AspNetCore.Http.Abstractions.dll</HintPath>
-      </Reference>
+        <PackageReference Include="AutoMapper" Version="12.0.0"/>
+        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0"/>
+        <PackageReference Include="FluentValidation" Version="12.0.0"/>
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0"/>
+        <PackageReference Include="MediatR" Version="13.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="8.0.18"/>
     </ItemGroup>
 
 </Project>
