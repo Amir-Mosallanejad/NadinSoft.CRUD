@@ -10,7 +10,12 @@ services:
       - db
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - CURRENT_DB_CONNECTION_STRING=${CURRENT_DB_CONNECTION_STRING}
+      - DB_SERVER=${DB_SERVER}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_ENCRYPT=${DB_ENCRYPT}
+      - DB_TRUST_CERT=${DB_TRUST_CERT}
 
   db:
     container_name: NadinSoft_DB

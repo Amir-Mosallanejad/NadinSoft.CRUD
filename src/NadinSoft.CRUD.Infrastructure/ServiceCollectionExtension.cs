@@ -36,7 +36,7 @@ public static class ServiceCollectionExtension
 
         service.AddDbContext<ApplicationDbContext>(opt =>
         {
-            opt.UseSqlServer(Environment.GetEnvironmentVariable("CURRENT_DB_CONNECTION_STRING"));
+            opt.UseSqlServer(BuildConnectionStringFromEnvironment());
         });
         service.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ApplicationProjectEntry).Assembly));
         service.AddValidatorsFromAssembly(typeof(ApplicationProjectEntry).Assembly);
@@ -100,5 +100,27 @@ public static class ServiceCollectionExtension
                 }
             });
         });
+    }
+
+    private static string BuildConnectionStringFromEnvironment()
+    {
+        string? dbServer = Environment.GetEnvironmentVariable("DB_SERVER");
+        string? dbName = Environment.GetEnvironmentVariable("DB_NAME");
+        string? dbUser = Environment.GetEnvironmentVariable("DB_USER");
+        string? dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD");
+        string encrypt = Environment.GetEnvironmentVariable("DB_ENCRYPT") ?? "False";
+        string trustCert = Environment.GetEnvironmentVariable("DB_TRUST_CERT") ?? "True";
+
+        if (string.IsNullOrWhiteSpace(dbServer) ||
+            string.IsNullOrWhiteSpace(dbName) ||
+            string.IsNullOrWhiteSpace(dbUser) ||
+            string.IsNullOrWhiteSpace(dbPassword))
+        {
+            throw new InvalidOperationException(
+                "Invalid Connection String");
+        }
+
+        return
+            $"Server={dbServer};Database={dbName};User Id={dbUser};Password={dbPassword};Encrypt={encrypt};TrustServerCertificate={trustCert};";
     }
 }

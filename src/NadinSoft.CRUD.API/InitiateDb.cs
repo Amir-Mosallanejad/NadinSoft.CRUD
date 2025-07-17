@@ -26,10 +26,10 @@ public static class InitiateDb
                 logger.LogInformation("Database migrated successfully.");
                 break;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 retry++;
-                logger.LogWarning(ex, "Database not ready. Retrying in {Delay}s... Attempt {Retry}/{MaxRetries}", 5,
+                logger.LogWarning("Database not ready. Retrying in {Delay}s... Attempt {Retry}/{MaxRetries}", 5,
                     retry, maxRetries);
                 Thread.Sleep(5000);
             }
