@@ -47,6 +47,7 @@ The project is easy to test and run using **Docker** and includes tools like **S
 # 🐳 Option 1: Using Docker Compose
 
 This is the easiest way. Docker will run both the API and the database for you.
+
 ✅ Requirements
 
 Make sure you have Docker and Docker Compose installed.
@@ -69,8 +70,6 @@ Make sure you have Docker and Docker Compose installed.
     Once running:
 
         API will be available at "http://localhost:8080/swagger/index.html"
-
-        SQL Server will run on port 1433
 
     The .env file already contains the database connection string used inside Docker.
 
