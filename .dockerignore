@@ -1,0 +1,10 @@
+bin/
+obj/
+*.db
+*.suo
+*.user
+*.cache
+*.log
+*.vs
+Dockerfile
+Dockerfile.*

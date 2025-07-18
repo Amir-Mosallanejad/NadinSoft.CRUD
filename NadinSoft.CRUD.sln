@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NadinSoft.CRUD.API", "src\N
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NadinSoft.CRUD.UnitTest", "tests\NadinSoft.CRUD.UnitTest\NadinSoft.CRUD.UnitTest.csproj", "{AF1AD4B8-8D2C-4DDF-9E94-59E404DE3652}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NadinSoft.CRUD.AcceptanceTest", "tests\NadinSoft.CRUD.AcceptanceTest\NadinSoft.CRUD.AcceptanceTest.csproj", "{D88DA316-8A03-49A8-92F9-25B7BB31418F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,7 @@ Global
 		{484E4F91-7DEE-4A11-9B12-D9258B7BE9E3} = {0E946C40-2A84-4338-BF82-C4B7B465EBA6}
 		{C407EDBB-299C-402A-89D5-D346FF6CD14D} = {0E946C40-2A84-4338-BF82-C4B7B465EBA6}
 		{AF1AD4B8-8D2C-4DDF-9E94-59E404DE3652} = {4AF26401-8C62-46A8-9D5E-D87003EFE2B3}
+		{D88DA316-8A03-49A8-92F9-25B7BB31418F} = {4AF26401-8C62-46A8-9D5E-D87003EFE2B3}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{83EA2DA8-9F48-45AF-8C21-95FA424E5983}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -47,5 +50,9 @@ Global
 		{AF1AD4B8-8D2C-4DDF-9E94-59E404DE3652}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF1AD4B8-8D2C-4DDF-9E94-59E404DE3652}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF1AD4B8-8D2C-4DDF-9E94-59E404DE3652}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D88DA316-8A03-49A8-92F9-25B7BB31418F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D88DA316-8A03-49A8-92F9-25B7BB31418F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D88DA316-8A03-49A8-92F9-25B7BB31418F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D88DA316-8A03-49A8-92F9-25B7BB31418F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
