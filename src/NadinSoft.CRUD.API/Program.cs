@@ -1,25 +1,32 @@
-var builder = WebApplication.CreateBuilder(args);
+using NadinSoft.CRUD.API;
+using NadinSoft.CRUD.Infrastructure;
+using NadinSoft.CRUD.Infrastructure.Middleware;
 
-// Add services to the container.
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (builder.Configuration.GetValue<bool>("LoadEnv"))
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    DotNetEnv.Env.Load();
 }
 
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.AddLogging();
+builder.Services.AddCustomService();
+builder.Services.AddRepositories();
+builder.Services.AddAuthenticationService(builder.Configuration);
+builder.Services.AddCustomSwaggerGen();
+
+WebApplication app = builder.Build();
+
+app.UseSwagger();
+app.UseSwaggerUI();
+
+app.MigrateDb();
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();
