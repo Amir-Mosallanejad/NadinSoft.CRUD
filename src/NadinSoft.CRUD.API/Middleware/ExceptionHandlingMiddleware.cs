@@ -1,10 +1,8 @@
 using System.Text.Json;
 using FluentValidation;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using NadinSoft.CRUD.Application.Common.DTOs;
 
-namespace NadinSoft.CRUD.Infrastructure.Middleware;
+namespace NadinSoft.CRUD.API.Middleware;
 
 public class ExceptionHandlingMiddleware
 {

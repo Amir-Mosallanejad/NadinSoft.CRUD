@@ -1,14 +1,16 @@
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
-using NadinSoft.CRUD.Infrastructure.Data;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
-namespace NadinSoft.CRUD.API;
+namespace NadinSoft.CRUD.Infrastructure.Data;
 
 public static class InitiateDb
 {
     public static void MigrateDb(this WebApplication app)
     {
         using IServiceScope scope = app.Services.CreateScope();
-        ILogger<Program> logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+        ILogger<ApplicationDbContext> logger = scope.ServiceProvider.GetRequiredService<ILogger<ApplicationDbContext>>();
         ApplicationDbContext context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
         const int maxRetries = 10;
