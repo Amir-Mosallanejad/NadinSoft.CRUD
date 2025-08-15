@@ -1,3 +1,9 @@
+// <copyright file="CreateProductRequestHandler.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
+namespace NadinSoft.CRUD.Application.Services.ProductService.Command.CreateProduct;
+
 using AutoMapper;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -6,8 +12,9 @@ using NadinSoft.CRUD.Application.Common.Interfaces;
 using NadinSoft.CRUD.Domain.Entities;
 using NadinSoft.CRUD.Domain.Repository;
 
-namespace NadinSoft.CRUD.Application.Services.ProductService.Command.CreateProduct;
-
+/// <summary>
+/// Handles requests to create new <see cref="Product"/> entities.
+/// </summary>
 public class CreateProductRequestHandler(
     IProductRepository productRepository,
     ICurrentUserService currentUserService,
@@ -15,6 +22,15 @@ public class CreateProductRequestHandler(
     ILogger<CreateProductRequestHandler> logger)
     : IRequestHandler<CreateProductRequest, ApiResponse<object>>
 {
+    /// <summary>
+    /// Handles the <see cref="CreateProductRequest"/> by validating the user,
+    /// checking for duplicate products, and adding a new product to the repository.
+    /// </summary>
+    /// <param name="request">The request containing the product data to create.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>
+    /// An <see cref="ApiResponse{T}"/> indicating success or failure of the creation operation.
+    /// </returns>
     public async Task<ApiResponse<object>> Handle(CreateProductRequest request, CancellationToken cancellationToken)
     {
         try
@@ -31,8 +47,10 @@ public class CreateProductRequestHandler(
 
             if (isExist)
             {
-                logger.LogWarning("Duplicate product detected: ManufactureEmail={Email}, ProduceDate={Date}",
-                    request.Dto.ManufactureEmail, request.Dto.ProduceDate);
+                logger.LogWarning(
+                    "Duplicate product detected: ManufactureEmail={Email}, ProduceDate={Date}",
+                    request.Dto.ManufactureEmail,
+                    request.Dto.ProduceDate);
 
                 return ApiResponse<object>.Fail(
                     "A product with the same Manufacture Email and Produce Date already exists.");
