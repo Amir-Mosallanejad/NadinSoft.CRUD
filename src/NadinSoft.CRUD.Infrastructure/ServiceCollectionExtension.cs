@@ -1,3 +1,9 @@
+// <copyright file="ServiceCollectionExtension.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
+namespace NadinSoft.CRUD.Infrastructure;
+
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -12,24 +18,36 @@ using NadinSoft.CRUD.Infrastructure.Data;
 using NadinSoft.CRUD.Infrastructure.Repository;
 using NadinSoft.CRUD.Infrastructure.Services.AuthService;
 
-namespace NadinSoft.CRUD.Infrastructure;
-
+/// <summary>
+/// Provides extension methods to register infrastructure services in the dependency injection container.
+/// </summary>
 public static class ServiceCollectionExtension
 {
-    public static void AddInfrastructureServices(this IServiceCollection services, IConfigurationManager configuration)
+    /// <summary>
+    /// Registers all infrastructure services including repositories, custom services, and authentication.
+    /// </summary>
+    /// <param name="services">The <see cref="IServiceCollection"/> to add services to.</param>
+    /// <param name="configuration">The <see cref="IConfiguration"/> containing application settings.</param>
+    public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddRepositories();
-
         services.AddCustomService();
-
         services.AddAuthenticationService(configuration);
     }
 
+    /// <summary>
+    /// Registers repository services.
+    /// </summary>
+    /// <param name="services">The <see cref="IServiceCollection"/> to add repositories to.</param>
     private static void AddRepositories(this IServiceCollection services)
     {
         services.AddScoped<IProductRepository, ProductRepository>();
     }
 
+    /// <summary>
+    /// Registers custom services such as JWT generator, current user service, Identity, and the database context.
+    /// </summary>
+    /// <param name="service">The <see cref="IServiceCollection"/> to add services to.</param>
     private static void AddCustomService(this IServiceCollection service)
     {
         service.AddHttpContextAccessor();
@@ -45,8 +63,14 @@ public static class ServiceCollectionExtension
         });
     }
 
-    private static void AddAuthenticationService(this IServiceCollection service,
-        IConfigurationManager configurationManager)
+    /// <summary>
+    /// Configures JWT authentication for the application.
+    /// </summary>
+    /// <param name="service">The <see cref="IServiceCollection"/> to add authentication to.</param>
+    /// <param name="configurationManager">The <see cref="IConfiguration"/> providing authentication settings.</param>
+    private static void AddAuthenticationService(
+        this IServiceCollection service,
+        IConfiguration configurationManager)
     {
         service.AddAuthentication(options =>
             {
@@ -65,11 +89,16 @@ public static class ServiceCollectionExtension
                     ValidateLifetime = true,
                     IssuerSigningKey =
                         new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configurationManager["Authentication:Key"]!)),
-                    ValidateIssuerSigningKey = true
+                    ValidateIssuerSigningKey = true,
                 };
             });
     }
 
+    /// <summary>
+    /// Builds the SQL Server connection string from environment variables.
+    /// </summary>
+    /// <returns>The constructed connection string.</returns>
+    /// <exception cref="InvalidOperationException">Thrown if any required environment variable is missing or empty.</exception>
     private static string BuildConnectionStringFromEnvironment()
     {
         string? dbServer = Environment.GetEnvironmentVariable("DB_SERVER");
@@ -84,8 +113,7 @@ public static class ServiceCollectionExtension
             string.IsNullOrWhiteSpace(dbUser) ||
             string.IsNullOrWhiteSpace(dbPassword))
         {
-            throw new InvalidOperationException(
-                "Invalid Connection String");
+            throw new InvalidOperationException("Invalid Connection String");
         }
 
         return
