@@ -3,14 +3,27 @@ using NadinSoft.CRUD.Application.Services.ProductService.Command.UpdateProduct;
 
 namespace NadinSoft.CRUD.UnitTest.ProductService.Validators;
 
+/// <summary>
+/// Contains unit tests for <see cref="UpdateProductRequestValidator"/>.
+/// </summary>
 public class UpdateProductRequestValidatorTests
 {
+    /// <summary>
+    /// Validator instance being tested.
+    /// </summary>
     private readonly UpdateProductRequestValidator _validator = new();
 
+    /// <summary>
+    /// Tests that validation fails when the Product Id is empty (Guid.Empty).
+    /// </summary>
     [Fact]
-    public void Should_Have_Error_When_Id_Is_Empty()
+    public void ShouldHaveErrorWhenIdIsEmpty()
     {
-        UpdateProductRequestDto dto = new UpdateProductRequestDto(Guid.Empty, "Test", DateTime.UtcNow, "+989121234567",
+        UpdateProductRequestDto dto = new UpdateProductRequestDto(
+            Guid.Empty,
+            "Test",
+            DateTime.UtcNow,
+            "+989121234567",
             "mail@test.com",
             true);
         UpdateProductRequest model = new UpdateProductRequest(dto);
@@ -19,10 +32,17 @@ public class UpdateProductRequestValidatorTests
         result.ShouldHaveValidationErrorFor(x => x.Dto.Id);
     }
 
+    /// <summary>
+    /// Tests that validation fails when the Product Name is empty.
+    /// </summary>
     [Fact]
-    public void Should_Have_Error_When_Name_Is_Empty()
+    public void ShouldHaveErrorWhenNameIsEmpty()
     {
-        UpdateProductRequestDto dto = new UpdateProductRequestDto(Guid.NewGuid(), "", DateTime.UtcNow, "+989121234567",
+        UpdateProductRequestDto dto = new UpdateProductRequestDto(
+            Guid.NewGuid(),
+            string.Empty,
+            DateTime.UtcNow,
+            "+989121234567",
             "mail@test.com",
             true);
         UpdateProductRequest model = new UpdateProductRequest(dto);
@@ -31,35 +51,56 @@ public class UpdateProductRequestValidatorTests
         result.ShouldHaveValidationErrorFor(x => x.Dto.Name);
     }
 
+    /// <summary>
+    /// Tests that validation fails when the Product Name exceeds maximum length.
+    /// </summary>
     [Fact]
-    public void Should_Have_Error_When_Name_Too_Long()
+    public void ShouldHaveErrorWhenNameTooLong()
     {
-        UpdateProductRequestDto dto = new UpdateProductRequestDto(Guid.NewGuid(), new string('A', 101), DateTime.UtcNow,
+        UpdateProductRequestDto dto = new UpdateProductRequestDto(
+            Guid.NewGuid(),
+            new string('A', 101),
+            DateTime.UtcNow,
             "+989121234567",
-            "mail@test.com", true);
+            "mail@test.com",
+            true);
         UpdateProductRequest model = new UpdateProductRequest(dto);
 
         TestValidationResult<UpdateProductRequest>? result = _validator.TestValidate(model);
         result.ShouldHaveValidationErrorFor(x => x.Dto.Name);
     }
 
+    /// <summary>
+    /// Tests that validation fails when ProduceDate is set in the future.
+    /// </summary>
     [Fact]
-    public void Should_Have_Error_When_ProduceDate_Is_In_The_Future()
+    public void ShouldHaveErrorWhenProduceDateIsInTheFuture()
     {
-        UpdateProductRequestDto dto = new UpdateProductRequestDto(Guid.NewGuid(), "Name", DateTime.UtcNow.AddDays(1),
+        UpdateProductRequestDto dto = new UpdateProductRequestDto(
+            Guid.NewGuid(),
+            "Name",
+            DateTime.UtcNow.AddDays(1),
             "+989121234567",
-            "mail@test.com", true);
+            "mail@test.com",
+            true);
         UpdateProductRequest model = new UpdateProductRequest(dto);
 
         TestValidationResult<UpdateProductRequest>? result = _validator.TestValidate(model);
         result.ShouldHaveValidationErrorFor(x => x.Dto.ProduceDate);
     }
 
+    /// <summary>
+    /// Tests that validation fails when ManufactureEmail is invalid.
+    /// </summary>
     [Fact]
-    public void Should_Have_Error_When_Email_Is_Invalid()
+    public void ShouldHaveErrorWhenEmailIsInvalid()
     {
-        UpdateProductRequestDto dto = new UpdateProductRequestDto(Guid.NewGuid(), "Name", DateTime.UtcNow,
-            "+989121234567", "invalid-email",
+        UpdateProductRequestDto dto = new UpdateProductRequestDto(
+            Guid.NewGuid(),
+            "Name",
+            DateTime.UtcNow,
+            "+989121234567",
+            "invalid-email",
             true);
         UpdateProductRequest model = new UpdateProductRequest(dto);
 
@@ -67,23 +108,36 @@ public class UpdateProductRequestValidatorTests
         result.ShouldHaveValidationErrorFor(x => x.Dto.ManufactureEmail);
     }
 
+    /// <summary>
+    /// Tests that no validation errors occur when all fields are valid.
+    /// </summary>
     [Fact]
-    public void Should_Not_Have_Any_Errors_When_Valid()
+    public void ShouldNotHaveAnyErrorsWhenValid()
     {
-        UpdateProductRequestDto dto = new UpdateProductRequestDto(Guid.NewGuid(), "Valid Name",
+        UpdateProductRequestDto dto = new UpdateProductRequestDto(
+            Guid.NewGuid(),
+            "Valid Name",
             DateTime.UtcNow.AddSeconds(-1),
             "+989121234567",
-            "valid@email.com", true);
+            "valid@email.com",
+            true);
         UpdateProductRequest model = new UpdateProductRequest(dto);
 
         TestValidationResult<UpdateProductRequest>? result = _validator.TestValidate(model);
         result.ShouldNotHaveAnyValidationErrors();
     }
 
+    /// <summary>
+    /// Tests that validation fails when ManufacturePhone is invalid.
+    /// </summary>
     [Fact]
-    public void Should_Have_Error_When_Phone_Invalid()
+    public void ShouldHaveErrorWhenPhoneInvalid()
     {
-        UpdateProductRequestDto dto = new UpdateProductRequestDto(Guid.NewGuid(), "Name", DateTime.UtcNow, "invalid",
+        UpdateProductRequestDto dto = new UpdateProductRequestDto(
+            Guid.NewGuid(),
+            "Name",
+            DateTime.UtcNow,
+            "invalid",
             "mail@test.com",
             true);
         UpdateProductRequest model = new UpdateProductRequest(dto);

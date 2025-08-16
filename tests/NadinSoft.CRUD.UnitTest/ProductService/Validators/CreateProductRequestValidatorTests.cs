@@ -3,15 +3,24 @@ using NadinSoft.CRUD.Application.Services.ProductService.Command.CreateProduct;
 
 namespace NadinSoft.CRUD.UnitTest.ProductService.Validators;
 
+/// <summary>
+/// Contains unit tests for <see cref="CreateProductRequestValidator"/>.
+/// </summary>
 public class CreateProductRequestValidatorTests
 {
+    /// <summary>
+    /// Validator instance being tested.
+    /// </summary>
     private readonly CreateProductRequestValidator _validator = new();
 
+    /// <summary>
+    /// Tests that validation fails when the product name is empty.
+    /// </summary>
     [Fact]
-    public void Should_Have_Error_When_Name_Is_Empty()
+    public void ShouldHaveErrorWhenNameIsEmpty()
     {
         CreateProductRequestDto dto = new CreateProductRequestDto(
-            "",
+            string.Empty,
             DateTime.UtcNow,
             "+989121234567",
             "test@mail.com",
@@ -21,8 +30,11 @@ public class CreateProductRequestValidatorTests
         result.ShouldHaveValidationErrorFor(x => x.Dto.Name);
     }
 
+    /// <summary>
+    /// Tests that validation fails when the product name is too long.
+    /// </summary>
     [Fact]
-    public void Should_Have_Error_When_Name_Too_Long()
+    public void ShouldHaveErrorWhenNameTooLong()
     {
         CreateProductRequestDto dto = new CreateProductRequestDto(
             new string('A', 101),
@@ -35,8 +47,11 @@ public class CreateProductRequestValidatorTests
         result.ShouldHaveValidationErrorFor(x => x.Dto.Name);
     }
 
+    /// <summary>
+    /// Tests that validation fails when the produce date is in the future.
+    /// </summary>
     [Fact]
-    public void Should_Have_Error_When_ProduceDate_Is_In_The_Future()
+    public void ShouldHaveErrorWhenProduceDateIsInTheFuture()
     {
         CreateProductRequestDto dto = new CreateProductRequestDto(
             "Test",
@@ -49,8 +64,11 @@ public class CreateProductRequestValidatorTests
         result.ShouldHaveValidationErrorFor(x => x.Dto.ProduceDate);
     }
 
+    /// <summary>
+    /// Tests that validation fails when the phone number is invalid.
+    /// </summary>
     [Fact]
-    public void Should_Have_Error_When_Phone_Invalid()
+    public void ShouldHaveErrorWhenPhoneInvalid()
     {
         CreateProductRequestDto dto = new CreateProductRequestDto(
             "Test",
@@ -63,8 +81,11 @@ public class CreateProductRequestValidatorTests
         result.ShouldHaveValidationErrorFor(x => x.Dto.ManufacturePhone);
     }
 
+    /// <summary>
+    /// Tests that validation fails when the email is invalid.
+    /// </summary>
     [Fact]
-    public void Should_Have_Error_When_Email_Invalid()
+    public void ShouldHaveErrorWhenEmailInvalid()
     {
         CreateProductRequestDto dto = new CreateProductRequestDto(
             "Test",
@@ -77,8 +98,11 @@ public class CreateProductRequestValidatorTests
         result.ShouldHaveValidationErrorFor(x => x.Dto.ManufactureEmail);
     }
 
+    /// <summary>
+    /// Tests that no validation errors occur when all fields are valid.
+    /// </summary>
     [Fact]
-    public void Should_Not_Have_Errors_When_Valid()
+    public void ShouldNotHaveErrorsWhenValid()
     {
         CreateProductRequestDto dto = new CreateProductRequestDto(
             "Valid",

@@ -3,21 +3,33 @@ using NadinSoft.CRUD.Application.Services.ApplicationUserService.Command.LoginAp
 
 namespace NadinSoft.CRUD.UnitTest.ApplicationUserService.Validators;
 
+/// <summary>
+/// Contains unit tests for <see cref="LoginApplicationUserRequestValidator"/>.
+/// </summary>
 public class LoginApplicationUserRequestValidatorTests
 {
+    /// <summary>
+    /// Instance of the validator being tested.
+    /// </summary>
     private readonly LoginApplicationUserRequestValidator _validator = new();
 
+    /// <summary>
+    /// Tests that validation fails when the email is empty.
+    /// </summary>
     [Fact]
-    public void Should_Have_Error_When_Email_Is_Empty()
+    public void ShouldHaveErrorWhenEmailIsEmpty()
     {
-        LoginApplicationUserRequest model = new LoginApplicationUserRequest("", "ValidPass123");
+        LoginApplicationUserRequest model = new LoginApplicationUserRequest(string.Empty, "ValidPass123");
         TestValidationResult<LoginApplicationUserRequest>? result = _validator.TestValidate(model);
         result.ShouldHaveValidationErrorFor(x => x.Email)
             .WithErrorMessage("Email is required.");
     }
 
+    /// <summary>
+    /// Tests that validation fails when the email format is invalid.
+    /// </summary>
     [Fact]
-    public void Should_Have_Error_When_Email_Is_Invalid()
+    public void ShouldHaveErrorWhenEmailIsInvalid()
     {
         LoginApplicationUserRequest model = new LoginApplicationUserRequest("invalid-email", "ValidPass123");
         TestValidationResult<LoginApplicationUserRequest>? result = _validator.TestValidate(model);
@@ -25,17 +37,23 @@ public class LoginApplicationUserRequestValidatorTests
             .WithErrorMessage("A valid email is required.");
     }
 
+    /// <summary>
+    /// Tests that validation fails when the password is empty.
+    /// </summary>
     [Fact]
-    public void Should_Have_Error_When_Password_Is_Empty()
+    public void ShouldHaveErrorWhenPasswordIsEmpty()
     {
-        LoginApplicationUserRequest model = new LoginApplicationUserRequest("user@test.com", "");
+        LoginApplicationUserRequest model = new LoginApplicationUserRequest("user@test.com", string.Empty);
         TestValidationResult<LoginApplicationUserRequest>? result = _validator.TestValidate(model);
         result.ShouldHaveValidationErrorFor(x => x.Password)
             .WithErrorMessage("Password is required.");
     }
 
+    /// <summary>
+    /// Tests that validation fails when the password is too short.
+    /// </summary>
     [Fact]
-    public void Should_Have_Error_When_Password_Too_Short()
+    public void ShouldHaveErrorWhenPasswordTooShort()
     {
         LoginApplicationUserRequest model = new LoginApplicationUserRequest("user@test.com", "123");
         TestValidationResult<LoginApplicationUserRequest>? result = _validator.TestValidate(model);
@@ -43,8 +61,11 @@ public class LoginApplicationUserRequestValidatorTests
             .WithErrorMessage("Password must be at least 6 characters long.");
     }
 
+    /// <summary>
+    /// Tests that validation passes when both email and password are valid.
+    /// </summary>
     [Fact]
-    public void Should_Not_Have_Errors_When_Valid()
+    public void ShouldNotHaveErrorsWhenValid()
     {
         LoginApplicationUserRequest model = new LoginApplicationUserRequest("user@test.com", "ValidPass123");
         TestValidationResult<LoginApplicationUserRequest>? result = _validator.TestValidate(model);

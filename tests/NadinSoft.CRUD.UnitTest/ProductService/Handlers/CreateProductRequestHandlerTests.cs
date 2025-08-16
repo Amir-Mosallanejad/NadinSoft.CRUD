@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using AutoMapper;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
@@ -8,40 +7,70 @@ using NadinSoft.CRUD.Application.Common.Interfaces;
 using NadinSoft.CRUD.Application.Services.ProductService.Command.CreateProduct;
 using NadinSoft.CRUD.Domain.Entities;
 using NadinSoft.CRUD.Domain.Repository;
+using System.Linq.Expressions;
 
 namespace NadinSoft.CRUD.UnitTest.ProductService.Handlers;
 
+/// <summary>
+/// Contains unit tests for <see cref="CreateProductRequestHandler"/>.
+/// </summary>
 public class CreateProductRequestHandlerTests
 {
+    /// <summary>
+    /// Mock for <see cref="IProductRepository"/>.
+    /// </summary>
     private readonly Mock<IProductRepository> _productRepoMock = new();
+
+    /// <summary>
+    /// Mock for <see cref="ICurrentUserService"/>.
+    /// </summary>
     private readonly Mock<ICurrentUserService> _currentUserMock = new();
+
+    /// <summary>
+    /// Mock for <see cref="IMapper"/>.
+    /// </summary>
     private readonly Mock<IMapper> _mapperMock = new();
+
+    /// <summary>
+    /// Mock for <see cref="ILogger{CreateProductRequestHandler}"/>.
+    /// </summary>
     private readonly Mock<ILogger<CreateProductRequestHandler>> _loggerMock = new();
 
+    /// <summary>
+    /// Handler instance being tested.
+    /// </summary>
     private readonly CreateProductRequestHandler _handler;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CreateProductRequestHandlerTests"/> class.
+    /// Initialize mocks and the handler.
+    /// </summary>
     public CreateProductRequestHandlerTests()
     {
         _handler = new CreateProductRequestHandler(
             _productRepoMock.Object,
             _currentUserMock.Object,
             _mapperMock.Object,
-            _loggerMock.Object
-        );
+            _loggerMock.Object);
     }
 
+    /// <summary>
+    /// Tests that the handler fails when the user is unauthorized.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
     [Fact]
-    public async Task Should_Return_Fail_When_User_Is_Unauthorized()
+    public async Task ShouldReturnFailWhenUserIsUnauthorized()
     {
         // Arrange
         _currentUserMock.Setup(x => x.UserId).Returns((string?)null);
         CreateProductRequest request =
-            new CreateProductRequest(new CreateProductRequestDto(
-                "Test",
-                DateTime.UtcNow,
-                "+989121234567",
-                "test@mail.com",
-                true));
+            new CreateProductRequest(
+                new CreateProductRequestDto(
+                    "Test",
+                    DateTime.UtcNow,
+                    "+989121234567",
+                    "test@mail.com",
+                    true));
 
         // Act
         ApiResponse<object> result = await _handler.Handle(request, CancellationToken.None);
@@ -51,8 +80,12 @@ public class CreateProductRequestHandlerTests
         result.Error.Should().Be("User is unauthorized.");
     }
 
+    /// <summary>
+    /// Tests that the handler fails when a product with the same email and produce date already exists.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
     [Fact]
-    public async Task Should_Return_Fail_When_Product_Already_Exists()
+    public async Task ShouldReturnFailWhenProductAlreadyExists()
     {
         CreateProductRequestDto dto =
             new CreateProductRequestDto(
@@ -76,8 +109,12 @@ public class CreateProductRequestHandlerTests
         result.Error.Should().Contain("already exists");
     }
 
+    /// <summary>
+    /// Tests that the handler creates a product successfully.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
     [Fact]
-    public async Task Should_Create_Product_Successfully()
+    public async Task ShouldCreateProductSuccessfully()
     {
         CreateProductRequestDto dto =
             new CreateProductRequestDto(
@@ -87,7 +124,10 @@ public class CreateProductRequestHandlerTests
                 "test@mail.com",
                 true);
         CreateProductRequest request = new CreateProductRequest(dto);
-        Product mappedEntity = new Product { Name = dto.Name };
+        Product mappedEntity = new Product
+        {
+            Name = dto.Name,
+        };
 
         _currentUserMock.Setup(x => x.UserId).Returns("user-1");
 
@@ -106,8 +146,12 @@ public class CreateProductRequestHandlerTests
         _productRepoMock.Verify(x => x.AddAsync(mappedEntity), Times.Once);
     }
 
+    /// <summary>
+    /// Tests that the handler returns a fail response when an exception is thrown.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
     [Fact]
-    public async Task Should_Return_Fail_When_Exception_Thrown()
+    public async Task ShouldReturnFailWhenExceptionThrown()
     {
         CreateProductRequestDto dto =
             new CreateProductRequestDto(
@@ -121,7 +165,7 @@ public class CreateProductRequestHandlerTests
         _currentUserMock.Setup(x => x.UserId).Returns("user-1");
 
         _productRepoMock.Setup(x => x.AnyAsync(It.IsAny<Expression<Func<Product, bool>>>()))
-            .ThrowsAsync(new Exception("DB crash"));
+            .ThrowsAsync(new InvalidOperationException("DB crash"));
 
         // Act
         ApiResponse<object> result = await _handler.Handle(request, CancellationToken.None);
