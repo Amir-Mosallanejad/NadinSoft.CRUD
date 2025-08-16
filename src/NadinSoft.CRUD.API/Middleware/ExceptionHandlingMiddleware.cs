@@ -1,4 +1,5 @@
 using FluentValidation;
+using NadinSoft.CRUD.API.Logger;
 using NadinSoft.CRUD.Application.Common.DTOs;
 using System.Text.Json;
 
@@ -43,7 +44,7 @@ public class ExceptionHandlingMiddleware
         }
         catch (ValidationException ex)
         {
-            _logger.LogError(ex, "Validation failed.");
+            _logger.ValidationFailedLogger(ex);
 
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = StatusCodes.Status400BadRequest;
@@ -59,7 +60,7 @@ public class ExceptionHandlingMiddleware
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An unhandled exception occurred.");
+            _logger.UnhandledExceptionLogger(ex);
 
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
