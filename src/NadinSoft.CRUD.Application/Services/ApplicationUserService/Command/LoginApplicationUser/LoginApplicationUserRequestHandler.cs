@@ -1,15 +1,11 @@
-// <copyright file="LoginApplicationUserRequestHandler.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
-
-namespace NadinSoft.CRUD.Application.Services.ApplicationUserService.Command.LoginApplicationUser;
-
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using NadinSoft.CRUD.Application.Common.DTOs;
 using NadinSoft.CRUD.Application.Common.Interfaces;
 using NadinSoft.CRUD.Domain.Entities;
+
+namespace NadinSoft.CRUD.Application.Services.ApplicationUserService.Command.LoginApplicationUser;
 
 /// <summary>
 /// Handles login requests for <see cref="ApplicationUser"/> and generates a JWT token upon successful authentication.

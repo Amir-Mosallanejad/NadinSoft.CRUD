@@ -1,7 +1,3 @@
-// <copyright file="ApplicationProjectEntry.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
-
 namespace NadinSoft.CRUD.Application;
 
 /// <summary>

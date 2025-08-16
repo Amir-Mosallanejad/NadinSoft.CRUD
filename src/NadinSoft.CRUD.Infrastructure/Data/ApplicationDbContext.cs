@@ -1,12 +1,8 @@
-// <copyright file="ApplicationDbContext.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
-
-namespace NadinSoft.CRUD.Infrastructure.Data;
-
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using NadinSoft.CRUD.Domain.Entities;
+
+namespace NadinSoft.CRUD.Infrastructure.Data;
 
 /// <summary>
 /// Represents the Entity Framework Core database context for the application,

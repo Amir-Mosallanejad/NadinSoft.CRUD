@@ -1,11 +1,7 @@
-// <copyright file="IBaseRepository.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
+using NadinSoft.CRUD.Domain.Entities;
+using System.Linq.Expressions;
 
 namespace NadinSoft.CRUD.Domain.Repository;
-
-using System.Linq.Expressions;
-using NadinSoft.CRUD.Domain.Entities;
 
 /// <summary>
 /// Defines the contract for a generic repository that provides basic data access operations.

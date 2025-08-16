@@ -1,9 +1,3 @@
-// <copyright file="CreateProductRequestHandler.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
-
-namespace NadinSoft.CRUD.Application.Services.ProductService.Command.CreateProduct;
-
 using AutoMapper;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -11,6 +5,8 @@ using NadinSoft.CRUD.Application.Common.DTOs;
 using NadinSoft.CRUD.Application.Common.Interfaces;
 using NadinSoft.CRUD.Domain.Entities;
 using NadinSoft.CRUD.Domain.Repository;
+
+namespace NadinSoft.CRUD.Application.Services.ProductService.Command.CreateProduct;
 
 /// <summary>
 /// Handles requests to create new <see cref="Product"/> entities.

@@ -1,16 +1,12 @@
-// <copyright file="AuthController.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
-
-namespace NadinSoft.CRUD.API.Controllers;
-
-using System.Security.Claims;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NadinSoft.CRUD.Application.Common.DTOs;
 using NadinSoft.CRUD.Application.Services.ApplicationUserService.Command.LoginApplicationUser;
 using NadinSoft.CRUD.Application.Services.ApplicationUserService.Command.RegisterApplicationUser;
+using System.Security.Claims;
+
+namespace NadinSoft.CRUD.API.Controllers;
 
 /// <summary>
 /// Provides authentication endpoints for registering users, logging in, and retrieving the current user's info.
@@ -19,7 +15,10 @@ using NadinSoft.CRUD.Application.Services.ApplicationUserService.Command.Registe
 [Route("api/[controller]")]
 public class AuthController : ControllerBase
 {
-    private readonly IMediator mediator;
+    /// <summary>
+    /// Sends requests to handlers and mediates communication between application components.
+    /// </summary>
+    private readonly IMediator _mediator;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AuthController"/> class.
@@ -27,7 +26,7 @@ public class AuthController : ControllerBase
     /// <param name="mediator">The mediator used to dispatch authentication requests.</param>
     public AuthController(IMediator mediator)
     {
-        this.mediator = mediator;
+        _mediator = mediator;
     }
 
     /// <summary>
@@ -40,7 +39,7 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<ApiResponse<object>> Register(RegisterApplicationUserRequest request)
     {
-        return await this.mediator.Send(request);
+        return await _mediator.Send(request);
     }
 
     /// <summary>
@@ -54,7 +53,7 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<ApiResponse<string>> Login(LoginApplicationUserRequest request)
     {
-        return await this.mediator.Send(request);
+        return await _mediator.Send(request);
     }
 
     /// <summary>
@@ -67,7 +66,7 @@ public class AuthController : ControllerBase
     [HttpGet("me")]
     public IActionResult GetMyInfo()
     {
-        string? userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        return this.Ok(userId);
+        string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        return Ok(userId);
     }
 }

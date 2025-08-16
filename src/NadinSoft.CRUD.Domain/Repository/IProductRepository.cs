@@ -1,10 +1,6 @@
-// <copyright file="IProductRepository.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
+using NadinSoft.CRUD.Domain.Entities;
 
 namespace NadinSoft.CRUD.Domain.Repository;
-
-using NadinSoft.CRUD.Domain.Entities;
 
 /// <summary>
 /// Defines the contract for a repository that provides data access operations for <see cref="Product"/> entities.

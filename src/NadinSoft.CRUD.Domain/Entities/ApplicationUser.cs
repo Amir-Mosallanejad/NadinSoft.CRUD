@@ -1,10 +1,6 @@
-// <copyright file="ApplicationUser.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
+using Microsoft.AspNetCore.Identity;
 
 namespace NadinSoft.CRUD.Domain.Entities;
-
-using Microsoft.AspNetCore.Identity;
 
 /// <summary>
 /// Represents an application user with additional properties and relationships.

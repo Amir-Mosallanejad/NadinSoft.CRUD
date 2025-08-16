@@ -1,12 +1,8 @@
-// <copyright file="ApplicationUserProfile.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
-
-namespace NadinSoft.CRUD.Application.Common.Mappings;
-
 using AutoMapper;
 using NadinSoft.CRUD.Application.Services.ApplicationUserService.Command.RegisterApplicationUser;
 using NadinSoft.CRUD.Domain.Entities;
+
+namespace NadinSoft.CRUD.Application.Common.Mappings;
 
 /// <summary>
 /// Defines AutoMapper mapping configuration for <see cref="ApplicationUser"/> entities.
@@ -19,7 +15,7 @@ public class ApplicationUserProfile : Profile
     /// </summary>
     public ApplicationUserProfile()
     {
-        this.CreateMap<RegisterApplicationUserRequest, ApplicationUser>()
+        CreateMap<RegisterApplicationUserRequest, ApplicationUser>()
             .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email))
             .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
             .ForMember(dest => dest.Products, opt => opt.Ignore());

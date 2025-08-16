@@ -1,9 +1,3 @@
-// <copyright file="ProductController.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
-
-namespace NadinSoft.CRUD.API.Controllers;
-
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +8,8 @@ using NadinSoft.CRUD.Application.Services.ProductService.Command.UpdateProduct;
 using NadinSoft.CRUD.Application.Services.ProductService.DTOs;
 using NadinSoft.CRUD.Application.Services.ProductService.Query.GetAllProducts;
 
+namespace NadinSoft.CRUD.API.Controllers;
+
 /// <summary>
 /// Provides product management endpoints for creating, updating, deleting, and retrieving products.
 /// </summary>
@@ -21,7 +17,10 @@ using NadinSoft.CRUD.Application.Services.ProductService.Query.GetAllProducts;
 [Route("api/[controller]")]
 public class ProductController : ControllerBase
 {
-    private readonly IMediator mediator;
+    /// <summary>
+    /// Sends requests to handlers and mediates communication between application components.
+    /// </summary>
+    private readonly IMediator _mediator;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ProductController"/> class.
@@ -29,7 +28,7 @@ public class ProductController : ControllerBase
     /// <param name="mediator">The mediator used to send product-related requests.</param>
     public ProductController(IMediator mediator)
     {
-        this.mediator = mediator;
+        _mediator = mediator;
     }
 
     /// <summary>
@@ -43,7 +42,7 @@ public class ProductController : ControllerBase
     [HttpPost("create")]
     public async Task<ApiResponse<object>> Create([FromBody] CreateProductRequestDto request)
     {
-        return await this.mediator.Send(new CreateProductRequest(request));
+        return await _mediator.Send(new CreateProductRequest(request));
     }
 
     /// <summary>
@@ -57,7 +56,7 @@ public class ProductController : ControllerBase
     [HttpPut("update")]
     public async Task<ApiResponse<object>> Update([FromBody] UpdateProductRequestDto request)
     {
-        return await this.mediator.Send(new UpdateProductRequest(request));
+        return await _mediator.Send(new UpdateProductRequest(request));
     }
 
     /// <summary>
@@ -71,7 +70,7 @@ public class ProductController : ControllerBase
     [HttpDelete("delete")]
     public async Task<ApiResponse<object>> Delete(Guid productId)
     {
-        return await this.mediator.Send(new DeleteProductRequest(productId));
+        return await _mediator.Send(new DeleteProductRequest(productId));
     }
 
     /// <summary>
@@ -86,6 +85,6 @@ public class ProductController : ControllerBase
     public async Task<ApiResponse<PaginatedResponse<ProductResponseDto>>> GetAll(
         [FromQuery] GetAllProductsRequest request)
     {
-        return await this.mediator.Send(request);
+        return await _mediator.Send(request);
     }
 }

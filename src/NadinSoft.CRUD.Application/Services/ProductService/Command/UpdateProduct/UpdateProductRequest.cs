@@ -1,13 +1,8 @@
-// <copyright file="UpdateProductRequest.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
-
-namespace NadinSoft.CRUD.Application.Services.ProductService.Command.UpdateProduct;
-
 using MediatR;
 using NadinSoft.CRUD.Application.Common.DTOs;
 using NadinSoft.CRUD.Domain.Entities;
 
+namespace NadinSoft.CRUD.Application.Services.ProductService.Command.UpdateProduct;
 /// <summary>
 /// Represents a request to update an existing <see cref="Product"/>.
 /// </summary>

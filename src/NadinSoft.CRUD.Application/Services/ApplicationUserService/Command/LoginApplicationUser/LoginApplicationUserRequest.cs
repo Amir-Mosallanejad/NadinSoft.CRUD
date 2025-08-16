@@ -1,12 +1,7 @@
-// <copyright file="LoginApplicationUserRequest.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
-
-namespace NadinSoft.CRUD.Application.Services.ApplicationUserService.Command.LoginApplicationUser;
-
 using MediatR;
 using NadinSoft.CRUD.Application.Common.DTOs;
 
+namespace NadinSoft.CRUD.Application.Services.ApplicationUserService.Command.LoginApplicationUser;
 /// <summary>
 /// Represents a request to log in an application user.
 /// </summary>

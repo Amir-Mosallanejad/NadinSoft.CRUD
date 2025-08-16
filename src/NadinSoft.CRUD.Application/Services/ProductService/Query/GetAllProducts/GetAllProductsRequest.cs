@@ -1,13 +1,9 @@
-// <copyright file="GetAllProductsRequest.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
-
-namespace NadinSoft.CRUD.Application.Services.ProductService.Query.GetAllProducts;
-
 using MediatR;
 using NadinSoft.CRUD.Application.Common.DTOs;
 using NadinSoft.CRUD.Application.Services.ProductService.DTOs;
 using NadinSoft.CRUD.Domain.Entities;
+
+namespace NadinSoft.CRUD.Application.Services.ProductService.Query.GetAllProducts;
 
 /// <summary>
 /// Represents a request to retrieve a paginated list of <see cref="Product"/> entities,

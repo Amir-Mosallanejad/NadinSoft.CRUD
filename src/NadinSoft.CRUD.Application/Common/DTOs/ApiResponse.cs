@@ -1,7 +1,3 @@
-// <copyright file="ApiResponse.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
-
 namespace NadinSoft.CRUD.Application.Common.DTOs;
 
 /// <summary>
@@ -19,9 +15,9 @@ public class ApiResponse<T>
     /// <param name="error">The error message if the operation failed; otherwise, <c>null</c>.</param>
     private ApiResponse(T? data, bool isSuccess, string? error)
     {
-        this.Data = data;
-        this.IsSuccess = isSuccess;
-        this.Error = error;
+        Data = data;
+        IsSuccess = isSuccess;
+        Error = error;
     }
 
     /// <summary>

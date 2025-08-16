@@ -1,11 +1,6 @@
-// <copyright file="ProductResponseDto.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
-
-namespace NadinSoft.CRUD.Application.Services.ProductService.DTOs;
-
 using NadinSoft.CRUD.Domain.Entities;
 
+namespace NadinSoft.CRUD.Application.Services.ProductService.DTOs;
 /// <summary>
 /// Represents the data returned for a <see cref="Product"/> in responses.
 /// </summary>

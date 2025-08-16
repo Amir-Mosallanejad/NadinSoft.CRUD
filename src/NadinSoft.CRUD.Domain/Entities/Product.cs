@@ -1,10 +1,6 @@
-// <copyright file="Product.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
+using System.ComponentModel.DataAnnotations;
 
 namespace NadinSoft.CRUD.Domain.Entities;
-
-using System.ComponentModel.DataAnnotations;
 
 /// <summary>
 /// Represents a product in the system.

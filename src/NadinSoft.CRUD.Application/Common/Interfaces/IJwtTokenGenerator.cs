@@ -1,10 +1,6 @@
-// <copyright file="IJwtTokenGenerator.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
+using NadinSoft.CRUD.Domain.Entities;
 
 namespace NadinSoft.CRUD.Application.Common.Interfaces;
-
-using NadinSoft.CRUD.Domain.Entities;
 
 /// <summary>
 /// Defines a service responsible for generating JSON Web Tokens (JWT) for users.

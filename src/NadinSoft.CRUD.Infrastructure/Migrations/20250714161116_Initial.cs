@@ -1,14 +1,10 @@
-﻿// <copyright file="20250714161116_Initial.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+using System;
 
 #nullable disable
 
 namespace NadinSoft.CRUD.Infrastructure.Migrations
 {
-    using System;
-    using Microsoft.EntityFrameworkCore.Migrations;
-
     /// <inheritdoc />
     public partial class Initial : Migration
     {

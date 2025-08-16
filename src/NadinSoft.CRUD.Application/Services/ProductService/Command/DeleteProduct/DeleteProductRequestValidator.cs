@@ -1,10 +1,6 @@
-// <copyright file="DeleteProductRequestValidator.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
+using FluentValidation;
 
 namespace NadinSoft.CRUD.Application.Services.ProductService.Command.DeleteProduct;
-
-using FluentValidation;
 
 /// <summary>
 /// Validates <see cref="DeleteProductRequest"/> instances to ensure the request contains a valid product ID.
@@ -17,7 +13,7 @@ public class DeleteProductRequestValidator : AbstractValidator<DeleteProductRequ
     /// </summary>
     public DeleteProductRequestValidator()
     {
-        this.RuleFor(x => x.ProductId)
+        RuleFor(x => x.ProductId)
             .NotEmpty().WithMessage("ProductId is required.");
     }
 }

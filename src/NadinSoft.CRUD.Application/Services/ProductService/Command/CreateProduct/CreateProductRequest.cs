@@ -1,13 +1,8 @@
-// <copyright file="CreateProductRequest.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
-
-namespace NadinSoft.CRUD.Application.Services.ProductService.Command.CreateProduct;
-
 using MediatR;
 using NadinSoft.CRUD.Application.Common.DTOs;
 using NadinSoft.CRUD.Domain.Entities;
 
+namespace NadinSoft.CRUD.Application.Services.ProductService.Command.CreateProduct;
 /// <summary>
 /// Represents a request to create a new <see cref="Product"/>.
 /// </summary>

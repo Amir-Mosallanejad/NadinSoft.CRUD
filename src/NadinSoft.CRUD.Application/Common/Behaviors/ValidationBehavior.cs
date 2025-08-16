@@ -1,12 +1,8 @@
-// <copyright file="ValidationBehavior.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
-
-namespace NadinSoft.CRUD.Application.Common.Behaviors;
-
 using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
+
+namespace NadinSoft.CRUD.Application.Common.Behaviors;
 
 /// <summary>
 /// A MediatR pipeline behavior that handles validation for requests using FluentValidation.
@@ -20,17 +16,20 @@ using MediatR;
 public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
-    private readonly IEnumerable<IValidator<TRequest>> validators;
+    /// <summary>
+    /// Holds all the validators for the current request type.
+    /// </summary>
+    private readonly IEnumerable<IValidator<TRequest>> _validators;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ValidationBehavior{TRequest, TResponse}"/> class.
     /// </summary>
-    /// <param name="validators">
+    /// <param name="validators">z
     /// A collection of validators for the request type.
     /// </param>
     public ValidationBehavior(IEnumerable<IValidator<TRequest>> validators)
     {
-        this.validators = validators;
+        _validators = validators;
     }
 
     /// <summary>
@@ -51,10 +50,10 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
     {
-        if (this.validators.Any())
+        if (_validators.Any())
         {
             ValidationContext<TRequest> context = new(request);
-            List<ValidationFailure> failures = this.validators
+            List<ValidationFailure> failures = _validators
                 .Select(x => x.Validate(context))
                 .SelectMany(r => r.Errors)
                 .Where(f => f != null)

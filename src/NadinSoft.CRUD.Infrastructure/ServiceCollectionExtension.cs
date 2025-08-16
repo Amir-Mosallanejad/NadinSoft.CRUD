@@ -1,10 +1,3 @@
-// <copyright file="ServiceCollectionExtension.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
-
-namespace NadinSoft.CRUD.Infrastructure;
-
-using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +10,9 @@ using NadinSoft.CRUD.Domain.Repository;
 using NadinSoft.CRUD.Infrastructure.Data;
 using NadinSoft.CRUD.Infrastructure.Repository;
 using NadinSoft.CRUD.Infrastructure.Services.AuthService;
+using System.Text;
+
+namespace NadinSoft.CRUD.Infrastructure;
 
 /// <summary>
 /// Provides extension methods to register infrastructure services in the dependency injection container.

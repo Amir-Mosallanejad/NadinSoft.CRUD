@@ -1,10 +1,6 @@
-// <copyright file="RegisterApplicationUserRequestValidator.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
+using FluentValidation;
 
 namespace NadinSoft.CRUD.Application.Services.ApplicationUserService.Command.RegisterApplicationUser;
-
-using FluentValidation;
 
 /// <summary>
 /// Validates <see cref="RegisterApplicationUserRequest"/> instances.
@@ -18,18 +14,15 @@ public class RegisterApplicationUserRequestValidator : AbstractValidator<Registe
     /// </summary>
     public RegisterApplicationUserRequestValidator()
     {
-        // Validate the Email property
-        this.RuleFor(x => x.Email)
+        RuleFor(x => x.Email)
             .NotEmpty().WithMessage("Email is required.")
             .EmailAddress().WithMessage("A valid email is required.");
 
-        // Validate the Password property
-        this.RuleFor(x => x.Password)
+        RuleFor(x => x.Password)
             .NotEmpty().WithMessage("Password is required.")
             .MinimumLength(6).WithMessage("Password must be at least 6 characters long.");
 
-        // Validate the ConfirmPassword property
-        this.RuleFor(x => x.ConfirmPassword)
+        RuleFor(x => x.ConfirmPassword)
             .NotEmpty().WithMessage("Confirm Password is required.")
             .Equal(x => x.Password).WithMessage("Passwords do not match.");
     }

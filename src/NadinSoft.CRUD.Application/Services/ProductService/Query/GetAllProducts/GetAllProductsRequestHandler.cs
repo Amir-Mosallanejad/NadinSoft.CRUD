@@ -1,9 +1,3 @@
-// <copyright file="GetAllProductsRequestHandler.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
-
-namespace NadinSoft.CRUD.Application.Services.ProductService.Query.GetAllProducts;
-
 using AutoMapper;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -11,6 +5,8 @@ using NadinSoft.CRUD.Application.Common.DTOs;
 using NadinSoft.CRUD.Application.Services.ProductService.DTOs;
 using NadinSoft.CRUD.Domain.Entities;
 using NadinSoft.CRUD.Domain.Repository;
+
+namespace NadinSoft.CRUD.Application.Services.ProductService.Query.GetAllProducts;
 
 /// <summary>
 /// Handles requests to retrieve a paginated list of <see cref="Product"/> entities,
@@ -41,7 +37,7 @@ public class GetAllProductsRequestHandler(
         try
         {
             (int Total, IEnumerable<Product> Items) products = await productRepository.GetProductsByFilters(
-                request.Name.ToLower(),
+                request.Name.ToLower(System.Globalization.CultureInfo.CurrentCulture),
                 request.Page,
                 request.PerPage);
 

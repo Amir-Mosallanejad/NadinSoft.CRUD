@@ -1,13 +1,8 @@
-// <copyright file="DeleteProductRequest.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
-
-namespace NadinSoft.CRUD.Application.Services.ProductService.Command.DeleteProduct;
-
 using MediatR;
 using NadinSoft.CRUD.Application.Common.DTOs;
 using NadinSoft.CRUD.Domain.Entities;
 
+namespace NadinSoft.CRUD.Application.Services.ProductService.Command.DeleteProduct;
 /// <summary>
 /// Represents a request to delete an existing <see cref="Product"/> by its unique identifier.
 /// </summary>

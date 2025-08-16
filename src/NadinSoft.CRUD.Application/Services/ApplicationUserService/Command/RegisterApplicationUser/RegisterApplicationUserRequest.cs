@@ -1,13 +1,8 @@
-// <copyright file="RegisterApplicationUserRequest.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
-
-namespace NadinSoft.CRUD.Application.Services.ApplicationUserService.Command.RegisterApplicationUser;
-
 using MediatR;
 using NadinSoft.CRUD.Application.Common.DTOs;
 using NadinSoft.CRUD.Domain.Entities;
 
+namespace NadinSoft.CRUD.Application.Services.ApplicationUserService.Command.RegisterApplicationUser;
 /// <summary>
 /// Represents a request to register a new <see cref="ApplicationUser"/>.
 /// </summary>

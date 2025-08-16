@@ -1,7 +1,3 @@
-// <copyright file="SwaggerExtensions.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
-
 namespace NadinSoft.CRUD.API.Extensions;
 
 /// <summary>
@@ -25,7 +21,13 @@ public static class SwaggerExtensions
     {
         service.AddSwaggerGen(options =>
         {
-            options.SwaggerDoc("v1", new() { Title = "ProductApp API", Version = "v1" });
+            options.SwaggerDoc(
+                "v1",
+                new()
+                {
+                    Title = "ProductApp API",
+                    Version = "v1",
+                });
 
             options.AddSecurityDefinition(
                 "Bearer",

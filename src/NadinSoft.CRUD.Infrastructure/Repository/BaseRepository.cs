@@ -1,14 +1,10 @@
-// <copyright file="BaseRepository.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
-
-namespace NadinSoft.CRUD.Infrastructure.Repository;
-
-using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using NadinSoft.CRUD.Domain.Entities;
 using NadinSoft.CRUD.Domain.Repository;
 using NadinSoft.CRUD.Infrastructure.Data;
+using System.Linq.Expressions;
+
+namespace NadinSoft.CRUD.Infrastructure.Repository;
 
 /// <summary>
 /// Provides a base repository implementation for CRUD operations on entities of type <typeparamref name="T"/>.
@@ -24,8 +20,8 @@ public abstract class BaseRepository<T> : IBaseRepository<T>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="context"/> is null.</exception>
     protected BaseRepository(ApplicationDbContext context)
     {
-        this.Context = context ?? throw new ArgumentNullException(nameof(context));
-        this.DbSet = this.Context.Set<T>();
+        Context = context ?? throw new ArgumentNullException(nameof(context));
+        DbSet = Context.Set<T>();
     }
 
     /// <summary>
@@ -41,46 +37,46 @@ public abstract class BaseRepository<T> : IBaseRepository<T>
     /// <inheritdoc/>
     public virtual async Task<T> AddAsync(T entity)
     {
-        await this.DbSet.AddAsync(entity);
-        await this.Context.SaveChangesAsync();
+        await DbSet.AddAsync(entity);
+        await Context.SaveChangesAsync();
         return entity;
     }
 
     /// <inheritdoc/>
     public virtual async Task<bool> AnyAsync(Expression<Func<T, bool>> filter)
     {
-        return await this.DbSet.AnyAsync(filter);
+        return await DbSet.AnyAsync(filter);
     }
 
     /// <inheritdoc/>
     public virtual async Task<int> CountAsync()
     {
-        return await this.DbSet.CountAsync();
+        return await DbSet.CountAsync();
     }
 
     /// <inheritdoc/>
     public virtual async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> filter)
     {
-        return await this.DbSet.Where(filter).ToListAsync();
+        return await DbSet.Where(filter).ToListAsync();
     }
 
     /// <inheritdoc/>
     public virtual async Task<T?> GetByIdAsync(Guid id)
     {
-        return await this.DbSet.FindAsync(id);
+        return await DbSet.FindAsync(id);
     }
 
     /// <inheritdoc/>
     public virtual void Remove(T entity)
     {
-        this.DbSet.Remove(entity);
-        this.Context.SaveChanges();
+        DbSet.Remove(entity);
+        Context.SaveChanges();
     }
 
     /// <inheritdoc/>
     public virtual void Update(T entity)
     {
-        this.DbSet.Update(entity);
-        this.Context.SaveChanges();
+        DbSet.Update(entity);
+        Context.SaveChanges();
     }
 }

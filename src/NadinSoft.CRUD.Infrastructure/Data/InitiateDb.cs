@@ -1,13 +1,9 @@
-// <copyright file="InitiateDb.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
-
-namespace NadinSoft.CRUD.Infrastructure.Data;
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+
+namespace NadinSoft.CRUD.Infrastructure.Data;
 
 /// <summary>
 /// Provides extension methods to initialize and migrate the database at application startup.
@@ -58,7 +54,7 @@ public static class InitiateDb
         if (retry == maxRetries)
         {
             logger.LogError("Could not connect to the database after {MaxRetries} attempts.", maxRetries);
-            throw new Exception("Failed to migrate the database.");
+            throw new InvalidOperationException("Failed to migrate the database.");
         }
     }
 }

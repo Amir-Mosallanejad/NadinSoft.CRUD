@@ -1,15 +1,11 @@
-// <copyright file="RegisterApplicationUserRequestHandler.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
-
-namespace NadinSoft.CRUD.Application.Services.ApplicationUserService.Command.RegisterApplicationUser;
-
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using NadinSoft.CRUD.Application.Common.DTOs;
 using NadinSoft.CRUD.Domain.Entities;
+
+namespace NadinSoft.CRUD.Application.Services.ApplicationUserService.Command.RegisterApplicationUser;
 
 /// <summary>
 /// Handles registration requests for <see cref="ApplicationUser"/> and creates a new user in the system.
