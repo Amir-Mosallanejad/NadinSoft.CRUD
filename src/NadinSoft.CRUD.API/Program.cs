@@ -1,3 +1,7 @@
+// <copyright file="Program.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
 using NadinSoft.CRUD.API.Extensions;
 using NadinSoft.CRUD.API.Middleware;
 using NadinSoft.CRUD.Application;
