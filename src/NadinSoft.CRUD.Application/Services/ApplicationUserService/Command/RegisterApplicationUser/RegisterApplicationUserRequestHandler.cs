@@ -34,9 +34,8 @@ public class RegisterApplicationUserRequestHandler(
             ApplicationUser? existingUser = await userManager.FindByEmailAsync(request.Email);
             if (existingUser != null)
             {
-                logger.LogInformation(
-                    "Registration attempt failed: User with email {Email} already exists.",
-                    request.Email);
+                logger.ExistingEmailErrorLogger(request.Email);
+
                 return ApiResponse<object>.Fail("User with this email already exists.");
             }
 
@@ -46,7 +45,7 @@ public class RegisterApplicationUserRequestHandler(
             if (!result.Succeeded)
             {
                 string errorMessages = string.Join(" | ", result.Errors.Select(e => e.Description));
-                logger.LogWarning("User registration failed for email {Email}: {Errors}", request.Email, errorMessages);
+                logger.RegistrationAttemptFailedLogger(request.Email, errorMessages);
                 return ApiResponse<object>.Fail(errorMessages);
             }
 
@@ -54,7 +53,7 @@ public class RegisterApplicationUserRequestHandler(
         }
         catch (Exception exception)
         {
-            logger.LogError(exception, "Unhandled error occurred while registering request.");
+            logger.UnhandledErrorLogger(exception);
 
             return ApiResponse<object>.Fail("An unexpected error occurred.");
         }

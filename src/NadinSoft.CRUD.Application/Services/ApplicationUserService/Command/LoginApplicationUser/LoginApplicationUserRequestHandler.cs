@@ -41,8 +41,7 @@ public class LoginApplicationUserRequestHandler(
         }
         catch (Exception exception)
         {
-            logger.LogError(exception, "Unhandled error occurred while logging-in request.");
-
+            logger.UnhandledErrorLogger(exception);
             return ApiResponse<string>.Fail("An unexpected error occurred.");
         }
     }

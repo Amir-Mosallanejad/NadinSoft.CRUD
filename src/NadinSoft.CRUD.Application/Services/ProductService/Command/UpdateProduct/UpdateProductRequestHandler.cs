@@ -43,17 +43,14 @@ public class UpdateProductRequestHandler(
 
             if (product is null)
             {
-                logger.LogWarning("Product not found with Id: {Id}", request.Dto.Id);
+                logger.ProductNotFoundLogger(request.Dto.Id);
+
                 return ApiResponse<object>.Fail("Product not found.");
             }
 
             if (product.CreatedByUserId != userId)
             {
-                logger.LogWarning(
-                    "Unauthorized update attempt by user {UserId} on product {ProductId} created by {CreatorId}.",
-                    userId,
-                    product.Id,
-                    product.CreatedByUserId);
+                logger.UnauthorizedUpdateAttemptLogger(userId, product.Id, product.CreatedByUserId);
 
                 return ApiResponse<object>.Fail("You are not owner of this product to update this product.");
             }
@@ -67,7 +64,7 @@ public class UpdateProductRequestHandler(
         }
         catch (Exception exception)
         {
-            logger.LogError(exception, "Unhandled error occurred while processing product update request.");
+            logger.UnhandledErrorLogger(exception);
 
             return ApiResponse<object>.Fail("An unexpected error occurred.");
         }

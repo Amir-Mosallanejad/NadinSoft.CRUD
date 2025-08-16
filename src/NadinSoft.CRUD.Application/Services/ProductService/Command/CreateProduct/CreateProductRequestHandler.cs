@@ -43,10 +43,7 @@ public class CreateProductRequestHandler(
 
             if (isExist)
             {
-                logger.LogWarning(
-                    "Duplicate product detected: ManufactureEmail={Email}, ProduceDate={Date}",
-                    request.Dto.ManufactureEmail,
-                    request.Dto.ProduceDate);
+                logger.DuplicateProductLogger(request.Dto.ManufactureEmail, request.Dto.ProduceDate);
 
                 return ApiResponse<object>.Fail(
                     "A product with the same Manufacture Email and Produce Date already exists.");
@@ -61,7 +58,7 @@ public class CreateProductRequestHandler(
         }
         catch (Exception exception)
         {
-            logger.LogError(exception, "Unhandled error occurred while processing product create request.");
+            logger.UnhandledErrorLogger(exception);
 
             return ApiResponse<object>.Fail("An unexpected error occurred.");
         }

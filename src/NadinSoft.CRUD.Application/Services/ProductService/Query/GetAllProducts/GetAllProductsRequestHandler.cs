@@ -52,9 +52,10 @@ public class GetAllProductsRequestHandler(
                     TotalCount = products.Total,
                 });
         }
-        catch (Exception e)
+        catch (Exception exception)
         {
-            logger.LogError(e, "Error occurred while retrieving all products.");
+            logger.UnhandledErrorLogger(exception);
+
             return ApiResponse<PaginatedResponse<ProductResponseDto>>.Fail(
                 "An unexpected error occurred while retrieving products.");
         }
