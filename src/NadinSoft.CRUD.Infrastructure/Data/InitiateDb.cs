@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NadinSoft.CRUD.Infrastructure.Logger;
 
 namespace NadinSoft.CRUD.Infrastructure.Data;
 
@@ -36,24 +37,23 @@ public static class InitiateDb
                     context.Database.Migrate();
                 }
 
-                logger.LogInformation("Database migrated successfully.");
+                logger.DatabaseMigratedLogger();
+
                 break;
             }
             catch (Exception)
             {
                 retry++;
-                logger.LogWarning(
-                    "Database not ready. Retrying in {Delay}s... Attempt {Retry}/{MaxRetries}",
-                    5,
-                    retry,
-                    maxRetries);
+
+                logger.DatabaseNotReadyLogger(5, retry, maxRetries);
+
                 Thread.Sleep(5000);
             }
         }
 
         if (retry == maxRetries)
         {
-            logger.LogError("Could not connect to the database after {MaxRetries} attempts.", maxRetries);
+            logger.DataBaseConnectionFailLogger(maxRetries);
             throw new InvalidOperationException("Failed to migrate the database.");
         }
     }
