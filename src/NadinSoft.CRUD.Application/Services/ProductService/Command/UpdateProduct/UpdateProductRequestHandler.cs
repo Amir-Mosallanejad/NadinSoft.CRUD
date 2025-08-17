@@ -16,7 +16,8 @@ public class UpdateProductRequestHandler(
     IProductRepository productRepository,
     ICurrentUserService currentUserService,
     IMapper mapper,
-    ILogger<UpdateProductRequestHandler> logger)
+    ILogger<UpdateProductRequestHandler> logger,
+    ILocalizationService localizationService)
     : IRequestHandler<UpdateProductRequest, ApiResponse<object>>
 {
     /// <summary>
@@ -36,7 +37,7 @@ public class UpdateProductRequestHandler(
             string? userId = currentUserService.UserId;
             if (userId is null)
             {
-                return ApiResponse<object>.Fail("User is unauthorized.");
+                return ApiResponse<object>.Fail(localizationService.GetApiMessageResource("UserUnauthorized"));
             }
 
             Product? product = await productRepository.GetByIdAsync(request.Dto.Id);
@@ -45,14 +46,14 @@ public class UpdateProductRequestHandler(
             {
                 logger.ProductNotFoundLogger(request.Dto.Id);
 
-                return ApiResponse<object>.Fail("Product not found.");
+                return ApiResponse<object>.Fail(localizationService.GetApiMessageResource("ProductNotFound"));
             }
 
             if (product.CreatedByUserId != userId)
             {
                 logger.UnauthorizedUpdateAttemptLogger(userId, product.Id, product.CreatedByUserId);
 
-                return ApiResponse<object>.Fail("You are not owner of this product to update this product.");
+                return ApiResponse<object>.Fail(localizationService.GetApiMessageResource("NotOwnerOfProductUpdate"));
             }
 
             mapper.Map(request.Dto, product);
@@ -66,7 +67,7 @@ public class UpdateProductRequestHandler(
         {
             logger.UnhandledErrorLogger(exception);
 
-            return ApiResponse<object>.Fail("An unexpected error occurred.");
+            return ApiResponse<object>.Fail(localizationService.GetApiMessageResource("UnexpectedError"));
         }
     }
 }

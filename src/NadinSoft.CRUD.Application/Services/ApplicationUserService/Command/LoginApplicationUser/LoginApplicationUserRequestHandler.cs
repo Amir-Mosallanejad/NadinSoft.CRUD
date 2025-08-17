@@ -13,7 +13,8 @@ namespace NadinSoft.CRUD.Application.Services.ApplicationUserService.Command.Log
 public class LoginApplicationUserRequestHandler(
     UserManager<ApplicationUser> userManager,
     IJwtTokenGenerator jwtTokenGenerator,
-    ILogger<LoginApplicationUserRequestHandler> logger)
+    ILogger<LoginApplicationUserRequestHandler> logger,
+    ILocalizationService localizationService)
     : IRequestHandler<LoginApplicationUserRequest, ApiResponse<string>>
 {
     /// <summary>
@@ -33,7 +34,7 @@ public class LoginApplicationUserRequestHandler(
             ApplicationUser? user = await userManager.FindByEmailAsync(request.Email);
             if (user == null || !await userManager.CheckPasswordAsync(user, request.Password))
             {
-                return ApiResponse<string>.Fail("Invalid credentials.");
+                return ApiResponse<string>.Fail(localizationService.GetApiMessageResource("Invalidcredentials"));
             }
 
             string token = jwtTokenGenerator.GenerateToken(user);
@@ -42,7 +43,7 @@ public class LoginApplicationUserRequestHandler(
         catch (Exception exception)
         {
             logger.UnhandledErrorLogger(exception);
-            return ApiResponse<string>.Fail("An unexpected error occurred.");
+            return ApiResponse<string>.Fail(localizationService.GetApiMessageResource("UnexpectedError"));
         }
     }
 }

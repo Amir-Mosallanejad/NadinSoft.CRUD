@@ -11,7 +11,28 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Test" xml:space="preserve">
-    <value>asdasd</value>
+  <data name="Invalidcredentials" xml:space="preserve">
+    <value>مدارک شناسایی نامعتبر.</value>
+  </data>
+  <data name="UnexpectedError" xml:space="preserve">
+    <value>یک خطای غیرمنتظره رخ داد.</value>
+  </data>
+  <data name="EmailAlreadyExists" xml:space="preserve">
+    <value>کاربری با این ایمیل از قبل وجود دارد.</value>
+  </data>
+  <data name="UserUnauthorized" xml:space="preserve">
+    <value>کاربر غیر مجاز است</value>
+  </data>
+  <data name="ProductAlreadyExists" xml:space="preserve">
+    <value>محصولی با همان ایمیل ساخت و تاریخ تولید از قبل وجود دارد.</value>
+  </data>
+  <data name="ProductNotFound" xml:space="preserve">
+    <value>محصول یافت نشد</value>
+  </data>
+  <data name="NotOwnerOfProductDelete" xml:space="preserve">
+    <value>شما مالک این محصول نیستید که بتوانید آن را حذف کنید.</value>
+  </data>
+  <data name="NotOwnerOfProductUpdate" xml:space="preserve">
+    <value>شما مالک این محصول نیستید تا بتوانید این محصول را به‌روزرسانی کنید.</value>
   </data>
 </root>

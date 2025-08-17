@@ -45,15 +45,51 @@ namespace NadinSoft.CRUD.Infrastructure.Resources {
             }
         }
         
-        public static string Test {
+        public static string Invalidcredentials {
             get {
-                return ResourceManager.GetString("Test", resourceCulture);
+                return ResourceManager.GetString("Invalidcredentials", resourceCulture);
             }
         }
         
-        public static string another_test {
+        public static string UnexpectedError {
             get {
-                return ResourceManager.GetString("another test", resourceCulture);
+                return ResourceManager.GetString("UnexpectedError", resourceCulture);
+            }
+        }
+        
+        public static string EmailAlreadyExists {
+            get {
+                return ResourceManager.GetString("EmailAlreadyExists", resourceCulture);
+            }
+        }
+        
+        public static string UserUnauthorized {
+            get {
+                return ResourceManager.GetString("UserUnauthorized", resourceCulture);
+            }
+        }
+        
+        public static string ProductAlreadyExists {
+            get {
+                return ResourceManager.GetString("ProductAlreadyExists", resourceCulture);
+            }
+        }
+        
+        public static string ProductNotFound {
+            get {
+                return ResourceManager.GetString("ProductNotFound", resourceCulture);
+            }
+        }
+        
+        public static string NotOwnerOfProductDelete {
+            get {
+                return ResourceManager.GetString("NotOwnerOfProductDelete", resourceCulture);
+            }
+        }
+        
+        public static string NotOwnerOfProductUpdate {
+            get {
+                return ResourceManager.GetString("NotOwnerOfProductUpdate", resourceCulture);
             }
         }
     }

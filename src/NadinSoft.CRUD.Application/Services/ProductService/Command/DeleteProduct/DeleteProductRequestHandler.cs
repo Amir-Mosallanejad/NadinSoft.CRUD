@@ -14,7 +14,8 @@ namespace NadinSoft.CRUD.Application.Services.ProductService.Command.DeleteProdu
 public class DeleteProductRequestHandler(
     IProductRepository productRepository,
     ICurrentUserService currentUserService,
-    ILogger<DeleteProductRequestHandler> logger)
+    ILogger<DeleteProductRequestHandler> logger,
+    ILocalizationService localizationService)
     : IRequestHandler<DeleteProductRequest, ApiResponse<object>>
 {
     /// <summary>
@@ -34,7 +35,7 @@ public class DeleteProductRequestHandler(
             string? userId = currentUserService.UserId;
             if (userId is null)
             {
-                return ApiResponse<object>.Fail("User is unauthorized.");
+                return ApiResponse<object>.Fail(localizationService.GetApiMessageResource("UserUnauthorized"));
             }
 
             Product? product = await productRepository.GetByIdAsync(request.ProductId);
@@ -42,14 +43,14 @@ public class DeleteProductRequestHandler(
             if (product is null)
             {
                 logger.ProductNotFoundLogger(request.ProductId);
-                return ApiResponse<object>.Fail("Product not found.");
+                return ApiResponse<object>.Fail(localizationService.GetApiMessageResource("ProductNotFound"));
             }
 
             if (product.CreatedByUserId != userId)
             {
                 logger.UnauthorizedDeleteAttemptLogger(userId, product.Id, product.CreatedByUserId);
 
-                return ApiResponse<object>.Fail("You are not owner of this product to delete this product.");
+                return ApiResponse<object>.Fail(localizationService.GetApiMessageResource("NotOwnerOfProductDelete"));
             }
 
             productRepository.Remove(product);
@@ -60,7 +61,7 @@ public class DeleteProductRequestHandler(
         {
             logger.UnhandledErrorLogger(exception);
 
-            return ApiResponse<object>.Fail("An unexpected error occurred.");
+            return ApiResponse<object>.Fail(localizationService.GetApiMessageResource("UnexpectedError"));
         }
     }
 }

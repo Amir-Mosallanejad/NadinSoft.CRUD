@@ -71,7 +71,7 @@ public static class ServiceCollectionExtension
 
         service.Configure<RequestLocalizationOptions>(options =>
         {
-            options.DefaultRequestCulture = new RequestCulture("en-US");
+            options.DefaultRequestCulture = new RequestCulture("fa-IR");
             options.SupportedCultures = supportedCultures;
             options.SupportedUICultures = supportedCultures;
 

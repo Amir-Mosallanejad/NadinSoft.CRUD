@@ -2,6 +2,7 @@ using AutoMapper;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using NadinSoft.CRUD.Application.Common.DTOs;
+using NadinSoft.CRUD.Application.Common.Interfaces;
 using NadinSoft.CRUD.Application.Services.ProductService.DTOs;
 using NadinSoft.CRUD.Domain.Entities;
 using NadinSoft.CRUD.Domain.Repository;
@@ -15,7 +16,8 @@ namespace NadinSoft.CRUD.Application.Services.ProductService.Query.GetAllProduct
 public class GetAllProductsRequestHandler(
     IProductRepository productRepository,
     IMapper mapper,
-    ILogger<GetAllProductsRequestHandler> logger)
+    ILogger<GetAllProductsRequestHandler> logger,
+    ILocalizationService localizationService)
     : IRequestHandler<GetAllProductsRequest, ApiResponse<PaginatedResponse<ProductResponseDto>>>
 {
     /// <summary>
@@ -57,7 +59,7 @@ public class GetAllProductsRequestHandler(
             logger.UnhandledErrorLogger(exception);
 
             return ApiResponse<PaginatedResponse<ProductResponseDto>>.Fail(
-                "An unexpected error occurred while retrieving products.");
+                localizationService.GetApiMessageResource("UnexpectedError"));
         }
 
         return response;
