@@ -1,6 +1,8 @@
-using NadinSoft.CRUD.API;
+using NadinSoft.CRUD.API.Extensions;
+using NadinSoft.CRUD.API.Middleware;
+using NadinSoft.CRUD.Application;
 using NadinSoft.CRUD.Infrastructure;
-using NadinSoft.CRUD.Infrastructure.Middleware;
+using NadinSoft.CRUD.Infrastructure.Data;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -11,20 +13,19 @@ if (builder.Configuration.GetValue<bool>("LoadEnv"))
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen()
+    .AddCustomSwaggerGen();
 builder.Services.AddLogging();
-builder.Services.AddCustomService();
-builder.Services.AddRepositories();
-builder.Services.AddAuthenticationService(builder.Configuration);
-builder.Services.AddCustomSwaggerGen();
+builder.Services.AddApplicationServices();
+builder.Services.AddInfrastructureServices(builder.Configuration);
 
 WebApplication app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.MigrateDb();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.MigrateDb();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

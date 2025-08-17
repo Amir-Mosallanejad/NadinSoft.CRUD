@@ -10,25 +10,49 @@ using NadinSoft.CRUD.Domain.Repository;
 
 namespace NadinSoft.CRUD.UnitTest.ProductService.Handlers;
 
+/// <summary>
+/// Contains unit tests for <see cref="GetAllProductsRequestHandler"/>.
+/// </summary>
 public class GetAllProductsRequestHandlerTests
 {
+    /// <summary>
+    /// Mock for <see cref="IProductRepository"/>.
+    /// </summary>
     private readonly Mock<IProductRepository> _productRepoMock = new();
+
+    /// <summary>
+    /// Mock for <see cref="IMapper"/>.
+    /// </summary>
     private readonly Mock<IMapper> _mapperMock = new();
+
+    /// <summary>
+    /// Mock for <see cref="ILogger{GetAllProductsRequestHandler}"/>.
+    /// </summary>
     private readonly Mock<ILogger<GetAllProductsRequestHandler>> _loggerMock = new();
 
+    /// <summary>
+    /// Handler instance being tested.
+    /// </summary>
     private readonly GetAllProductsRequestHandler _handler;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="GetAllProductsRequestHandlerTests"/> class.
+    /// Initialize mocks and the handler.
+    /// </summary>
     public GetAllProductsRequestHandlerTests()
     {
         _handler = new GetAllProductsRequestHandler(
             _productRepoMock.Object,
             _mapperMock.Object,
-            _loggerMock.Object
-        );
+            _loggerMock.Object);
     }
 
+    /// <summary>
+    /// Tests that the handler returns paginated products successfully.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
     [Fact]
-    public async Task Should_Return_Paginated_Products_Successfully()
+    public async Task ShouldReturnPaginatedProductsSuccessfully()
     {
         // Arrange
         Product product1 = new Product
@@ -39,7 +63,7 @@ public class GetAllProductsRequestHandlerTests
             ManufacturePhone = "+989121234567",
             ManufactureEmail = "milk@factory.com",
             IsAvailable = true,
-            CreatedByUserId = "user-1"
+            CreatedByUserId = "user-1",
         };
 
         Product product2 = new Product
@@ -50,7 +74,7 @@ public class GetAllProductsRequestHandlerTests
             ManufacturePhone = "+989121234568",
             ManufactureEmail = "bread@factory.com",
             IsAvailable = false,
-            CreatedByUserId = "user-2"
+            CreatedByUserId = "user-2",
         };
 
         ProductResponseDto dto1 = new ProductResponseDto(
@@ -60,8 +84,7 @@ public class GetAllProductsRequestHandlerTests
             product1.ManufacturePhone,
             product1.ManufactureEmail,
             product1.IsAvailable,
-            product1.CreatedByUserId
-        );
+            product1.CreatedByUserId);
 
         ProductResponseDto dto2 = new ProductResponseDto(
             product2.Id,
@@ -70,19 +93,23 @@ public class GetAllProductsRequestHandlerTests
             product2.ManufacturePhone,
             product2.ManufactureEmail,
             product2.IsAvailable,
-            product2.CreatedByUserId
-        );
+            product2.CreatedByUserId);
 
         GetAllProductsRequest request = new GetAllProductsRequest
         {
             Name = "bread",
             Page = 1,
-            PerPage = 2
+            PerPage = 2,
         };
 
         _productRepoMock
             .Setup(r => r.GetProductsByFilters("bread", 1, 2))
-            .ReturnsAsync((2, new List<Product> { product1, product2 }));
+            .ReturnsAsync(
+                (2, new List<Product>
+                {
+                    product1,
+                    product2,
+                }));
 
         _mapperMock.Setup(m => m.Map<ProductResponseDto>(product1)).Returns(dto1);
         _mapperMock.Setup(m => m.Map<ProductResponseDto>(product2)).Returns(dto2);
@@ -103,19 +130,23 @@ public class GetAllProductsRequestHandlerTests
         first.ManufactureEmail.Should().Be(dto1.ManufactureEmail);
     }
 
+    /// <summary>
+    /// Tests that the handler returns failure when an unexpected exception occurs.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
     [Fact]
-    public async Task Should_Return_Failure_When_Exception_Occurs()
+    public async Task ShouldReturnFailureWhenExceptionOccurs()
     {
         GetAllProductsRequest request = new GetAllProductsRequest
         {
             Name = "crash",
             Page = 1,
-            PerPage = 5
+            PerPage = 5,
         };
 
         _productRepoMock
             .Setup(r => r.GetProductsByFilters(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
-            .ThrowsAsync(new Exception("DB crash"));
+            .ThrowsAsync(new InvalidOperationException("DB crash"));
 
         ApiResponse<PaginatedResponse<ProductResponseDto>> result =
             await _handler.Handle(request, CancellationToken.None);

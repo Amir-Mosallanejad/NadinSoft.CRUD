@@ -2,8 +2,16 @@ using FluentValidation;
 
 namespace NadinSoft.CRUD.Application.Services.ApplicationUserService.Command.RegisterApplicationUser;
 
+/// <summary>
+/// Validates <see cref="RegisterApplicationUserRequest"/> instances.
+/// Ensures that the email, password, and confirm password fields meet required constraints.
+/// </summary>
 public class RegisterApplicationUserRequestValidator : AbstractValidator<RegisterApplicationUserRequest>
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="RegisterApplicationUserRequestValidator"/> class.
+    /// Configures rules for validating email, password, and confirm password fields.
+    /// </summary>
     public RegisterApplicationUserRequestValidator()
     {
         RuleFor(x => x.Email)

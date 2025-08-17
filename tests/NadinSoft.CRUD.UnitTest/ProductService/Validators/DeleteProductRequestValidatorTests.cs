@@ -3,12 +3,21 @@ using NadinSoft.CRUD.Application.Services.ProductService.Command.DeleteProduct;
 
 namespace NadinSoft.CRUD.UnitTest.ProductService.Validators;
 
+/// <summary>
+/// Contains unit tests for <see cref="DeleteProductRequestValidator"/>.
+/// </summary>
 public class DeleteProductRequestValidatorTests
 {
+    /// <summary>
+    /// Validator instance being tested.
+    /// </summary>
     private readonly DeleteProductRequestValidator _validator = new();
 
+    /// <summary>
+    /// Tests that validation fails when the ProductId is empty (Guid.Empty).
+    /// </summary>
     [Fact]
-    public void Should_Have_Error_When_ProductId_Is_Empty()
+    public void ShouldHaveErrorWhenProductIdIsEmpty()
     {
         DeleteProductRequest request = new DeleteProductRequest(Guid.Empty);
 
@@ -18,8 +27,11 @@ public class DeleteProductRequestValidatorTests
             .WithErrorMessage("ProductId is required.");
     }
 
+    /// <summary>
+    /// Tests that no validation errors occur when the ProductId is valid.
+    /// </summary>
     [Fact]
-    public void Should_Not_Have_Error_When_ProductId_Is_Valid()
+    public void ShouldNotHaveErrorWhenProductIdIsValid()
     {
         DeleteProductRequest request = new DeleteProductRequest(Guid.NewGuid());
 

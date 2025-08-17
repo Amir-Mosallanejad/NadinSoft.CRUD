@@ -4,8 +4,15 @@ using NadinSoft.CRUD.Domain.Entities;
 
 namespace NadinSoft.CRUD.Application.Common.Mappings;
 
+/// <summary>
+/// Defines AutoMapper mapping configuration for <see cref="ApplicationUser"/> entities.
+/// </summary>
 public class ApplicationUserProfile : Profile
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ApplicationUserProfile"/> class.
+    /// Configures the mapping between <see cref="RegisterApplicationUserRequest"/> and <see cref="ApplicationUser"/>.
+    /// </summary>
     public ApplicationUserProfile()
     {
         CreateMap<RegisterApplicationUserRequest, ApplicationUser>()

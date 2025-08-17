@@ -4,11 +4,22 @@ using NadinSoft.CRUD.Domain.Entities;
 
 namespace NadinSoft.CRUD.Infrastructure.Data.Configuration;
 
+/// <summary>
+/// Configures the entity mapping for the <see cref="Product"/> entity.
+/// </summary>
 public class ProductConfiguration : IEntityTypeConfiguration<Product>
 {
+    /// <summary>
+    /// Configures the <see cref="Product"/> entity type including keys, properties, relationships, and indexes.
+    /// </summary>
+    /// <param name="builder">The <see cref="EntityTypeBuilder{TEntity}"/> used to configure the entity.</param>
     public void Configure(EntityTypeBuilder<Product> builder)
     {
-        builder.HasIndex(p => new { p.ManufactureEmail, p.ProduceDate })
+        builder.HasIndex(p => new
+            {
+                p.ManufactureEmail,
+                p.ProduceDate,
+            })
             .IsUnique();
 
         builder.HasOne(p => p.CreatedByUser)

@@ -9,25 +9,49 @@ using NadinSoft.CRUD.Domain.Repository;
 
 namespace NadinSoft.CRUD.UnitTest.ProductService.Handlers;
 
+/// <summary>
+/// Contains unit tests for <see cref="DeleteProductRequestHandler"/>.
+/// </summary>
 public class DeleteProductRequestHandlerTests
 {
+    /// <summary>
+    /// Mock for <see cref="IProductRepository"/>.
+    /// </summary>
     private readonly Mock<IProductRepository> _productRepoMock = new();
+
+    /// <summary>
+    /// Mock for <see cref="ICurrentUserService"/>.
+    /// </summary>
     private readonly Mock<ICurrentUserService> _currentUserMock = new();
+
+    /// <summary>
+    /// Mock for <see cref="ILogger{DeleteProductRequestHandler}"/>.
+    /// </summary>
     private readonly Mock<ILogger<DeleteProductRequestHandler>> _loggerMock = new();
 
+    /// <summary>
+    /// Handler instance being tested.
+    /// </summary>
     private readonly DeleteProductRequestHandler _handler;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DeleteProductRequestHandlerTests"/> class.
+    /// Initialize mocks and the handler.
+    /// </summary>
     public DeleteProductRequestHandlerTests()
     {
         _handler = new DeleteProductRequestHandler(
             _productRepoMock.Object,
             _currentUserMock.Object,
-            _loggerMock.Object
-        );
+            _loggerMock.Object);
     }
 
+    /// <summary>
+    /// Tests that the handler fails when the current user is unauthorized.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
     [Fact]
-    public async Task Should_Return_Fail_When_User_Is_Unauthorized()
+    public async Task ShouldReturnFailWhenUserIsUnauthorized()
     {
         _currentUserMock.Setup(x => x.UserId).Returns((string?)null);
 
@@ -39,8 +63,12 @@ public class DeleteProductRequestHandlerTests
         result.Error.Should().Be("User is unauthorized.");
     }
 
+    /// <summary>
+    /// Tests that the handler fails when the product to delete is not found.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
     [Fact]
-    public async Task Should_Return_Fail_When_Product_Not_Found()
+    public async Task ShouldReturnFailWhenProductNotFound()
     {
         Guid productId = Guid.NewGuid();
 
@@ -55,15 +83,19 @@ public class DeleteProductRequestHandlerTests
         result.Error.Should().Be("Product not found.");
     }
 
+    /// <summary>
+    /// Tests that the handler fails when the current user is not the owner of the product.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
     [Fact]
-    public async Task Should_Return_Fail_When_User_Is_Not_Owner()
+    public async Task ShouldReturnFailWhenUserIsNotOwner()
     {
         Guid productId = Guid.NewGuid();
 
         Product product = new Product
         {
             Id = productId,
-            CreatedByUserId = "owner-id"
+            CreatedByUserId = "owner-id",
         };
 
         _currentUserMock.Setup(x => x.UserId).Returns("non-owner");
@@ -77,15 +109,19 @@ public class DeleteProductRequestHandlerTests
         result.Error.Should().Contain("not owner");
     }
 
+    /// <summary>
+    /// Tests that the handler deletes a product successfully when the user is the owner.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
     [Fact]
-    public async Task Should_Delete_Product_Successfully()
+    public async Task ShouldDeleteProductSuccessfully()
     {
         Guid productId = Guid.NewGuid();
 
         Product product = new Product
         {
             Id = productId,
-            CreatedByUserId = "user-1"
+            CreatedByUserId = "user-1",
         };
 
         _currentUserMock.Setup(x => x.UserId).Returns("user-1");
@@ -99,13 +135,17 @@ public class DeleteProductRequestHandlerTests
         _productRepoMock.Verify(x => x.Remove(product), Times.Once);
     }
 
+    /// <summary>
+    /// Tests that the handler returns a fail response when an unexpected exception occurs.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
     [Fact]
-    public async Task Should_Return_Fail_When_Exception_Occurs()
+    public async Task ShouldReturnFailWhenExceptionOccurs()
     {
         Guid productId = Guid.NewGuid();
 
         _currentUserMock.Setup(x => x.UserId).Returns("user-1");
-        _productRepoMock.Setup(x => x.GetByIdAsync(productId)).ThrowsAsync(new Exception("boom"));
+        _productRepoMock.Setup(x => x.GetByIdAsync(productId)).ThrowsAsync(new InvalidOperationException("boom"));
 
         DeleteProductRequest request = new DeleteProductRequest(productId);
 

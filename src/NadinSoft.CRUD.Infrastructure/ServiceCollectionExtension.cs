@@ -1,31 +1,50 @@
-using System.Text;
-using FluentValidation;
-using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using NadinSoft.CRUD.Application;
-using NadinSoft.CRUD.Application.Common.Behaviors;
 using NadinSoft.CRUD.Application.Common.Interfaces;
 using NadinSoft.CRUD.Domain.Entities;
 using NadinSoft.CRUD.Domain.Repository;
 using NadinSoft.CRUD.Infrastructure.Data;
 using NadinSoft.CRUD.Infrastructure.Repository;
 using NadinSoft.CRUD.Infrastructure.Services.AuthService;
+using System.Text;
 
 namespace NadinSoft.CRUD.Infrastructure;
 
+/// <summary>
+/// Provides extension methods to register infrastructure services in the dependency injection container.
+/// </summary>
 public static class ServiceCollectionExtension
 {
-    public static void AddRepositories(this IServiceCollection services)
+    /// <summary>
+    /// Registers all infrastructure services including repositories, custom services, and authentication.
+    /// </summary>
+    /// <param name="services">The <see cref="IServiceCollection"/> to add services to.</param>
+    /// <param name="configuration">The <see cref="IConfiguration"/> containing application settings.</param>
+    public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddRepositories();
+        services.AddCustomService();
+        services.AddAuthenticationService(configuration);
+    }
+
+    /// <summary>
+    /// Registers repository services.
+    /// </summary>
+    /// <param name="services">The <see cref="IServiceCollection"/> to add repositories to.</param>
+    private static void AddRepositories(this IServiceCollection services)
     {
         services.AddScoped<IProductRepository, ProductRepository>();
     }
 
-    public static void AddCustomService(this IServiceCollection service)
+    /// <summary>
+    /// Registers custom services such as JWT generator, current user service, Identity, and the database context.
+    /// </summary>
+    /// <param name="service">The <see cref="IServiceCollection"/> to add services to.</param>
+    private static void AddCustomService(this IServiceCollection service)
     {
         service.AddHttpContextAccessor();
         service.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
@@ -38,14 +57,16 @@ public static class ServiceCollectionExtension
         {
             opt.UseSqlServer(BuildConnectionStringFromEnvironment());
         });
-        service.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ApplicationProjectEntry).Assembly));
-        service.AddValidatorsFromAssembly(typeof(ApplicationProjectEntry).Assembly);
-        service.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-        service.AddAutoMapper(typeof(ApplicationProjectEntry).Assembly);
     }
 
-    public static void AddAuthenticationService(this IServiceCollection service,
-        IConfigurationManager configurationManager)
+    /// <summary>
+    /// Configures JWT authentication for the application.
+    /// </summary>
+    /// <param name="service">The <see cref="IServiceCollection"/> to add authentication to.</param>
+    /// <param name="configurationManager">The <see cref="IConfiguration"/> providing authentication settings.</param>
+    private static void AddAuthenticationService(
+        this IServiceCollection service,
+        IConfiguration configurationManager)
     {
         service.AddAuthentication(options =>
             {
@@ -64,44 +85,16 @@ public static class ServiceCollectionExtension
                     ValidateLifetime = true,
                     IssuerSigningKey =
                         new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configurationManager["Authentication:Key"]!)),
-                    ValidateIssuerSigningKey = true
+                    ValidateIssuerSigningKey = true,
                 };
             });
     }
 
-    public static void AddCustomSwaggerGen(this IServiceCollection service)
-    {
-        service.AddSwaggerGen(options =>
-        {
-            options.SwaggerDoc("v1", new() { Title = "ProductApp API", Version = "v1" });
-
-            options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-            {
-                Name = "Authorization",
-                Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
-                Scheme = "Bearer",
-                BearerFormat = "JWT",
-                In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-                Description = "Enter your JWT token like: **Bearer YOUR_TOKEN_HERE**"
-            });
-
-            options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
-            {
-                {
-                    new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-                    {
-                        Reference = new Microsoft.OpenApi.Models.OpenApiReference
-                        {
-                            Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
-                            Id = "Bearer"
-                        }
-                    },
-                    []
-                }
-            });
-        });
-    }
-
+    /// <summary>
+    /// Builds the SQL Server connection string from environment variables.
+    /// </summary>
+    /// <returns>The constructed connection string.</returns>
+    /// <exception cref="InvalidOperationException">Thrown if any required environment variable is missing or empty.</exception>
     private static string BuildConnectionStringFromEnvironment()
     {
         string? dbServer = Environment.GetEnvironmentVariable("DB_SERVER");
@@ -116,8 +109,7 @@ public static class ServiceCollectionExtension
             string.IsNullOrWhiteSpace(dbUser) ||
             string.IsNullOrWhiteSpace(dbPassword))
         {
-            throw new InvalidOperationException(
-                "Invalid Connection String");
+            throw new InvalidOperationException("Invalid Connection String");
         }
 
         return
