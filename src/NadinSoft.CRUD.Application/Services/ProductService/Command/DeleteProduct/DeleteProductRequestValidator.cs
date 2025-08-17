@@ -1,4 +1,5 @@
 using FluentValidation;
+using NadinSoft.CRUD.Application.Common.Interfaces;
 
 namespace NadinSoft.CRUD.Application.Services.ProductService.Command.DeleteProduct;
 
@@ -7,13 +8,27 @@ namespace NadinSoft.CRUD.Application.Services.ProductService.Command.DeleteProdu
 /// </summary>
 public class DeleteProductRequestValidator : AbstractValidator<DeleteProductRequest>
 {
+    private readonly ILocalizationService _localizationService;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="DeleteProductRequestValidator"/> class.
     /// Configures the rule to ensure <see cref="DeleteProductRequest.ProductId"/> is not empty.
     /// </summary>
-    public DeleteProductRequestValidator()
+    public DeleteProductRequestValidator(ILocalizationService localizationService)
     {
+        _localizationService = localizationService;
+
         RuleFor(x => x.ProductId)
-            .NotEmpty().WithMessage("ProductId is required.");
+            .NotEmpty()
+            .WithMessage(GetSafeMessage("ProductIdRequired"));
+    }
+
+    /// <summary>
+    /// Safely gets a localized message, falling back to the key if the value is empty.
+    /// </summary>
+    private string GetSafeMessage(string key, params object[] args)
+    {
+        string msg = _localizationService.GetValidatorResource(key, args);
+        return string.IsNullOrWhiteSpace(msg) ? key : msg;
     }
 }

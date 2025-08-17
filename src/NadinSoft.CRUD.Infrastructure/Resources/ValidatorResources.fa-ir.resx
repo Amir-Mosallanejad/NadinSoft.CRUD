@@ -11,7 +11,55 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Test" xml:space="preserve">
-    <value>این ولیدیتور هست </value>
+  <data name="EmailRequired" xml:space="preserve">
+    <value>ایمیل مورد نیاز است.</value>
+  </data>
+  <data name="ValidEmailRequired" xml:space="preserve">
+    <value>ایمیل معتبر الزامی است.</value>
+  </data>
+  <data name="PasswordRequired" xml:space="preserve">
+    <value>رمز عبور لازم است.</value>
+  </data>
+  <data name="PasswordBeXCharacters" xml:space="preserve">
+    <value>رمز عبور باید حداقل {0} کاراکتر داشته باشد.</value>
+  </data>
+  <data name="ConfirmPasswordRequired" xml:space="preserve">
+    <value>تایید رمز عبور الزامی است.</value>
+  </data>
+  <data name="PasswordsNotMatch" xml:space="preserve">
+    <value>رمزهای عبور مطابقت ندارند.</value>
+  </data>
+  <data name="NameRequired" xml:space="preserve">
+    <value>نام الزامی است.</value>
+  </data>
+  <data name="NameCannotXCharacters" xml:space="preserve">
+    <value>نام نمیتواند بیشتر از {0} کارکتر باشد.</value>
+  </data>
+  <data name="ProduceCannotFuture" xml:space="preserve">
+    <value>تاریخ تولید نمی‌تواند در آینده باشد.</value>
+  </data>
+  <data name="PhoneNumberXCharacters" xml:space="preserve">
+    <value>شماره موبایل بیشتر از {0} کارکتر نمیتواند باشد.</value>
+  </data>
+  <data name="ManufacturePhoneRequired" xml:space="preserve">
+    <value>ارائه تلفن همراه سازنده الزامی است.</value>
+  </data>
+  <data name="InvalidPhoneNumber" xml:space="preserve">
+    <value>قالب شماره تلفن نامعتبر است. مثال: +98901 .......</value>
+  </data>
+  <data name="InvalidEmailFormat" xml:space="preserve">
+    <value>قالب ایمیل نامعتبر است.</value>
+  </data>
+  <data name="ManufactureEmailRequired" xml:space="preserve">
+    <value>ایمیل سازنده الزامی است.</value>
+  </data>
+  <data name="ManufactureEmailXCharacters" xml:space="preserve">
+    <value>ایمیل سازنده نمیتواند بیشتر از {0} کارکتر باشد.</value>
+  </data>
+  <data name="ProductIdRequired" xml:space="preserve">
+    <value>شناسه محصول الزامی است.</value>
+  </data>
+  <data name="IdRequired" xml:space="preserve">
+    <value>ارائه آیدی الزامی است.</value>
   </data>
 </root>

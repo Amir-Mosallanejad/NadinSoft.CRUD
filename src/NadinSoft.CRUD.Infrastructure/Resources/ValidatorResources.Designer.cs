@@ -45,15 +45,105 @@ namespace NadinSoft.CRUD.Infrastructure.Resources {
             }
         }
         
-        public static string Test {
+        public static string EmailRequired {
             get {
-                return ResourceManager.GetString("Test", resourceCulture);
+                return ResourceManager.GetString("EmailRequired", resourceCulture);
             }
         }
         
-        public static string a {
+        public static string ValidEmailRequired {
             get {
-                return ResourceManager.GetString("a", resourceCulture);
+                return ResourceManager.GetString("ValidEmailRequired", resourceCulture);
+            }
+        }
+        
+        public static string PasswordRequired {
+            get {
+                return ResourceManager.GetString("PasswordRequired", resourceCulture);
+            }
+        }
+        
+        public static string PasswordBeXCharacters {
+            get {
+                return ResourceManager.GetString("PasswordBeXCharacters", resourceCulture);
+            }
+        }
+        
+        public static string ConfirmPasswordRequired {
+            get {
+                return ResourceManager.GetString("ConfirmPasswordRequired", resourceCulture);
+            }
+        }
+        
+        public static string PasswordsNotMatch {
+            get {
+                return ResourceManager.GetString("PasswordsNotMatch", resourceCulture);
+            }
+        }
+        
+        public static string NameRequired {
+            get {
+                return ResourceManager.GetString("NameRequired", resourceCulture);
+            }
+        }
+        
+        public static string NameCannotXCharacters {
+            get {
+                return ResourceManager.GetString("NameCannotXCharacters", resourceCulture);
+            }
+        }
+        
+        public static string ProduceCannotFuture {
+            get {
+                return ResourceManager.GetString("ProduceCannotFuture", resourceCulture);
+            }
+        }
+        
+        public static string PhoneNumberXCharacters {
+            get {
+                return ResourceManager.GetString("PhoneNumberXCharacters", resourceCulture);
+            }
+        }
+        
+        public static string ManufacturePhoneRequired {
+            get {
+                return ResourceManager.GetString("ManufacturePhoneRequired", resourceCulture);
+            }
+        }
+        
+        public static string InvalidPhoneNumber {
+            get {
+                return ResourceManager.GetString("InvalidPhoneNumber", resourceCulture);
+            }
+        }
+        
+        public static string ManufactureEmailXCharacters {
+            get {
+                return ResourceManager.GetString("ManufactureEmailXCharacters", resourceCulture);
+            }
+        }
+        
+        public static string ManufactureEmailRequired {
+            get {
+                return ResourceManager.GetString("ManufactureEmailRequired", resourceCulture);
+            }
+        }
+        
+        public static string InvalidEmailFormat {
+            get {
+                return ResourceManager.GetString("InvalidEmailFormat", resourceCulture);
+            }
+        }
+        
+        public static string ProductIdRequired {
+            get {
+                return ResourceManager.GetString("ProductIdRequired", resourceCulture);
+            }
+        }
+        
+        public static string IdRequired {
+            get {
+                return ResourceManager.GetString("IdRequired", resourceCulture);
             }
         }
     }

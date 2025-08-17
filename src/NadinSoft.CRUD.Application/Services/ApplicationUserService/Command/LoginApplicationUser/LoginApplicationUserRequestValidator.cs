@@ -1,4 +1,5 @@
 using FluentValidation;
+using NadinSoft.CRUD.Application.Common.Interfaces;
 
 namespace NadinSoft.CRUD.Application.Services.ApplicationUserService.Command.LoginApplicationUser;
 
@@ -8,18 +9,35 @@ namespace NadinSoft.CRUD.Application.Services.ApplicationUserService.Command.Log
 /// </summary>
 public class LoginApplicationUserRequestValidator : AbstractValidator<LoginApplicationUserRequest>
 {
+    private readonly ILocalizationService _localizationService;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="LoginApplicationUserRequestValidator"/> class.
     /// Configures rules for validating email and password fields.
     /// </summary>
-    public LoginApplicationUserRequestValidator()
+    public LoginApplicationUserRequestValidator(ILocalizationService localizationService)
     {
+        _localizationService = localizationService;
+
         RuleFor(x => x.Email)
-            .NotEmpty().WithMessage("Email is required.")
-            .EmailAddress().WithMessage("A valid email is required.");
+            .NotEmpty()
+            .WithMessage(GetSafeMessage("EmailRequired"))
+            .EmailAddress()
+            .WithMessage(GetSafeMessage("ValidEmailRequired"));
 
         RuleFor(x => x.Password)
-            .NotEmpty().WithMessage("Password is required.")
-            .MinimumLength(6).WithMessage("Password must be at least 6 characters long.");
+            .NotEmpty()
+            .WithMessage(GetSafeMessage("PasswordRequired"))
+            .MinimumLength(6)
+            .WithMessage(GetSafeMessage("PasswordBeXCharacters", 6));
+    }
+
+    /// <summary>
+    /// Safely gets a localized message, falling back to the key if the value is empty.
+    /// </summary>
+    private string GetSafeMessage(string key, params object[] args)
+    {
+        string msg = _localizationService.GetValidatorResource(key, args);
+        return string.IsNullOrWhiteSpace(msg) ? key : msg;
     }
 }

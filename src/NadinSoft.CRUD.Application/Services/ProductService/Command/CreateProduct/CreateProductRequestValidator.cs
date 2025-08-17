@@ -1,4 +1,5 @@
 using FluentValidation;
+using NadinSoft.CRUD.Application.Common.Interfaces;
 
 namespace NadinSoft.CRUD.Application.Services.ProductService.Command.CreateProduct;
 
@@ -7,27 +8,49 @@ namespace NadinSoft.CRUD.Application.Services.ProductService.Command.CreateProdu
 /// </summary>
 public class CreateProductRequestValidator : AbstractValidator<CreateProductRequest>
 {
+    private readonly ILocalizationService _localizationService;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="CreateProductRequestValidator"/> class.
     /// Configures validation rules for product creation, including name, produce date, manufacturer phone, and email.
     /// </summary>
-    public CreateProductRequestValidator()
+    public CreateProductRequestValidator(ILocalizationService localizationService)
     {
+        _localizationService = localizationService;
+
         RuleFor(x => x.Dto.Name)
-            .NotEmpty().WithMessage("Name is required.")
-            .MaximumLength(50).WithMessage("Name cannot exceed 50 characters.");
+            .NotEmpty()
+            .WithMessage(GetSafeMessage("NameRequired"))
+            .MaximumLength(50)
+            .WithMessage(GetSafeMessage("NameCannotXCharacters", 50));
 
         RuleFor(x => x.Dto.ProduceDate)
-            .LessThanOrEqualTo(DateTime.UtcNow).WithMessage("Produce date cannot be in the future.");
+            .LessThanOrEqualTo(DateTime.UtcNow)
+            .WithMessage(GetSafeMessage("ProduceCannotFuture"));
 
         RuleFor(x => x.Dto.ManufacturePhone)
-            .MaximumLength(20).WithMessage("Phone number cannot exceed 20 characters.")
-            .NotEmpty().WithMessage("Manufacture phone is required.")
-            .Matches(@"^\+?[1-9]\d{1,14}$").WithMessage("Invalid phone number format. Example: +98901.......");
+            .MaximumLength(20)
+            .WithMessage(GetSafeMessage("PhoneNumberXCharacters", 20))
+            .NotEmpty()
+            .WithMessage(GetSafeMessage("ManufacturePhoneRequired"))
+            .Matches(@"^\+?[1-9]\d{1,14}$")
+            .WithMessage(GetSafeMessage("InvalidPhoneNumber"));
 
         RuleFor(x => x.Dto.ManufactureEmail)
-            .MaximumLength(100).WithMessage("Manufacture email cannot exceed 100 characters.")
-            .NotEmpty().WithMessage("Manufacture email is required.")
-            .EmailAddress().WithMessage("Invalid email format.");
+            .MaximumLength(100)
+            .WithMessage(GetSafeMessage("ManufactureEmailXCharacters", 100))
+            .NotEmpty()
+            .WithMessage(GetSafeMessage("ManufactureEmailRequired"))
+            .EmailAddress()
+            .WithMessage(GetSafeMessage("InvalidEmailFormat"));
+    }
+
+    /// <summary>
+    /// Safely gets a localized message, falling back to the key if the value is empty.
+    /// </summary>
+    private string GetSafeMessage(string key, params object[] args)
+    {
+        string msg = _localizationService.GetValidatorResource(key, args);
+        return string.IsNullOrWhiteSpace(msg) ? key : msg;
     }
 }
