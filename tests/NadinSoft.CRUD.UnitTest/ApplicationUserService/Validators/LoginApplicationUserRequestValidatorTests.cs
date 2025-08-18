@@ -1,4 +1,7 @@
 using FluentValidation.TestHelper;
+using Moq;
+using NadinSoft.CRUD.Application.Common.Interfaces;
+using NadinSoft.CRUD.Application.Common.ResourceKeys;
 using NadinSoft.CRUD.Application.Services.ApplicationUserService.Command.LoginApplicationUser;
 
 namespace NadinSoft.CRUD.UnitTest.ApplicationUserService.Validators;
@@ -8,10 +11,26 @@ namespace NadinSoft.CRUD.UnitTest.ApplicationUserService.Validators;
 /// </summary>
 public class LoginApplicationUserRequestValidatorTests
 {
+    private readonly Mock<ILocalizationService> _localizationServiceMock = new();
+
     /// <summary>
-    /// Instance of the validator being tested.
+    /// Validator instance being tested.
     /// </summary>
-    private readonly LoginApplicationUserRequestValidator _validator = new();
+    private readonly LoginApplicationUserRequestValidator _validator;
+
+    public LoginApplicationUserRequestValidatorTests()
+    {
+        _localizationServiceMock.Setup(x => x.GetValidatorResource(ValidatorResourceKey.EmailRequired))
+            .Returns("Email is required.");
+        _localizationServiceMock.Setup(x => x.GetValidatorResource(ValidatorResourceKey.PasswordRequired))
+            .Returns("Password is required.");
+        _localizationServiceMock.Setup(x => x.GetValidatorResource(ValidatorResourceKey.ValidEmailRequired))
+            .Returns("A valid email is required.");
+        _localizationServiceMock.Setup(x => x.GetValidatorResource(ValidatorResourceKey.PasswordBeXCharacters, 6))
+            .Returns("Password must be at least 6 characters long.");
+
+        _validator = new LoginApplicationUserRequestValidator(_localizationServiceMock.Object);
+    }
 
     /// <summary>
     /// Tests that validation fails when the email is empty.
@@ -20,7 +39,9 @@ public class LoginApplicationUserRequestValidatorTests
     public void ShouldHaveErrorWhenEmailIsEmpty()
     {
         LoginApplicationUserRequest model = new LoginApplicationUserRequest(string.Empty, "ValidPass123");
+
         TestValidationResult<LoginApplicationUserRequest>? result = _validator.TestValidate(model);
+
         result.ShouldHaveValidationErrorFor(x => x.Email)
             .WithErrorMessage("Email is required.");
     }

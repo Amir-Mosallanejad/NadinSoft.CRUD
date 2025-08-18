@@ -1,4 +1,7 @@
 using FluentValidation.TestHelper;
+using Moq;
+using NadinSoft.CRUD.Application.Common.Interfaces;
+using NadinSoft.CRUD.Application.Common.ResourceKeys;
 using NadinSoft.CRUD.Application.Services.ProductService.Command.UpdateProduct;
 
 namespace NadinSoft.CRUD.UnitTest.ProductService.Validators;
@@ -8,10 +11,32 @@ namespace NadinSoft.CRUD.UnitTest.ProductService.Validators;
 /// </summary>
 public class UpdateProductRequestValidatorTests
 {
+    private readonly Mock<ILocalizationService> _localizationMock = new();
+
     /// <summary>
     /// Validator instance being tested.
     /// </summary>
-    private readonly UpdateProductRequestValidator _validator = new();
+    private readonly UpdateProductRequestValidator _validator;
+
+    public UpdateProductRequestValidatorTests()
+    {
+        _localizationMock.Setup(x => x.GetValidatorResource(ValidatorResourceKey.ProductIdRequired))
+            .Returns("ProductId is required.");
+        _localizationMock.Setup(x => x.GetValidatorResource(ValidatorResourceKey.NameRequired))
+            .Returns("Product name is required.");
+        _localizationMock.Setup(x => x.GetValidatorResource(
+                ValidatorResourceKey.NameCannotXCharacters,
+                It.IsAny<object[]>()))
+            .Returns("Product name is too long.");
+        _localizationMock.Setup(x => x.GetValidatorResource(ValidatorResourceKey.ProduceCannotFuture))
+            .Returns("Produce date cannot be in the future.");
+        _localizationMock.Setup(x => x.GetValidatorResource(ValidatorResourceKey.InvalidEmailFormat))
+            .Returns("Invalid email address.");
+        _localizationMock.Setup(x => x.GetValidatorResource(ValidatorResourceKey.InvalidPhoneNumber))
+            .Returns("Invalid phone number.");
+
+        _validator = new UpdateProductRequestValidator(_localizationMock.Object);
+    }
 
     /// <summary>
     /// Tests that validation fails when the Product Id is empty (Guid.Empty).

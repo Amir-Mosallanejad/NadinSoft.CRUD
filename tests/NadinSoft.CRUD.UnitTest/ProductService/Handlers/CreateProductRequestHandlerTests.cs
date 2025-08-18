@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NadinSoft.CRUD.Application.Common.DTOs;
 using NadinSoft.CRUD.Application.Common.Interfaces;
+using NadinSoft.CRUD.Application.Common.ResourceKeys;
 using NadinSoft.CRUD.Application.Services.ProductService.Command.CreateProduct;
 using NadinSoft.CRUD.Domain.Entities;
 using NadinSoft.CRUD.Domain.Repository;
@@ -36,6 +37,8 @@ public class CreateProductRequestHandlerTests
     /// </summary>
     private readonly Mock<ILogger<CreateProductRequestHandler>> _loggerMock = new();
 
+    private readonly Mock<ILocalizationService> _localizationMock = new();
+
     /// <summary>
     /// Handler instance being tested.
     /// </summary>
@@ -51,7 +54,8 @@ public class CreateProductRequestHandlerTests
             _productRepoMock.Object,
             _currentUserMock.Object,
             _mapperMock.Object,
-            _loggerMock.Object);
+            _loggerMock.Object,
+            _localizationMock.Object);
     }
 
     /// <summary>
@@ -63,6 +67,8 @@ public class CreateProductRequestHandlerTests
     {
         // Arrange
         _currentUserMock.Setup(x => x.UserId).Returns((string?)null);
+        _localizationMock.Setup(x => x.GetApiMessageResource(ApiMessageResourceKey.UserUnauthorized))
+            .Returns("User is unauthorized.");
         CreateProductRequest request =
             new CreateProductRequest(
                 new CreateProductRequestDto(
@@ -100,6 +106,9 @@ public class CreateProductRequestHandlerTests
 
         _productRepoMock.Setup(x => x.AnyAsync(It.IsAny<Expression<Func<Product, bool>>>()))
             .ReturnsAsync(true);
+
+        _localizationMock.Setup(x => x.GetApiMessageResource(ApiMessageResourceKey.ProductAlreadyExists))
+            .Returns("Product with same email and produce date already exists.");
 
         // Act
         ApiResponse<object> result = await _handler.Handle(request, CancellationToken.None);
@@ -166,6 +175,9 @@ public class CreateProductRequestHandlerTests
 
         _productRepoMock.Setup(x => x.AnyAsync(It.IsAny<Expression<Func<Product, bool>>>()))
             .ThrowsAsync(new InvalidOperationException("DB crash"));
+
+        _localizationMock.Setup(x => x.GetApiMessageResource(ApiMessageResourceKey.UnexpectedError))
+            .Returns("An unexpected error occurred.");
 
         // Act
         ApiResponse<object> result = await _handler.Handle(request, CancellationToken.None);

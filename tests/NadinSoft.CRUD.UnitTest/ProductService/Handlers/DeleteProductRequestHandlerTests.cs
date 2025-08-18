@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NadinSoft.CRUD.Application.Common.DTOs;
 using NadinSoft.CRUD.Application.Common.Interfaces;
+using NadinSoft.CRUD.Application.Common.ResourceKeys;
 using NadinSoft.CRUD.Application.Services.ProductService.Command.DeleteProduct;
 using NadinSoft.CRUD.Domain.Entities;
 using NadinSoft.CRUD.Domain.Repository;
@@ -29,6 +30,8 @@ public class DeleteProductRequestHandlerTests
     /// </summary>
     private readonly Mock<ILogger<DeleteProductRequestHandler>> _loggerMock = new();
 
+    private readonly Mock<ILocalizationService> _localizationMock = new();
+
     /// <summary>
     /// Handler instance being tested.
     /// </summary>
@@ -43,7 +46,8 @@ public class DeleteProductRequestHandlerTests
         _handler = new DeleteProductRequestHandler(
             _productRepoMock.Object,
             _currentUserMock.Object,
-            _loggerMock.Object);
+            _loggerMock.Object,
+            _localizationMock.Object);
     }
 
     /// <summary>
@@ -54,6 +58,8 @@ public class DeleteProductRequestHandlerTests
     public async Task ShouldReturnFailWhenUserIsUnauthorized()
     {
         _currentUserMock.Setup(x => x.UserId).Returns((string?)null);
+        _localizationMock.Setup(x => x.GetApiMessageResource(ApiMessageResourceKey.UserUnauthorized))
+            .Returns("User is unauthorized.");
 
         DeleteProductRequest request = new DeleteProductRequest(Guid.NewGuid());
 
@@ -74,6 +80,8 @@ public class DeleteProductRequestHandlerTests
 
         _currentUserMock.Setup(x => x.UserId).Returns("user-1");
         _productRepoMock.Setup(x => x.GetByIdAsync(productId)).ReturnsAsync((Product?)null);
+        _localizationMock.Setup(x => x.GetApiMessageResource(ApiMessageResourceKey.ProductNotFound))
+            .Returns("Product not found.");
 
         DeleteProductRequest request = new DeleteProductRequest(productId);
 
@@ -100,6 +108,8 @@ public class DeleteProductRequestHandlerTests
 
         _currentUserMock.Setup(x => x.UserId).Returns("non-owner");
         _productRepoMock.Setup(x => x.GetByIdAsync(productId)).ReturnsAsync(product);
+        _localizationMock.Setup(x => x.GetApiMessageResource(ApiMessageResourceKey.NotOwnerOfProductDelete))
+            .Returns("You are not owner of this product.");
 
         DeleteProductRequest request = new DeleteProductRequest(productId);
 
@@ -146,6 +156,8 @@ public class DeleteProductRequestHandlerTests
 
         _currentUserMock.Setup(x => x.UserId).Returns("user-1");
         _productRepoMock.Setup(x => x.GetByIdAsync(productId)).ThrowsAsync(new InvalidOperationException("boom"));
+        _localizationMock.Setup(x => x.GetApiMessageResource(ApiMessageResourceKey.UnexpectedError))
+            .Returns("An unexpected error occurred.");
 
         DeleteProductRequest request = new DeleteProductRequest(productId);
 

@@ -1,4 +1,7 @@
 using FluentValidation.TestHelper;
+using Moq;
+using NadinSoft.CRUD.Application.Common.Interfaces;
+using NadinSoft.CRUD.Application.Common.ResourceKeys;
 using NadinSoft.CRUD.Application.Services.ApplicationUserService.Command.RegisterApplicationUser;
 
 namespace NadinSoft.CRUD.UnitTest.ApplicationUserService.Validators;
@@ -8,10 +11,39 @@ namespace NadinSoft.CRUD.UnitTest.ApplicationUserService.Validators;
 /// </summary>
 public class RegisterApplicationUserRequestValidatorTests
 {
+    private readonly Mock<ILocalizationService> _localizationMock = new();
+
     /// <summary>
-    /// Instance of the validator being tested.
+    /// Validator instance being tested.
     /// </summary>
-    private readonly RegisterApplicationUserRequestValidator _validator = new();
+    private readonly RegisterApplicationUserRequestValidator _validator;
+
+    public RegisterApplicationUserRequestValidatorTests()
+    {
+        _localizationMock.Setup(x => x.GetValidatorResource(ValidatorResourceKey.EmailRequired, It.IsAny<object[]>()))
+            .Returns("Email is required.");
+        _localizationMock.Setup(x => x.GetValidatorResource(
+                ValidatorResourceKey.ValidEmailRequired,
+                It.IsAny<object[]>()))
+            .Returns("A valid email is required.");
+        _localizationMock
+            .Setup(x => x.GetValidatorResource(ValidatorResourceKey.PasswordRequired, It.IsAny<object[]>()))
+            .Returns("Password is required.");
+        _localizationMock.Setup(x => x.GetValidatorResource(
+                ValidatorResourceKey.PasswordBeXCharacters,
+                It.IsAny<object[]>()))
+            .Returns("Password must be at least 6 characters long.");
+        _localizationMock.Setup(x => x.GetValidatorResource(
+                ValidatorResourceKey.ConfirmPasswordRequired,
+                It.IsAny<object[]>()))
+            .Returns("Confirm Password is required.");
+        _localizationMock.Setup(x => x.GetValidatorResource(
+                ValidatorResourceKey.PasswordsNotMatch,
+                It.IsAny<object[]>()))
+            .Returns("Passwords do not match.");
+
+        _validator = new RegisterApplicationUserRequestValidator(_localizationMock.Object);
+    }
 
     /// <summary>
     /// Tests that validation fails when the email is empty.
