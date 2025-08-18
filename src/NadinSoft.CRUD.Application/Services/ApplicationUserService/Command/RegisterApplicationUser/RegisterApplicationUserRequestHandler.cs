@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using NadinSoft.CRUD.Application.Common.DTOs;
 using NadinSoft.CRUD.Application.Common.Interfaces;
+using NadinSoft.CRUD.Application.Common.ResourceKeys;
 using NadinSoft.CRUD.Domain.Entities;
 
 namespace NadinSoft.CRUD.Application.Services.ApplicationUserService.Command.RegisterApplicationUser;
@@ -38,7 +39,8 @@ public class RegisterApplicationUserRequestHandler(
             {
                 logger.ExistingEmailErrorLogger(request.Email);
 
-                return ApiResponse<object>.Fail(localizationService.GetApiMessageResource("EmailAlreadyExists"));
+                return ApiResponse<object>.Fail(
+                    localizationService.GetApiMessageResource(ApiMessageResourceKey.EmailAlreadyExists));
             }
 
             ApplicationUser user = mapper.Map<ApplicationUser>(request);
@@ -57,7 +59,8 @@ public class RegisterApplicationUserRequestHandler(
         {
             logger.UnhandledErrorLogger(exception);
 
-            return ApiResponse<object>.Fail(localizationService.GetApiMessageResource("UnexpectedError"));
+            return ApiResponse<object>.Fail(
+                localizationService.GetApiMessageResource(ApiMessageResourceKey.UnexpectedError));
         }
     }
 }

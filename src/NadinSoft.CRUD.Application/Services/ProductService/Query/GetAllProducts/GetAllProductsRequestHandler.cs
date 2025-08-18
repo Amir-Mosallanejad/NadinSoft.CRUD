@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using NadinSoft.CRUD.Application.Common.DTOs;
 using NadinSoft.CRUD.Application.Common.Interfaces;
+using NadinSoft.CRUD.Application.Common.ResourceKeys;
 using NadinSoft.CRUD.Application.Services.ProductService.DTOs;
 using NadinSoft.CRUD.Domain.Entities;
 using NadinSoft.CRUD.Domain.Repository;
@@ -59,7 +60,7 @@ public class GetAllProductsRequestHandler(
             logger.UnhandledErrorLogger(exception);
 
             return ApiResponse<PaginatedResponse<ProductResponseDto>>.Fail(
-                localizationService.GetApiMessageResource("UnexpectedError"));
+                localizationService.GetApiMessageResource(ApiMessageResourceKey.UnexpectedError));
         }
 
         return response;

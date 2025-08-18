@@ -1,5 +1,6 @@
 using FluentValidation;
 using NadinSoft.CRUD.Application.Common.Interfaces;
+using NadinSoft.CRUD.Application.Common.ResourceKeys;
 
 namespace NadinSoft.CRUD.Application.Services.ProductService.Command.CreateProduct;
 
@@ -26,29 +27,29 @@ public class CreateProductRequestValidator : AbstractValidator<CreateProductRequ
 
         RuleFor(x => x.Dto.Name)
             .NotEmpty()
-            .WithMessage(GetSafeMessage("NameRequired"))
+            .WithMessage(GetSafeMessage(ValidatorResourceKey.NameRequired))
             .MaximumLength(50)
-            .WithMessage(GetSafeMessage("NameCannotXCharacters", 50));
+            .WithMessage(GetSafeMessage(ValidatorResourceKey.NameCannotXCharacters, 50));
 
         RuleFor(x => x.Dto.ProduceDate)
             .LessThanOrEqualTo(DateTime.UtcNow)
-            .WithMessage(GetSafeMessage("ProduceCannotFuture"));
+            .WithMessage(GetSafeMessage(ValidatorResourceKey.ProduceCannotFuture));
 
         RuleFor(x => x.Dto.ManufacturePhone)
             .MaximumLength(20)
-            .WithMessage(GetSafeMessage("PhoneNumberXCharacters", 20))
+            .WithMessage(GetSafeMessage(ValidatorResourceKey.PhoneNumberXCharacters, 20))
             .NotEmpty()
-            .WithMessage(GetSafeMessage("ManufacturePhoneRequired"))
+            .WithMessage(GetSafeMessage(ValidatorResourceKey.ManufacturePhoneRequired))
             .Matches(@"^\+?[1-9]\d{1,14}$")
-            .WithMessage(GetSafeMessage("InvalidPhoneNumber"));
+            .WithMessage(GetSafeMessage(ValidatorResourceKey.InvalidPhoneNumber));
 
         RuleFor(x => x.Dto.ManufactureEmail)
             .MaximumLength(100)
-            .WithMessage(GetSafeMessage("ManufactureEmailXCharacters", 100))
+            .WithMessage(GetSafeMessage(ValidatorResourceKey.ManufactureEmailXCharacters, 100))
             .NotEmpty()
-            .WithMessage(GetSafeMessage("ManufactureEmailRequired"))
+            .WithMessage(GetSafeMessage(ValidatorResourceKey.ManufactureEmailRequired))
             .EmailAddress()
-            .WithMessage(GetSafeMessage("InvalidEmailFormat"));
+            .WithMessage(GetSafeMessage(ValidatorResourceKey.InvalidEmailFormat));
     }
 
     /// <summary>

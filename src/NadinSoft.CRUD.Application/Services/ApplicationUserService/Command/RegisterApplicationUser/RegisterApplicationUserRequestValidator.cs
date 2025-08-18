@@ -1,5 +1,6 @@
 using FluentValidation;
 using NadinSoft.CRUD.Application.Common.Interfaces;
+using NadinSoft.CRUD.Application.Common.ResourceKeys;
 
 namespace NadinSoft.CRUD.Application.Services.ApplicationUserService.Command.RegisterApplicationUser;
 
@@ -27,21 +28,21 @@ public class RegisterApplicationUserRequestValidator : AbstractValidator<Registe
 
         RuleFor(x => x.Email)
             .NotEmpty()
-            .WithMessage(GetSafeMessage("EmailRequired"))
+            .WithMessage(GetSafeMessage(ValidatorResourceKey.EmailRequired))
             .EmailAddress()
-            .WithMessage(GetSafeMessage("ValidEmailRequired"));
+            .WithMessage(GetSafeMessage(ValidatorResourceKey.ValidEmailRequired));
 
         RuleFor(x => x.Password)
             .NotEmpty()
-            .WithMessage(GetSafeMessage("PasswordRequired"))
+            .WithMessage(GetSafeMessage(ValidatorResourceKey.PasswordRequired))
             .MinimumLength(6)
-            .WithMessage(GetSafeMessage("PasswordBeXCharacters", 6));
+            .WithMessage(GetSafeMessage(ValidatorResourceKey.PasswordBeXCharacters, 6));
 
         RuleFor(x => x.ConfirmPassword)
             .NotEmpty()
-            .WithMessage(GetSafeMessage("ConfirmPasswordRequired"))
+            .WithMessage(GetSafeMessage(ValidatorResourceKey.ConfirmPasswordRequired))
             .Equal(x => x.Password)
-            .WithMessage(GetSafeMessage("PasswordsNotMatch"));
+            .WithMessage(GetSafeMessage(ValidatorResourceKey.PasswordsNotMatch));
     }
 
     /// <summary>

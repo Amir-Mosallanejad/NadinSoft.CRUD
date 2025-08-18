@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using NadinSoft.CRUD.Application.Common.DTOs;
 using NadinSoft.CRUD.Application.Common.Interfaces;
+using NadinSoft.CRUD.Application.Common.ResourceKeys;
 using NadinSoft.CRUD.Domain.Entities;
 
 namespace NadinSoft.CRUD.Application.Services.ApplicationUserService.Command.LoginApplicationUser;
@@ -34,7 +35,8 @@ public class LoginApplicationUserRequestHandler(
             ApplicationUser? user = await userManager.FindByEmailAsync(request.Email);
             if (user == null || !await userManager.CheckPasswordAsync(user, request.Password))
             {
-                return ApiResponse<string>.Fail(localizationService.GetApiMessageResource("Invalidcredentials"));
+                return ApiResponse<string>.Fail(
+                    localizationService.GetApiMessageResource(ApiMessageResourceKey.Invalidcredentials));
             }
 
             string token = jwtTokenGenerator.GenerateToken(user);
@@ -43,7 +45,7 @@ public class LoginApplicationUserRequestHandler(
         catch (Exception exception)
         {
             logger.UnhandledErrorLogger(exception);
-            return ApiResponse<string>.Fail(localizationService.GetApiMessageResource("UnexpectedError"));
+            return ApiResponse<string>.Fail(localizationService.GetApiMessageResource(ApiMessageResourceKey.UnexpectedError));
         }
     }
 }

@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using NadinSoft.CRUD.Application.Common.DTOs;
 using NadinSoft.CRUD.Application.Common.Interfaces;
+using NadinSoft.CRUD.Application.Common.ResourceKeys;
 using NadinSoft.CRUD.Domain.Entities;
 using NadinSoft.CRUD.Domain.Repository;
 
@@ -35,7 +36,8 @@ public class DeleteProductRequestHandler(
             string? userId = currentUserService.UserId;
             if (userId is null)
             {
-                return ApiResponse<object>.Fail(localizationService.GetApiMessageResource("UserUnauthorized"));
+                return ApiResponse<object>.Fail(
+                    localizationService.GetApiMessageResource(ApiMessageResourceKey.UserUnauthorized));
             }
 
             Product? product = await productRepository.GetByIdAsync(request.ProductId);
@@ -43,14 +45,16 @@ public class DeleteProductRequestHandler(
             if (product is null)
             {
                 logger.ProductNotFoundLogger(request.ProductId);
-                return ApiResponse<object>.Fail(localizationService.GetApiMessageResource("ProductNotFound"));
+                return ApiResponse<object>.Fail(
+                    localizationService.GetApiMessageResource(ApiMessageResourceKey.ProductNotFound));
             }
 
             if (product.CreatedByUserId != userId)
             {
                 logger.UnauthorizedDeleteAttemptLogger(userId, product.Id, product.CreatedByUserId);
 
-                return ApiResponse<object>.Fail(localizationService.GetApiMessageResource("NotOwnerOfProductDelete"));
+                return ApiResponse<object>.Fail(
+                    localizationService.GetApiMessageResource(ApiMessageResourceKey.NotOwnerOfProductDelete));
             }
 
             productRepository.Remove(product);
@@ -61,7 +65,8 @@ public class DeleteProductRequestHandler(
         {
             logger.UnhandledErrorLogger(exception);
 
-            return ApiResponse<object>.Fail(localizationService.GetApiMessageResource("UnexpectedError"));
+            return ApiResponse<object>.Fail(
+                localizationService.GetApiMessageResource(ApiMessageResourceKey.UnexpectedError));
         }
     }
 }

@@ -1,5 +1,6 @@
 using FluentValidation;
 using NadinSoft.CRUD.Application.Common.Interfaces;
+using NadinSoft.CRUD.Application.Common.ResourceKeys;
 
 namespace NadinSoft.CRUD.Application.Services.ApplicationUserService.Command.LoginApplicationUser;
 
@@ -27,15 +28,15 @@ public class LoginApplicationUserRequestValidator : AbstractValidator<LoginAppli
 
         RuleFor(x => x.Email)
             .NotEmpty()
-            .WithMessage(GetSafeMessage("EmailRequired"))
+            .WithMessage(GetSafeMessage(ValidatorResourceKey.EmailRequired))
             .EmailAddress()
-            .WithMessage(GetSafeMessage("ValidEmailRequired"));
+            .WithMessage(GetSafeMessage(ValidatorResourceKey.ValidEmailRequired));
 
         RuleFor(x => x.Password)
             .NotEmpty()
-            .WithMessage(GetSafeMessage("PasswordRequired"))
+            .WithMessage(GetSafeMessage(ValidatorResourceKey.PasswordRequired))
             .MinimumLength(6)
-            .WithMessage(GetSafeMessage("PasswordBeXCharacters", 6));
+            .WithMessage(GetSafeMessage(ValidatorResourceKey.PasswordBeXCharacters, 6));
     }
 
     /// <summary>

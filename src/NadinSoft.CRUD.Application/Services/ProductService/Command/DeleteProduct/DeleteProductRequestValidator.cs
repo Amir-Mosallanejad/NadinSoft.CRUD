@@ -1,5 +1,6 @@
 using FluentValidation;
 using NadinSoft.CRUD.Application.Common.Interfaces;
+using NadinSoft.CRUD.Application.Common.ResourceKeys;
 
 namespace NadinSoft.CRUD.Application.Services.ProductService.Command.DeleteProduct;
 
@@ -26,7 +27,7 @@ public class DeleteProductRequestValidator : AbstractValidator<DeleteProductRequ
 
         RuleFor(x => x.ProductId)
             .NotEmpty()
-            .WithMessage(GetSafeMessage("ProductIdRequired"));
+            .WithMessage(GetSafeMessage(ValidatorResourceKey.ProductIdRequired));
     }
 
     /// <summary>

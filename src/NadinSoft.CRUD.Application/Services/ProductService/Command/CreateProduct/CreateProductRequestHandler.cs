@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using NadinSoft.CRUD.Application.Common.DTOs;
 using NadinSoft.CRUD.Application.Common.Interfaces;
+using NadinSoft.CRUD.Application.Common.ResourceKeys;
 using NadinSoft.CRUD.Domain.Entities;
 using NadinSoft.CRUD.Domain.Repository;
 
@@ -35,7 +36,8 @@ public class CreateProductRequestHandler(
             string? userId = currentUserService.UserId;
             if (userId is null)
             {
-                return ApiResponse<object>.Fail(localizationService.GetApiMessageResource("UserUnauthorized"));
+                return ApiResponse<object>.Fail(
+                    localizationService.GetApiMessageResource(ApiMessageResourceKey.UserUnauthorized));
             }
 
             bool isExist = await productRepository.AnyAsync(x =>
@@ -46,7 +48,8 @@ public class CreateProductRequestHandler(
             {
                 logger.DuplicateProductLogger(request.Dto.ManufactureEmail, request.Dto.ProduceDate);
 
-                return ApiResponse<object>.Fail(localizationService.GetApiMessageResource("ProductAlreadyExists"));
+                return ApiResponse<object>.Fail(
+                    localizationService.GetApiMessageResource(ApiMessageResourceKey.ProductAlreadyExists));
             }
 
             Product entity = mapper.Map<Product>(request.Dto);
@@ -60,7 +63,8 @@ public class CreateProductRequestHandler(
         {
             logger.UnhandledErrorLogger(exception);
 
-            return ApiResponse<object>.Fail(localizationService.GetApiMessageResource("UnexpectedError"));
+            return ApiResponse<object>.Fail(
+                localizationService.GetApiMessageResource(ApiMessageResourceKey.UnexpectedError));
         }
     }
 }
