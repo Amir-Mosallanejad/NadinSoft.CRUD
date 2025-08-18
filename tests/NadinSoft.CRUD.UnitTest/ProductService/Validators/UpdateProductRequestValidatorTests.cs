@@ -11,6 +11,9 @@ namespace NadinSoft.CRUD.UnitTest.ProductService.Validators;
 /// </summary>
 public class UpdateProductRequestValidatorTests
 {
+    /// <summary>
+    /// Mock instance of <see cref="ILocalizationService"/> used for unit testing.
+    /// </summary>
     private readonly Mock<ILocalizationService> _localizationMock = new();
 
     /// <summary>
@@ -18,6 +21,10 @@ public class UpdateProductRequestValidatorTests
     /// </summary>
     private readonly UpdateProductRequestValidator _validator;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UpdateProductRequestValidatorTests"/> class.
+    /// Sets up mocked localization service responses for validator messages.
+    /// </summary>
     public UpdateProductRequestValidatorTests()
     {
         _localizationMock.Setup(x => x.GetValidatorResource(ValidatorResourceKey.ProductIdRequired))

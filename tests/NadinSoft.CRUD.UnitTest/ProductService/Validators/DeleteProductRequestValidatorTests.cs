@@ -11,6 +11,9 @@ namespace NadinSoft.CRUD.UnitTest.ProductService.Validators;
 /// </summary>
 public class DeleteProductRequestValidatorTests
 {
+    /// <summary>
+    /// Mock instance of <see cref="ILocalizationService"/> used for unit testing.
+    /// </summary>
     private readonly Mock<ILocalizationService> _localizationMock = new();
 
     /// <summary>
@@ -18,6 +21,10 @@ public class DeleteProductRequestValidatorTests
     /// </summary>
     private readonly DeleteProductRequestValidator _validator;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DeleteProductRequestValidatorTests"/> class.
+    /// Sets up the mocked localization service to return validator messages for product deletion.
+    /// </summary>
     public DeleteProductRequestValidatorTests()
     {
         _localizationMock

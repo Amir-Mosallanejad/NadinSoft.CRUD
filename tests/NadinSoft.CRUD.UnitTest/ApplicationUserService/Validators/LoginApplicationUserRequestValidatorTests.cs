@@ -11,6 +11,9 @@ namespace NadinSoft.CRUD.UnitTest.ApplicationUserService.Validators;
 /// </summary>
 public class LoginApplicationUserRequestValidatorTests
 {
+    /// <summary>
+    /// Mock instance of <see cref="ILocalizationService"/> used for unit testing.
+    /// </summary>
     private readonly Mock<ILocalizationService> _localizationServiceMock = new();
 
     /// <summary>
@@ -18,6 +21,10 @@ public class LoginApplicationUserRequestValidatorTests
     /// </summary>
     private readonly LoginApplicationUserRequestValidator _validator;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LoginApplicationUserRequestValidatorTests"/> class.
+    /// Sets up the mocked localization service to return validation messages for login fields.
+    /// </summary>
     public LoginApplicationUserRequestValidatorTests()
     {
         _localizationServiceMock.Setup(x => x.GetValidatorResource(ValidatorResourceKey.EmailRequired))

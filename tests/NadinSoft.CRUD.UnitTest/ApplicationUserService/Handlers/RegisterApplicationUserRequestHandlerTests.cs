@@ -31,6 +31,9 @@ public class RegisterApplicationUserRequestHandlerTests
     /// </summary>
     private readonly Mock<ILogger<RegisterApplicationUserRequestHandler>> _loggerMock = new();
 
+    /// <summary>
+    /// Mock instance of <see cref="ILocalizationService"/> used for unit testing.
+    /// </summary>
     private readonly Mock<ILocalizationService> _localizationMock = new();
 
     /// <summary>
@@ -110,7 +113,7 @@ public class RegisterApplicationUserRequestHandlerTests
                 x.GetApiMessageResource(
                     It.Is<string>(s => s.Contains("Password") || s.Contains("Email")),
                     It.IsAny<object[]>()))
-            .Returns((string s, object[] args) => s);
+            .Returns((string s, object[] _) => s);
 
         IdentityResult identityResult = IdentityResult.Failed(
             new IdentityError

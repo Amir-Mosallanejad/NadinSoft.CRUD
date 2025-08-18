@@ -32,6 +32,9 @@ public class GetAllProductsRequestHandlerTests
     /// </summary>
     private readonly Mock<ILogger<GetAllProductsRequestHandler>> _loggerMock = new();
 
+    /// <summary>
+    /// Mock instance of <see cref="ILocalizationService"/> used for unit testing.
+    /// </summary>
     private readonly Mock<ILocalizationService> _localizationMock = new();
 
     /// <summary>

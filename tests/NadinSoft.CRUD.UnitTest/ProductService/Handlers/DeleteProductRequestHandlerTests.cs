@@ -30,6 +30,9 @@ public class DeleteProductRequestHandlerTests
     /// </summary>
     private readonly Mock<ILogger<DeleteProductRequestHandler>> _loggerMock = new();
 
+    /// <summary>
+    /// Mock instance of <see cref="ILocalizationService"/> used for unit testing.
+    /// </summary>
     private readonly Mock<ILocalizationService> _localizationMock = new();
 
     /// <summary>
