@@ -8,12 +8,18 @@ namespace NadinSoft.CRUD.Application.Services.ProductService.Command.DeleteProdu
 /// </summary>
 public class DeleteProductRequestValidator : AbstractValidator<DeleteProductRequest>
 {
+    /// <summary>
+    /// Provides access to localized validation messages.
+    /// </summary>
     private readonly ILocalizationService _localizationService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DeleteProductRequestValidator"/> class.
     /// Configures the rule to ensure <see cref="DeleteProductRequest.ProductId"/> is not empty.
     /// </summary>
+    /// <param name="localizationService">
+    /// Service used to retrieve localized validation messages from resource files.
+    /// </param>
     public DeleteProductRequestValidator(ILocalizationService localizationService)
     {
         _localizationService = localizationService;

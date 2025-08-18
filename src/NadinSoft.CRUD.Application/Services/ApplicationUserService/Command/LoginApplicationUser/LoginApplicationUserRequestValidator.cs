@@ -9,12 +9,18 @@ namespace NadinSoft.CRUD.Application.Services.ApplicationUserService.Command.Log
 /// </summary>
 public class LoginApplicationUserRequestValidator : AbstractValidator<LoginApplicationUserRequest>
 {
+    /// <summary>
+    /// Provides access to localized validation messages.
+    /// </summary>
     private readonly ILocalizationService _localizationService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="LoginApplicationUserRequestValidator"/> class.
     /// Configures rules for validating email and password fields.
     /// </summary>
+    /// <param name="localizationService">
+    /// Service used to retrieve localized validation messages from resource files.
+    /// </param>
     public LoginApplicationUserRequestValidator(ILocalizationService localizationService)
     {
         _localizationService = localizationService;

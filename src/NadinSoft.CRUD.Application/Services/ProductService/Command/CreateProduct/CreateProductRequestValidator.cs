@@ -8,12 +8,18 @@ namespace NadinSoft.CRUD.Application.Services.ProductService.Command.CreateProdu
 /// </summary>
 public class CreateProductRequestValidator : AbstractValidator<CreateProductRequest>
 {
+    /// <summary>
+    /// Provides access to localized validation messages.
+    /// </summary>
     private readonly ILocalizationService _localizationService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CreateProductRequestValidator"/> class.
     /// Configures validation rules for product creation, including name, produce date, manufacturer phone, and email.
     /// </summary>
+    /// <param name="localizationService">
+    /// Service used to retrieve localized validation messages from resource files.
+    /// </param>
     public CreateProductRequestValidator(ILocalizationService localizationService)
     {
         _localizationService = localizationService;
