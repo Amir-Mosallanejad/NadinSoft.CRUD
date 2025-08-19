@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NadinSoft.CRUD.Application.Common.DTOs;
 using NadinSoft.CRUD.Application.Common.Interfaces;
+using NadinSoft.CRUD.Application.Common.ResourceKeys;
 using NadinSoft.CRUD.Application.Services.ProductService.Command.UpdateProduct;
 using NadinSoft.CRUD.Domain.Entities;
 using NadinSoft.CRUD.Domain.Repository;
@@ -36,6 +37,11 @@ public class UpdateProductRequestHandlerTests
     private readonly Mock<ICurrentUserService> _currentUserMock = new();
 
     /// <summary>
+    /// Mock instance of <see cref="ILocalizationService"/> used for unit testing.
+    /// </summary>
+    private readonly Mock<ILocalizationService> _localizationMock = new();
+
+    /// <summary>
     /// Handler instance being tested.
     /// </summary>
     private readonly UpdateProductRequestHandler _handler;
@@ -50,7 +56,8 @@ public class UpdateProductRequestHandlerTests
             _productRepoMock.Object,
             _currentUserMock.Object,
             _mapperMock.Object,
-            _loggerMock.Object);
+            _loggerMock.Object,
+            _localizationMock.Object);
     }
 
     /// <summary>
@@ -62,6 +69,8 @@ public class UpdateProductRequestHandlerTests
     {
         // Arrange
         _currentUserMock.Setup(c => c.UserId).Returns((string?)null);
+        _localizationMock.Setup(x => x.GetApiMessageResource(ApiMessageResourceKey.UserUnauthorized))
+            .Returns("User is unauthorized.");
 
         UpdateProductRequest command = new UpdateProductRequest(
             new UpdateProductRequestDto(
@@ -90,6 +99,8 @@ public class UpdateProductRequestHandlerTests
         // Arrange
         string userId = "user-123";
         _currentUserMock.Setup(c => c.UserId).Returns(userId);
+        _localizationMock.Setup(x => x.GetApiMessageResource(ApiMessageResourceKey.ProductNotFound))
+            .Returns("Product not found.");
 
         UpdateProductRequest command = new UpdateProductRequest(
             new UpdateProductRequestDto(
@@ -128,6 +139,8 @@ public class UpdateProductRequestHandlerTests
 
         _currentUserMock.Setup(c => c.UserId).Returns(userId);
         _productRepoMock.Setup(r => r.GetByIdAsync(product.Id)).ReturnsAsync(product);
+        _localizationMock.Setup(x => x.GetApiMessageResource(ApiMessageResourceKey.NotOwnerOfProductUpdate))
+            .Returns("You are not owner of this product.");
 
         UpdateProductRequest command = new UpdateProductRequest(
             new UpdateProductRequestDto(

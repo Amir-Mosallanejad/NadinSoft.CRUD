@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Options;
 using NadinSoft.CRUD.API.Extensions;
 using NadinSoft.CRUD.API.Middleware;
 using NadinSoft.CRUD.Application;
@@ -25,6 +26,7 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseRequestLocalization(app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
 app.MigrateDb();
 app.UseHttpsRedirection();
 app.UseAuthentication();

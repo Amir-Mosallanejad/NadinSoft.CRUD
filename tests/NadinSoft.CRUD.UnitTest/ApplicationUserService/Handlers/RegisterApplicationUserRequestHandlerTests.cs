@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NadinSoft.CRUD.Application.Common.DTOs;
+using NadinSoft.CRUD.Application.Common.Interfaces;
+using NadinSoft.CRUD.Application.Common.ResourceKeys;
 using NadinSoft.CRUD.Application.Services.ApplicationUserService.Command.RegisterApplicationUser;
 using NadinSoft.CRUD.Domain.Entities;
 
@@ -28,6 +30,11 @@ public class RegisterApplicationUserRequestHandlerTests
     /// Mock of <see cref="ILogger{RegisterApplicationUserRequestHandler}"/> for logging inside the handler.
     /// </summary>
     private readonly Mock<ILogger<RegisterApplicationUserRequestHandler>> _loggerMock = new();
+
+    /// <summary>
+    /// Mock instance of <see cref="ILocalizationService"/> used for unit testing.
+    /// </summary>
+    private readonly Mock<ILocalizationService> _localizationMock = new();
 
     /// <summary>
     /// Instance of the handler under test.
@@ -55,7 +62,8 @@ public class RegisterApplicationUserRequestHandlerTests
         _handler = new RegisterApplicationUserRequestHandler(
             _userManagerMock.Object,
             _mapperMock.Object,
-            _loggerMock.Object);
+            _loggerMock.Object,
+            _localizationMock.Object);
     }
 
     /// <summary>
@@ -71,6 +79,8 @@ public class RegisterApplicationUserRequestHandlerTests
             "Pa$$word",
             "Pa$$word");
         _userManagerMock.Setup(x => x.FindByEmailAsync(request.Email)).ReturnsAsync(new ApplicationUser());
+        _localizationMock.Setup(x => x.GetApiMessageResource(ApiMessageResourceKey.EmailAlreadyExists))
+            .Returns("User with this email already exists.");
 
         // Act
         ApiResponse<object> result = await _handler.Handle(request, CancellationToken.None);
@@ -99,6 +109,11 @@ public class RegisterApplicationUserRequestHandlerTests
             Email = request.Email,
         };
         _mapperMock.Setup(x => x.Map<ApplicationUser>(request)).Returns(mappedUser);
+        _localizationMock.Setup(x =>
+                x.GetApiMessageResource(
+                    It.Is<string>(s => s.Contains("Password") || s.Contains("Email")),
+                    It.IsAny<object[]>()))
+            .Returns((string s, object[] _) => s);
 
         IdentityResult identityResult = IdentityResult.Failed(
             new IdentityError
@@ -163,6 +178,8 @@ public class RegisterApplicationUserRequestHandlerTests
 
         _userManagerMock.Setup(x => x.FindByEmailAsync(It.IsAny<string>()))
             .ThrowsAsync(new InvalidOperationException("Oops"));
+        _localizationMock.Setup(x => x.GetApiMessageResource(ApiMessageResourceKey.UnexpectedError))
+            .Returns("An unexpected error occurred.");
 
         ApiResponse<object> result = await _handler.Handle(request, CancellationToken.None);
 

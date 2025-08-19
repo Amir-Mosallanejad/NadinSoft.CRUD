@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using NadinSoft.CRUD.Application.Common.DTOs;
 using NadinSoft.CRUD.Application.Common.Interfaces;
+using NadinSoft.CRUD.Application.Common.ResourceKeys;
 using NadinSoft.CRUD.Domain.Entities;
 using NadinSoft.CRUD.Domain.Repository;
 
@@ -15,7 +16,8 @@ public class CreateProductRequestHandler(
     IProductRepository productRepository,
     ICurrentUserService currentUserService,
     IMapper mapper,
-    ILogger<CreateProductRequestHandler> logger)
+    ILogger<CreateProductRequestHandler> logger,
+    ILocalizationService localizationService)
     : IRequestHandler<CreateProductRequest, ApiResponse<object>>
 {
     /// <summary>
@@ -34,7 +36,8 @@ public class CreateProductRequestHandler(
             string? userId = currentUserService.UserId;
             if (userId is null)
             {
-                return ApiResponse<object>.Fail("User is unauthorized.");
+                return ApiResponse<object>.Fail(
+                    localizationService.GetApiMessageResource(ApiMessageResourceKey.UserUnauthorized));
             }
 
             bool isExist = await productRepository.AnyAsync(x =>
@@ -46,7 +49,7 @@ public class CreateProductRequestHandler(
                 logger.DuplicateProductLogger(request.Dto.ManufactureEmail, request.Dto.ProduceDate);
 
                 return ApiResponse<object>.Fail(
-                    "A product with the same Manufacture Email and Produce Date already exists.");
+                    localizationService.GetApiMessageResource(ApiMessageResourceKey.ProductAlreadyExists));
             }
 
             Product entity = mapper.Map<Product>(request.Dto);
@@ -60,7 +63,8 @@ public class CreateProductRequestHandler(
         {
             logger.UnhandledErrorLogger(exception);
 
-            return ApiResponse<object>.Fail("An unexpected error occurred.");
+            return ApiResponse<object>.Fail(
+                localizationService.GetApiMessageResource(ApiMessageResourceKey.UnexpectedError));
         }
     }
 }

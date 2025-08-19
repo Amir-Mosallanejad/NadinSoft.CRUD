@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +12,8 @@ using NadinSoft.CRUD.Domain.Repository;
 using NadinSoft.CRUD.Infrastructure.Data;
 using NadinSoft.CRUD.Infrastructure.Repository;
 using NadinSoft.CRUD.Infrastructure.Services.AuthService;
+using NadinSoft.CRUD.Infrastructure.Services.Localization;
+using System.Globalization;
 using System.Text;
 
 namespace NadinSoft.CRUD.Infrastructure;
@@ -49,6 +53,7 @@ public static class ServiceCollectionExtension
         service.AddHttpContextAccessor();
         service.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
         service.AddScoped<ICurrentUserService, CurrentUserService>();
+        service.AddScoped<ILocalizationService, LocalizationService>();
         service.AddIdentity<ApplicationUser, IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
@@ -56,6 +61,24 @@ public static class ServiceCollectionExtension
         service.AddDbContext<ApplicationDbContext>(opt =>
         {
             opt.UseSqlServer(BuildConnectionStringFromEnvironment());
+        });
+
+        service.AddLocalization();
+        CultureInfo[] supportedCultures = new[]
+        {
+            new CultureInfo("en-US"), new CultureInfo("fa-IR"),
+        };
+
+        service.Configure<RequestLocalizationOptions>(options =>
+        {
+            options.DefaultRequestCulture = new RequestCulture("fa-IR");
+            options.SupportedCultures = supportedCultures;
+            options.SupportedUICultures = supportedCultures;
+
+            options.RequestCultureProviders = new List<IRequestCultureProvider>
+            {
+                new QueryStringRequestCultureProvider(),
+            };
         });
     }
 
