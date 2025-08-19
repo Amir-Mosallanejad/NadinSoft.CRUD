@@ -79,4 +79,27 @@ public abstract class BaseRepository<T> : IBaseRepository<T>
         DbSet.Update(entity);
         Context.SaveChanges();
     }
+
+    /// <inheritdoc />
+    public virtual async Task<(int Total, IEnumerable<T> Items)> GetByFiltersAsync(
+        Expression<Func<T, bool>>? filter = null,
+        int page = 1,
+        int perPage = 10)
+    {
+        IQueryable<T> query = Context.Set<T>();
+
+        if (filter != null)
+        {
+            query = query.Where(filter);
+        }
+
+        int totalCount = await query.CountAsync();
+
+        List<T> result = await query
+            .Skip((page - 1) * perPage)
+            .Take(perPage)
+            .ToListAsync();
+
+        return (totalCount, result);
+    }
 }

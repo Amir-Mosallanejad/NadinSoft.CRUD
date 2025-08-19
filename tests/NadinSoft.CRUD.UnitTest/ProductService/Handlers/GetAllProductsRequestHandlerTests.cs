@@ -9,6 +9,7 @@ using NadinSoft.CRUD.Application.Services.ProductService.DTOs;
 using NadinSoft.CRUD.Application.Services.ProductService.Query.GetAllProducts;
 using NadinSoft.CRUD.Domain.Entities;
 using NadinSoft.CRUD.Domain.Repository;
+using System.Linq.Expressions;
 
 namespace NadinSoft.CRUD.UnitTest.ProductService.Handlers;
 
@@ -111,7 +112,7 @@ public class GetAllProductsRequestHandlerTests
         };
 
         _productRepoMock
-            .Setup(r => r.GetProductsByFilters("bread", 1, 2))
+            .Setup(r => r.GetByFiltersAsync(p => p.Name.Contains(request.Name), 1, 2))
             .ReturnsAsync(
                 (2, new List<Product>
                 {
@@ -153,7 +154,10 @@ public class GetAllProductsRequestHandlerTests
         };
 
         _productRepoMock
-            .Setup(r => r.GetProductsByFilters(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
+            .Setup(r => r.GetByFiltersAsync(
+                It.IsAny<Expression<Func<Product, bool>>>(),
+                It.IsAny<int>(),
+                It.IsAny<int>()))
             .ThrowsAsync(new InvalidOperationException("DB crash"));
         _localizationMock.Setup(x => x.GetApiMessageResource(ApiMessageResourceKey.UnexpectedError))
             .Returns("An unexpected error occurred.");
