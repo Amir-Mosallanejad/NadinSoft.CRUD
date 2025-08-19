@@ -18,7 +18,7 @@ public class DeleteProductRequestHandlerTests
     /// <summary>
     /// Mock for <see cref="IProductRepository"/>.
     /// </summary>
-    private readonly Mock<IProductRepository> _productRepoMock = new();
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock = new();
 
     /// <summary>
     /// Mock for <see cref="ICurrentUserService"/>.
@@ -47,7 +47,7 @@ public class DeleteProductRequestHandlerTests
     public DeleteProductRequestHandlerTests()
     {
         _handler = new DeleteProductRequestHandler(
-            _productRepoMock.Object,
+            _unitOfWorkMock.Object,
             _currentUserMock.Object,
             _loggerMock.Object,
             _localizationMock.Object);
@@ -82,7 +82,7 @@ public class DeleteProductRequestHandlerTests
         Guid productId = Guid.NewGuid();
 
         _currentUserMock.Setup(x => x.UserId).Returns("user-1");
-        _productRepoMock.Setup(x => x.GetByIdAsync(productId)).ReturnsAsync((Product?)null);
+        _unitOfWorkMock.Setup(x => x.ProductRepository.GetByIdAsync(productId)).ReturnsAsync((Product?)null);
         _localizationMock.Setup(x => x.GetApiMessageResource(ApiMessageResourceKey.ProductNotFound))
             .Returns("Product not found.");
 
@@ -110,7 +110,7 @@ public class DeleteProductRequestHandlerTests
         };
 
         _currentUserMock.Setup(x => x.UserId).Returns("non-owner");
-        _productRepoMock.Setup(x => x.GetByIdAsync(productId)).ReturnsAsync(product);
+        _unitOfWorkMock.Setup(x => x.ProductRepository.GetByIdAsync(productId)).ReturnsAsync(product);
         _localizationMock.Setup(x => x.GetApiMessageResource(ApiMessageResourceKey.NotOwnerOfProductDelete))
             .Returns("You are not owner of this product.");
 
@@ -138,14 +138,14 @@ public class DeleteProductRequestHandlerTests
         };
 
         _currentUserMock.Setup(x => x.UserId).Returns("user-1");
-        _productRepoMock.Setup(x => x.GetByIdAsync(productId)).ReturnsAsync(product);
+        _unitOfWorkMock.Setup(x => x.ProductRepository.GetByIdAsync(productId)).ReturnsAsync(product);
 
         DeleteProductRequest request = new DeleteProductRequest(productId);
 
         ApiResponse<object> result = await _handler.Handle(request, CancellationToken.None);
 
         result.IsSuccess.Should().BeTrue();
-        _productRepoMock.Verify(x => x.Remove(product), Times.Once);
+        _unitOfWorkMock.Verify(x => x.ProductRepository.Remove(product), Times.Once);
     }
 
     /// <summary>
@@ -158,7 +158,8 @@ public class DeleteProductRequestHandlerTests
         Guid productId = Guid.NewGuid();
 
         _currentUserMock.Setup(x => x.UserId).Returns("user-1");
-        _productRepoMock.Setup(x => x.GetByIdAsync(productId)).ThrowsAsync(new InvalidOperationException("boom"));
+        _unitOfWorkMock.Setup(x => x.ProductRepository.GetByIdAsync(productId))
+            .ThrowsAsync(new InvalidOperationException("boom"));
         _localizationMock.Setup(x => x.GetApiMessageResource(ApiMessageResourceKey.UnexpectedError))
             .Returns("An unexpected error occurred.");
 

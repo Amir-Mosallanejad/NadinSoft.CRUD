@@ -13,7 +13,7 @@ namespace NadinSoft.CRUD.Application.Services.ProductService.Command.DeleteProdu
 /// Ensures the requesting user is authorized and the product exists before deletion.
 /// </summary>
 public class DeleteProductRequestHandler(
-    IProductRepository productRepository,
+    IUnitOfWork unitOfWork,
     ICurrentUserService currentUserService,
     ILogger<DeleteProductRequestHandler> logger,
     ILocalizationService localizationService)
@@ -40,7 +40,7 @@ public class DeleteProductRequestHandler(
                     localizationService.GetApiMessageResource(ApiMessageResourceKey.UserUnauthorized));
             }
 
-            Product? product = await productRepository.GetByIdAsync(request.ProductId);
+            Product? product = await unitOfWork.ProductRepository.GetByIdAsync(request.ProductId);
 
             if (product is null)
             {
@@ -57,7 +57,8 @@ public class DeleteProductRequestHandler(
                     localizationService.GetApiMessageResource(ApiMessageResourceKey.NotOwnerOfProductDelete));
             }
 
-            productRepository.Remove(product);
+            unitOfWork.ProductRepository.Remove(product);
+            await unitOfWork.SaveChangesAsync();
 
             return ApiResponse<object>.Success(new object());
         }

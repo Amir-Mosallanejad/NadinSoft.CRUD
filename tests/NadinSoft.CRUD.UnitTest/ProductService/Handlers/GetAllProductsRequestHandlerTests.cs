@@ -21,7 +21,7 @@ public class GetAllProductsRequestHandlerTests
     /// <summary>
     /// Mock for <see cref="IProductRepository"/>.
     /// </summary>
-    private readonly Mock<IProductRepository> _productRepoMock = new();
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock = new();
 
     /// <summary>
     /// Mock for <see cref="IMapper"/>.
@@ -50,7 +50,7 @@ public class GetAllProductsRequestHandlerTests
     public GetAllProductsRequestHandlerTests()
     {
         _handler = new GetAllProductsRequestHandler(
-            _productRepoMock.Object,
+            _unitOfWorkMock.Object,
             _mapperMock.Object,
             _loggerMock.Object,
             _localizationMock.Object);
@@ -111,8 +111,8 @@ public class GetAllProductsRequestHandlerTests
             PerPage = 2,
         };
 
-        _productRepoMock
-            .Setup(r => r.GetByFiltersAsync(p => p.Name.Contains(request.Name), 1, 2))
+        _unitOfWorkMock
+            .Setup(r => r.ProductRepository.GetByFiltersAsync(p => p.Name.Contains(request.Name), 1, 2))
             .ReturnsAsync(
                 (2, new List<Product>
                 {
@@ -153,8 +153,8 @@ public class GetAllProductsRequestHandlerTests
             PerPage = 5,
         };
 
-        _productRepoMock
-            .Setup(r => r.GetByFiltersAsync(
+        _unitOfWorkMock
+            .Setup(r => r.ProductRepository.GetByFiltersAsync(
                 It.IsAny<Expression<Func<Product, bool>>>(),
                 It.IsAny<int>(),
                 It.IsAny<int>()))

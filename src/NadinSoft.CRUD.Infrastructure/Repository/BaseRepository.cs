@@ -38,7 +38,6 @@ public abstract class BaseRepository<T> : IBaseRepository<T>
     public virtual async Task<T> AddAsync(T entity)
     {
         await DbSet.AddAsync(entity);
-        await Context.SaveChangesAsync();
         return entity;
     }
 
@@ -70,14 +69,12 @@ public abstract class BaseRepository<T> : IBaseRepository<T>
     public virtual void Remove(T entity)
     {
         DbSet.Remove(entity);
-        Context.SaveChanges();
     }
 
     /// <inheritdoc/>
     public virtual void Update(T entity)
     {
         DbSet.Update(entity);
-        Context.SaveChanges();
     }
 
     /// <inheritdoc />

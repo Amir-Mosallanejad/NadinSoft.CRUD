@@ -16,7 +16,7 @@ namespace NadinSoft.CRUD.Application.Services.ProductService.Query.GetAllProduct
 /// optionally filtered by name.
 /// </summary>
 public class GetAllProductsRequestHandler(
-    IProductRepository productRepository,
+    IUnitOfWork unitOfWork,
     IMapper mapper,
     ILogger<GetAllProductsRequestHandler> logger,
     ILocalizationService localizationService)
@@ -42,7 +42,7 @@ public class GetAllProductsRequestHandler(
         {
             Expression<Func<Product, bool>> filter = x => x.Name.Contains(request.Name);
 
-            (int Total, IEnumerable<Product> Items) products = await productRepository.GetByFiltersAsync(
+            (int Total, IEnumerable<Product> Items) products = await unitOfWork.ProductRepository.GetByFiltersAsync(
                 filter,
                 request.Page,
                 request.PerPage);
