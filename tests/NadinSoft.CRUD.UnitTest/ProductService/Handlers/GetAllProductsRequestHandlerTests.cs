@@ -3,6 +3,8 @@ using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NadinSoft.CRUD.Application.Common.DTOs;
+using NadinSoft.CRUD.Application.Common.Interfaces;
+using NadinSoft.CRUD.Application.Common.ResourceKeys;
 using NadinSoft.CRUD.Application.Services.ProductService.DTOs;
 using NadinSoft.CRUD.Application.Services.ProductService.Query.GetAllProducts;
 using NadinSoft.CRUD.Domain.Entities;
@@ -31,6 +33,11 @@ public class GetAllProductsRequestHandlerTests
     private readonly Mock<ILogger<GetAllProductsRequestHandler>> _loggerMock = new();
 
     /// <summary>
+    /// Mock instance of <see cref="ILocalizationService"/> used for unit testing.
+    /// </summary>
+    private readonly Mock<ILocalizationService> _localizationMock = new();
+
+    /// <summary>
     /// Handler instance being tested.
     /// </summary>
     private readonly GetAllProductsRequestHandler _handler;
@@ -44,7 +51,8 @@ public class GetAllProductsRequestHandlerTests
         _handler = new GetAllProductsRequestHandler(
             _productRepoMock.Object,
             _mapperMock.Object,
-            _loggerMock.Object);
+            _loggerMock.Object,
+            _localizationMock.Object);
     }
 
     /// <summary>
@@ -147,6 +155,8 @@ public class GetAllProductsRequestHandlerTests
         _productRepoMock
             .Setup(r => r.GetProductsByFilters(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
             .ThrowsAsync(new InvalidOperationException("DB crash"));
+        _localizationMock.Setup(x => x.GetApiMessageResource(ApiMessageResourceKey.UnexpectedError))
+            .Returns("An unexpected error occurred.");
 
         ApiResponse<PaginatedResponse<ProductResponseDto>> result =
             await _handler.Handle(request, CancellationToken.None);

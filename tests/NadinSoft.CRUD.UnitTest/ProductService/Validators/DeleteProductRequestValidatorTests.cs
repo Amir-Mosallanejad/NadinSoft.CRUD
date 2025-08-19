@@ -1,4 +1,7 @@
 using FluentValidation.TestHelper;
+using Moq;
+using NadinSoft.CRUD.Application.Common.Interfaces;
+using NadinSoft.CRUD.Application.Common.ResourceKeys;
 using NadinSoft.CRUD.Application.Services.ProductService.Command.DeleteProduct;
 
 namespace NadinSoft.CRUD.UnitTest.ProductService.Validators;
@@ -9,9 +12,27 @@ namespace NadinSoft.CRUD.UnitTest.ProductService.Validators;
 public class DeleteProductRequestValidatorTests
 {
     /// <summary>
+    /// Mock instance of <see cref="ILocalizationService"/> used for unit testing.
+    /// </summary>
+    private readonly Mock<ILocalizationService> _localizationMock = new();
+
+    /// <summary>
     /// Validator instance being tested.
     /// </summary>
-    private readonly DeleteProductRequestValidator _validator = new();
+    private readonly DeleteProductRequestValidator _validator;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DeleteProductRequestValidatorTests"/> class.
+    /// Sets up the mocked localization service to return validator messages for product deletion.
+    /// </summary>
+    public DeleteProductRequestValidatorTests()
+    {
+        _localizationMock
+            .Setup(x => x.GetValidatorResource(ValidatorResourceKey.ProductIdRequired, It.IsAny<object[]>()))
+            .Returns("ProductId is required.");
+
+        _validator = new DeleteProductRequestValidator(_localizationMock.Object);
+    }
 
     /// <summary>
     /// Tests that validation fails when the ProductId is empty (Guid.Empty).

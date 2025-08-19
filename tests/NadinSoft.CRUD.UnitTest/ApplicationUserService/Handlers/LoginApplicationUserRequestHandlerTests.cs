@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NadinSoft.CRUD.Application.Common.DTOs;
 using NadinSoft.CRUD.Application.Common.Interfaces;
+using NadinSoft.CRUD.Application.Common.ResourceKeys;
 using NadinSoft.CRUD.Application.Services.ApplicationUserService.Command.LoginApplicationUser;
 using NadinSoft.CRUD.Domain.Entities;
 
@@ -28,6 +29,11 @@ public class LoginApplicationUserRequestHandlerTests
     /// Mock of <see cref="ILogger{LoginApplicationUserRequestHandler}"/> for logging inside the handler.
     /// </summary>
     private readonly Mock<ILogger<LoginApplicationUserRequestHandler>> _loggerMock = new();
+
+    /// <summary>
+    /// Mock instance of <see cref="ILocalizationService"/> used for unit testing.
+    /// </summary>
+    private readonly Mock<ILocalizationService> _localizationMock = new();
 
     /// <summary>
     /// Instance of the handler under test.
@@ -55,7 +61,8 @@ public class LoginApplicationUserRequestHandlerTests
         _handler = new LoginApplicationUserRequestHandler(
             _userManagerMock.Object,
             _jwtMock.Object,
-            _loggerMock.Object);
+            _loggerMock.Object,
+            _localizationMock.Object);
     }
 
     /// <summary>
@@ -70,6 +77,10 @@ public class LoginApplicationUserRequestHandlerTests
 
         _userManagerMock.Setup(x => x.FindByEmailAsync(request.Email))
             .ReturnsAsync((ApplicationUser?)null);
+
+        _localizationMock
+            .Setup(x => x.GetApiMessageResource(ApiMessageResourceKey.Invalidcredentials))
+            .Returns("Invalid credentials.");
 
         // Act
         ApiResponse<string> result = await _handler.Handle(request, CancellationToken.None);
@@ -93,6 +104,9 @@ public class LoginApplicationUserRequestHandlerTests
 
         _userManagerMock.Setup(x => x.FindByEmailAsync(user.Email)).ReturnsAsync(user);
         _userManagerMock.Setup(x => x.CheckPasswordAsync(user, "wrongpass")).ReturnsAsync(false);
+        _localizationMock
+            .Setup(x => x.GetApiMessageResource(ApiMessageResourceKey.Invalidcredentials))
+            .Returns("Invalid credentials.");
 
         LoginApplicationUserRequest request = new LoginApplicationUserRequest(user.Email!, "wrongpass");
 
@@ -137,6 +151,9 @@ public class LoginApplicationUserRequestHandlerTests
 
         _userManagerMock.Setup(x => x.FindByEmailAsync(It.IsAny<string>()))
             .ThrowsAsync(new InvalidOperationException("DB exploded"));
+        _localizationMock
+            .Setup(x => x.GetApiMessageResource(ApiMessageResourceKey.UnexpectedError))
+            .Returns("An unexpected error occurred.");
 
         ApiResponse<string> result = await _handler.Handle(request, CancellationToken.None);
 
