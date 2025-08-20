@@ -40,7 +40,9 @@ public class CreateProductRequestHandler(
                     localizationService.GetApiMessageResource(ApiMessageResourceKey.UserUnauthorized));
             }
 
-            bool isExist = await unitOfWork.ProductRepository.AnyAsync(x =>
+            IBaseRepository<Product> productRepo = unitOfWork.GetRepository<Product>();
+
+            bool isExist = await productRepo.AnyAsync(x =>
                 x.ManufactureEmail == request.Dto.ManufactureEmail &&
                 x.ProduceDate == request.Dto.ProduceDate);
 
@@ -55,7 +57,7 @@ public class CreateProductRequestHandler(
             Product entity = mapper.Map<Product>(request.Dto);
             entity.CreatedByUserId = userId;
 
-            await unitOfWork.ProductRepository.AddAsync(entity);
+            await productRepo.AddAsync(entity);
             await unitOfWork.SaveChangesAsync();
 
             return ApiResponse<object>.Success(new object());

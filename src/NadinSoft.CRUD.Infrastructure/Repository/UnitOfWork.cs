@@ -10,44 +10,34 @@ namespace NadinSoft.CRUD.Infrastructure.Repository;
 /// </summary>
 public class UnitOfWork : IUnitOfWork
 {
-    /// <summary>
-    /// The <see cref="ApplicationDbContext"/> instance used by the repositories
-    /// to interact with the database.
-    /// </summary>
     private readonly ApplicationDbContext _context;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="UnitOfWork"/> class.
-    /// </summary>
-    /// <param name="context">The <see cref="ApplicationDbContext"/> used by repositories.</param>
+    private readonly Dictionary<Type, object> _repositories = new();
+
     public UnitOfWork(ApplicationDbContext context)
     {
         _context = context;
-        ProductRepository = new ProductRepository(_context);
     }
 
-    /// <summary>
-    /// Gets the repository for managing <see cref="Product"/> entities.
-    /// </summary>
-    /// <value>The product repository.</value>
-    public IBaseRepository<Product> ProductRepository { get; }
+    public IBaseRepository<TEntity> GetRepository<TEntity>()
+        where TEntity : BaseEntity
+    {
+        if (_repositories.ContainsKey(typeof(TEntity)))
+        {
+            return (IBaseRepository<TEntity>)_repositories[typeof(TEntity)];
+        }
 
-    /// <summary>
-    /// Persists all changes made through the repositories to the database asynchronously.
-    /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        IBaseRepository<TEntity> repository = new BaseRepository<TEntity>(_context);
+        _repositories.Add(typeof(TEntity), repository);
+
+        return repository;
+    }
+
     public async Task SaveChangesAsync()
     {
         await _context.SaveChangesAsync();
     }
 
-    /// <summary>
-    /// Disposes the underlying database context.
-    /// </summary>
-    /// <remarks>
-    /// This method releases all resources used by the <see cref="ApplicationDbContext"/>.
-    /// After calling this method, the unit of work should not be used.
-    /// </remarks>
     public void Dispose()
     {
         _context.Dispose();

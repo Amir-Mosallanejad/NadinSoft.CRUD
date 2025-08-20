@@ -40,9 +40,11 @@ public class GetAllProductsRequestHandler(
 
         try
         {
+            IBaseRepository<Product> productRepo = unitOfWork.GetRepository<Product>();
+
             Expression<Func<Product, bool>> filter = x => x.Name.Contains(request.Name);
 
-            (int Total, IEnumerable<Product> Items) products = await unitOfWork.ProductRepository.GetByFiltersAsync(
+            (int Total, IEnumerable<Product> Items) products = await productRepo.GetByFiltersAsync(
                 filter,
                 request.Page,
                 request.PerPage);

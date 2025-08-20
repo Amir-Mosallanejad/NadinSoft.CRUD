@@ -40,7 +40,9 @@ public class DeleteProductRequestHandler(
                     localizationService.GetApiMessageResource(ApiMessageResourceKey.UserUnauthorized));
             }
 
-            Product? product = await unitOfWork.ProductRepository.GetByIdAsync(request.ProductId);
+            IBaseRepository<Product> productRepo = unitOfWork.GetRepository<Product>();
+
+            Product? product = await productRepo.GetByIdAsync(request.ProductId);
 
             if (product is null)
             {
@@ -57,7 +59,7 @@ public class DeleteProductRequestHandler(
                     localizationService.GetApiMessageResource(ApiMessageResourceKey.NotOwnerOfProductDelete));
             }
 
-            unitOfWork.ProductRepository.Remove(product);
+            productRepo.Remove(product);
             await unitOfWork.SaveChangesAsync();
 
             return ApiResponse<object>.Success(new object());

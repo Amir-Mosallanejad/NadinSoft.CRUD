@@ -42,7 +42,9 @@ public class UpdateProductRequestHandler(
                     localizationService.GetApiMessageResource(ApiMessageResourceKey.UserUnauthorized));
             }
 
-            Product? product = await unitOfWork.ProductRepository.GetByIdAsync(request.Dto.Id);
+            IBaseRepository<Product> productRepo = unitOfWork.GetRepository<Product>();
+
+            Product? product = await productRepo.GetByIdAsync(request.Dto.Id);
 
             if (product is null)
             {
@@ -63,7 +65,7 @@ public class UpdateProductRequestHandler(
             mapper.Map(request.Dto, product);
             product.CreatedByUserId = userId;
 
-            unitOfWork.ProductRepository.Update(product);
+            productRepo.Update(product);
             await unitOfWork.SaveChangesAsync();
 
             return ApiResponse<object>.Success(new object());
