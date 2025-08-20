@@ -18,7 +18,7 @@ namespace NadinSoft.CRUD.UnitTest.ProductService.Handlers;
 public class CreateProductRequestHandlerTests
 {
     /// <summary>
-    /// Mock for <see cref="IProductRepository"/>.
+    /// Mock for <see cref="IUnitOfWork"/>.
     /// </summary>
     private readonly Mock<IUnitOfWork> _unitOfWorkMock = new();
 
@@ -107,7 +107,7 @@ public class CreateProductRequestHandlerTests
 
         _currentUserMock.Setup(x => x.UserId).Returns("user-1");
 
-        _unitOfWorkMock.Setup(x => x.ProductRepository.AnyAsync(It.IsAny<Expression<Func<Product, bool>>>()))
+        _unitOfWorkMock.Setup(x => x.GetRepository<Product>().AnyAsync(It.IsAny<Expression<Func<Product, bool>>>()))
             .ReturnsAsync(true);
 
         _localizationMock.Setup(x => x.GetApiMessageResource(ApiMessageResourceKey.ProductAlreadyExists))
@@ -143,19 +143,19 @@ public class CreateProductRequestHandlerTests
 
         _currentUserMock.Setup(x => x.UserId).Returns("user-1");
 
-        _unitOfWorkMock.Setup(x => x.ProductRepository.AnyAsync(It.IsAny<Expression<Func<Product, bool>>>()))
+        _unitOfWorkMock.Setup(x => x.GetRepository<Product>().AnyAsync(It.IsAny<Expression<Func<Product, bool>>>()))
             .ReturnsAsync(false);
 
         _mapperMock.Setup(x => x.Map<Product>(dto)).Returns(mappedEntity);
 
-        _unitOfWorkMock.Setup(x => x.ProductRepository.AddAsync(mappedEntity)).ReturnsAsync(mappedEntity);
+        _unitOfWorkMock.Setup(x => x.GetRepository<Product>().AddAsync(mappedEntity)).ReturnsAsync(mappedEntity);
 
         // Act
         ApiResponse<object> result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        _unitOfWorkMock.Verify(x => x.ProductRepository.AddAsync(mappedEntity), Times.Once);
+        _unitOfWorkMock.Verify(x => x.GetRepository<Product>().AddAsync(mappedEntity), Times.Once);
     }
 
     /// <summary>
@@ -176,7 +176,7 @@ public class CreateProductRequestHandlerTests
 
         _currentUserMock.Setup(x => x.UserId).Returns("user-1");
 
-        _unitOfWorkMock.Setup(x => x.ProductRepository.AnyAsync(It.IsAny<Expression<Func<Product, bool>>>()))
+        _unitOfWorkMock.Setup(x => x.GetRepository<Product>().AnyAsync(It.IsAny<Expression<Func<Product, bool>>>()))
             .ThrowsAsync(new InvalidOperationException("DB crash"));
 
         _localizationMock.Setup(x => x.GetApiMessageResource(ApiMessageResourceKey.UnexpectedError))

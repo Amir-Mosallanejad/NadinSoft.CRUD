@@ -17,7 +17,7 @@ namespace NadinSoft.CRUD.UnitTest.ProductService.Handlers;
 public class UpdateProductRequestHandlerTests
 {
     /// <summary>
-    /// Mock for <see cref="IProductRepository"/>.
+    /// Mock for <see cref="IUnitOfWork"/>.
     /// </summary>
     private readonly Mock<IUnitOfWork> _unitOfWorkMock = new();
 
@@ -111,7 +111,7 @@ public class UpdateProductRequestHandlerTests
                 "123",
                 true));
 
-        _unitOfWorkMock.Setup(r => r.ProductRepository.GetByIdAsync(command.Dto.Id))
+        _unitOfWorkMock.Setup(r => r.GetRepository<Product>().GetByIdAsync(command.Dto.Id))
             .ReturnsAsync((Product?)null);
 
         // Act
@@ -138,7 +138,7 @@ public class UpdateProductRequestHandlerTests
         };
 
         _currentUserMock.Setup(c => c.UserId).Returns(userId);
-        _unitOfWorkMock.Setup(r => r.ProductRepository.GetByIdAsync(product.Id)).ReturnsAsync(product);
+        _unitOfWorkMock.Setup(r => r.GetRepository<Product>().GetByIdAsync(product.Id)).ReturnsAsync(product);
         _localizationMock.Setup(x => x.GetApiMessageResource(ApiMessageResourceKey.NotOwnerOfProductUpdate))
             .Returns("You are not owner of this product.");
 
@@ -175,7 +175,7 @@ public class UpdateProductRequestHandlerTests
         };
 
         _currentUserMock.Setup(c => c.UserId).Returns(userId);
-        _unitOfWorkMock.Setup(r => r.ProductRepository.GetByIdAsync(product.Id)).ReturnsAsync(product);
+        _unitOfWorkMock.Setup(r => r.GetRepository<Product>().GetByIdAsync(product.Id)).ReturnsAsync(product);
         _mapperMock.Setup(m => m.Map(It.IsAny<UpdateProductRequestDto>(), product));
 
         UpdateProductRequest command = new UpdateProductRequest(
@@ -192,6 +192,6 @@ public class UpdateProductRequestHandlerTests
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        _unitOfWorkMock.Verify(r => r.ProductRepository.Update(product), Times.Once);
+        _unitOfWorkMock.Verify(r => r.GetRepository<Product>().Update(product), Times.Once);
     }
 }

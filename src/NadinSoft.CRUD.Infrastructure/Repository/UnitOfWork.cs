@@ -10,34 +10,47 @@ namespace NadinSoft.CRUD.Infrastructure.Repository;
 /// </summary>
 public class UnitOfWork : IUnitOfWork
 {
+    /// <summary>
+    /// The application's database context used to interact with the data store.
+    /// </summary>
     private readonly ApplicationDbContext _context;
 
+    /// <summary>
+    /// Stores already created repositories by entity type to ensure reusability.
+    /// </summary>
     private readonly Dictionary<Type, object> _repositories = new();
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UnitOfWork"/> class.
+    /// </summary>
+    /// <param name="context">The database context for data access.</param>
     public UnitOfWork(ApplicationDbContext context)
     {
         _context = context;
     }
 
+    /// <inheritdoc />
     public IBaseRepository<TEntity> GetRepository<TEntity>()
         where TEntity : BaseEntity
     {
-        if (_repositories.ContainsKey(typeof(TEntity)))
+        if (_repositories.TryGetValue(typeof(TEntity), out var repository))
         {
-            return (IBaseRepository<TEntity>)_repositories[typeof(TEntity)];
+            return (IBaseRepository<TEntity>)repository;
         }
 
-        IBaseRepository<TEntity> repository = new BaseRepository<TEntity>(_context);
-        _repositories.Add(typeof(TEntity), repository);
+        IBaseRepository<TEntity> newRepository = new BaseRepository<TEntity>(_context);
+        _repositories.Add(typeof(TEntity), newRepository);
 
-        return repository;
+        return newRepository;
     }
 
+    /// <inheritdoc />
     public async Task SaveChangesAsync()
     {
         await _context.SaveChangesAsync();
     }
 
+    /// <inheritdoc />
     public void Dispose()
     {
         _context.Dispose();

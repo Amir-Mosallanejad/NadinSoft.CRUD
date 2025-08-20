@@ -19,7 +19,7 @@ namespace NadinSoft.CRUD.UnitTest.ProductService.Handlers;
 public class GetAllProductsRequestHandlerTests
 {
     /// <summary>
-    /// Mock for <see cref="IProductRepository"/>.
+    /// Mock for <see cref="IUnitOfWork"/>.
     /// </summary>
     private readonly Mock<IUnitOfWork> _unitOfWorkMock = new();
 
@@ -112,7 +112,7 @@ public class GetAllProductsRequestHandlerTests
         };
 
         _unitOfWorkMock
-            .Setup(r => r.ProductRepository.GetByFiltersAsync(p => p.Name.Contains(request.Name), 1, 2))
+            .Setup(r => r.GetRepository<Product>().GetByFiltersAsync(p => p.Name.Contains(request.Name), 1, 2))
             .ReturnsAsync(
                 (2, new List<Product>
                 {
@@ -154,10 +154,11 @@ public class GetAllProductsRequestHandlerTests
         };
 
         _unitOfWorkMock
-            .Setup(r => r.ProductRepository.GetByFiltersAsync(
-                It.IsAny<Expression<Func<Product, bool>>>(),
-                It.IsAny<int>(),
-                It.IsAny<int>()))
+            .Setup(r => r.GetRepository<Product>()
+                .GetByFiltersAsync(
+                    It.IsAny<Expression<Func<Product, bool>>>(),
+                    It.IsAny<int>(),
+                    It.IsAny<int>()))
             .ThrowsAsync(new InvalidOperationException("DB crash"));
         _localizationMock.Setup(x => x.GetApiMessageResource(ApiMessageResourceKey.UnexpectedError))
             .Returns("An unexpected error occurred.");

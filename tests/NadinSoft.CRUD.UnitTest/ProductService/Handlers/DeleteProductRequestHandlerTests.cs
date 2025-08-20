@@ -16,7 +16,7 @@ namespace NadinSoft.CRUD.UnitTest.ProductService.Handlers;
 public class DeleteProductRequestHandlerTests
 {
     /// <summary>
-    /// Mock for <see cref="IProductRepository"/>.
+    /// Mock for <see cref="IUnitOfWork"/>.
     /// </summary>
     private readonly Mock<IUnitOfWork> _unitOfWorkMock = new();
 
@@ -82,7 +82,7 @@ public class DeleteProductRequestHandlerTests
         Guid productId = Guid.NewGuid();
 
         _currentUserMock.Setup(x => x.UserId).Returns("user-1");
-        _unitOfWorkMock.Setup(x => x.ProductRepository.GetByIdAsync(productId)).ReturnsAsync((Product?)null);
+        _unitOfWorkMock.Setup(x => x.GetRepository<Product>().GetByIdAsync(productId)).ReturnsAsync((Product?)null);
         _localizationMock.Setup(x => x.GetApiMessageResource(ApiMessageResourceKey.ProductNotFound))
             .Returns("Product not found.");
 
@@ -110,7 +110,7 @@ public class DeleteProductRequestHandlerTests
         };
 
         _currentUserMock.Setup(x => x.UserId).Returns("non-owner");
-        _unitOfWorkMock.Setup(x => x.ProductRepository.GetByIdAsync(productId)).ReturnsAsync(product);
+        _unitOfWorkMock.Setup(x => x.GetRepository<Product>().GetByIdAsync(productId)).ReturnsAsync(product);
         _localizationMock.Setup(x => x.GetApiMessageResource(ApiMessageResourceKey.NotOwnerOfProductDelete))
             .Returns("You are not owner of this product.");
 
@@ -138,14 +138,14 @@ public class DeleteProductRequestHandlerTests
         };
 
         _currentUserMock.Setup(x => x.UserId).Returns("user-1");
-        _unitOfWorkMock.Setup(x => x.ProductRepository.GetByIdAsync(productId)).ReturnsAsync(product);
+        _unitOfWorkMock.Setup(x => x.GetRepository<Product>().GetByIdAsync(productId)).ReturnsAsync(product);
 
         DeleteProductRequest request = new DeleteProductRequest(productId);
 
         ApiResponse<object> result = await _handler.Handle(request, CancellationToken.None);
 
         result.IsSuccess.Should().BeTrue();
-        _unitOfWorkMock.Verify(x => x.ProductRepository.Remove(product), Times.Once);
+        _unitOfWorkMock.Verify(x => x.GetRepository<Product>().Remove(product), Times.Once);
     }
 
     /// <summary>
@@ -158,7 +158,7 @@ public class DeleteProductRequestHandlerTests
         Guid productId = Guid.NewGuid();
 
         _currentUserMock.Setup(x => x.UserId).Returns("user-1");
-        _unitOfWorkMock.Setup(x => x.ProductRepository.GetByIdAsync(productId))
+        _unitOfWorkMock.Setup(x => x.GetRepository<Product>().GetByIdAsync(productId))
             .ThrowsAsync(new InvalidOperationException("boom"));
         _localizationMock.Setup(x => x.GetApiMessageResource(ApiMessageResourceKey.UnexpectedError))
             .Returns("An unexpected error occurred.");
