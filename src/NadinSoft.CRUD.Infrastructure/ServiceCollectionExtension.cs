@@ -30,18 +30,18 @@ public static class ServiceCollectionExtension
     /// <param name="configuration">The <see cref="IConfiguration"/> containing application settings.</param>
     public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddRepositories();
+        services.AddUnitOfWork();
         services.AddCustomService();
         services.AddAuthenticationService(configuration);
     }
 
     /// <summary>
-    /// Registers repository services.
+    /// Registers Unit of Work.
     /// </summary>
     /// <param name="services">The <see cref="IServiceCollection"/> to add repositories to.</param>
-    private static void AddRepositories(this IServiceCollection services)
+    private static void AddUnitOfWork(this IServiceCollection services)
     {
-        services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
     }
 
     /// <summary>

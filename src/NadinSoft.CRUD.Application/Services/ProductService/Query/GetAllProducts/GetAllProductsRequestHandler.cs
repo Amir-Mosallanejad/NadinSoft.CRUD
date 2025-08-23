@@ -7,6 +7,7 @@ using NadinSoft.CRUD.Application.Common.ResourceKeys;
 using NadinSoft.CRUD.Application.Services.ProductService.DTOs;
 using NadinSoft.CRUD.Domain.Entities;
 using NadinSoft.CRUD.Domain.Repository;
+using System.Linq.Expressions;
 
 namespace NadinSoft.CRUD.Application.Services.ProductService.Query.GetAllProducts;
 
@@ -15,7 +16,7 @@ namespace NadinSoft.CRUD.Application.Services.ProductService.Query.GetAllProduct
 /// optionally filtered by name.
 /// </summary>
 public class GetAllProductsRequestHandler(
-    IProductRepository productRepository,
+    IUnitOfWork unitOfWork,
     IMapper mapper,
     ILogger<GetAllProductsRequestHandler> logger,
     ILocalizationService localizationService)
@@ -39,8 +40,12 @@ public class GetAllProductsRequestHandler(
 
         try
         {
-            (int Total, IEnumerable<Product> Items) products = await productRepository.GetProductsByFilters(
-                request.Name.ToLower(System.Globalization.CultureInfo.CurrentCulture),
+            IBaseRepository<Product> productRepo = unitOfWork.GetRepository<Product>();
+
+            Expression<Func<Product, bool>> filter = x => x.Name.Contains(request.Name);
+
+            (int Total, IEnumerable<Product> Items) products = await productRepo.GetByFiltersAsync(
+                filter,
                 request.Page,
                 request.PerPage);
 

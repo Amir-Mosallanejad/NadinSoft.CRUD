@@ -78,4 +78,16 @@ public interface IBaseRepository<T>
     /// The task result is <c>true</c> if any matching entities exist; otherwise, <c>false</c>.
     /// </returns>
     Task<bool> AnyAsync(Expression<Func<T, bool>> filter);
+
+    /// <summary>
+    /// Gets paginated list of entities with an optional filter.
+    /// </summary>
+    /// <param name="filter">Optional filter expression.</param>
+    /// <param name="page">Page number (1-based).</param>
+    /// <param name="perPage">Number of items per page.</param>
+    /// <returns>Total count and the filtered items.</returns>
+    Task<(int Total, IEnumerable<T> Items)> GetByFiltersAsync(
+        Expression<Func<T, bool>>? filter = null,
+        int page = 1,
+        int perPage = 10);
 }

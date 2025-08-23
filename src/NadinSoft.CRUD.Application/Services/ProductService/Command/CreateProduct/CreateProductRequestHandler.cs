@@ -13,7 +13,7 @@ namespace NadinSoft.CRUD.Application.Services.ProductService.Command.CreateProdu
 /// Handles requests to create new <see cref="Product"/> entities.
 /// </summary>
 public class CreateProductRequestHandler(
-    IProductRepository productRepository,
+    IUnitOfWork unitOfWork,
     ICurrentUserService currentUserService,
     IMapper mapper,
     ILogger<CreateProductRequestHandler> logger,
@@ -33,6 +33,8 @@ public class CreateProductRequestHandler(
     {
         try
         {
+            await unitOfWork.BeginTransactionAsync();
+
             string? userId = currentUserService.UserId;
             if (userId is null)
             {
@@ -40,7 +42,9 @@ public class CreateProductRequestHandler(
                     localizationService.GetApiMessageResource(ApiMessageResourceKey.UserUnauthorized));
             }
 
-            bool isExist = await productRepository.AnyAsync(x =>
+            IBaseRepository<Product> productRepo = unitOfWork.GetRepository<Product>();
+
+            bool isExist = await productRepo.AnyAsync(x =>
                 x.ManufactureEmail == request.Dto.ManufactureEmail &&
                 x.ProduceDate == request.Dto.ProduceDate);
 
@@ -55,7 +59,8 @@ public class CreateProductRequestHandler(
             Product entity = mapper.Map<Product>(request.Dto);
             entity.CreatedByUserId = userId;
 
-            await productRepository.AddAsync(entity);
+            await productRepo.AddAsync(entity);
+            await unitOfWork.CommitAsync();
 
             return ApiResponse<object>.Success(new object());
         }

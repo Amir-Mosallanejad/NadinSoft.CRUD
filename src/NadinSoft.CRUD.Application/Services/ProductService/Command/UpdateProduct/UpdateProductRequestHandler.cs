@@ -14,7 +14,7 @@ namespace NadinSoft.CRUD.Application.Services.ProductService.Command.UpdateProdu
 /// Ensures the requesting user is authorized and the product exists before applying updates.
 /// </summary>
 public class UpdateProductRequestHandler(
-    IProductRepository productRepository,
+    IUnitOfWork unitOfWork,
     ICurrentUserService currentUserService,
     IMapper mapper,
     ILogger<UpdateProductRequestHandler> logger,
@@ -35,6 +35,8 @@ public class UpdateProductRequestHandler(
     {
         try
         {
+            await unitOfWork.BeginTransactionAsync();
+
             string? userId = currentUserService.UserId;
             if (userId is null)
             {
@@ -42,7 +44,9 @@ public class UpdateProductRequestHandler(
                     localizationService.GetApiMessageResource(ApiMessageResourceKey.UserUnauthorized));
             }
 
-            Product? product = await productRepository.GetByIdAsync(request.Dto.Id);
+            IBaseRepository<Product> productRepo = unitOfWork.GetRepository<Product>();
+
+            Product? product = await productRepo.GetByIdAsync(request.Dto.Id);
 
             if (product is null)
             {
@@ -63,7 +67,8 @@ public class UpdateProductRequestHandler(
             mapper.Map(request.Dto, product);
             product.CreatedByUserId = userId;
 
-            productRepository.Update(product);
+            productRepo.Update(product);
+            await unitOfWork.CommitAsync();
 
             return ApiResponse<object>.Success(new object());
         }
