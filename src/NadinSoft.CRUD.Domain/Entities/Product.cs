@@ -69,4 +69,11 @@ public class Product : BaseEntity
     /// An instance of <see cref="ApplicationUser"/> representing the creator.
     /// </value>
     public ApplicationUser CreatedByUser { get; set; } = null!;
+
+    /// <summary>
+    /// Gets or sets the collection of product validation history records
+    /// associated with the product.
+    /// </summary>
+    public ICollection<ProductValidationHistory> ValidationHistories { get; set; } =
+        new List<ProductValidationHistory>();
 }

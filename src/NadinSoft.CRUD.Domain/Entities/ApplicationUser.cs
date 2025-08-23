@@ -31,4 +31,11 @@ public class ApplicationUser : IdentityUser<Guid>
     /// A collection of <see cref="Product"/> entities owned or created by the user.
     /// </value>
     public ICollection<Product> Products { get; set; } = new List<Product>();
+
+    /// <summary>
+    /// Gets or sets the collection of product validation history records
+    /// associated with the product.
+    /// </summary>
+    public ICollection<ProductValidationHistory> ProductValidationHistories { get; set; } =
+        new List<ProductValidationHistory>();
 }

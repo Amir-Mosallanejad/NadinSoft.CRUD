@@ -26,6 +26,11 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
     public DbSet<Product> Products { get; set; } = null!;
 
     /// <summary>
+    /// Gets or sets the <see cref="DbSet{TEntity}"/> representing products validation histories in the database.
+    /// </summary>
+    public DbSet<ProductValidationHistory> ProductValidationHistories { get; set; }
+
+    /// <summary>
     /// Configures the model by applying entity configurations from the current assembly.
     /// </summary>
     /// <param name="builder">The <see cref="ModelBuilder"/> used to configure the EF Core model.</param>
