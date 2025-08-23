@@ -47,6 +47,14 @@ public class Product : BaseEntity
     public bool IsAvailable { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether the product is valid.
+    /// </summary>
+    /// <value>
+    /// <c>true</c> if the product is valid; otherwise, <c>false</c>.
+    /// </value>
+    public bool IsValid { get; set; }
+
+    /// <summary>
     /// Gets or sets the identifier of the user who created the product.
     /// </summary>
     /// <value>
