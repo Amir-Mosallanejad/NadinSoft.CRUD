@@ -23,4 +23,42 @@ public interface IUnitOfWork : IDisposable
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     Task SaveChangesAsync();
+
+    /// <summary>
+    /// Persists changes to the database synchronously.
+    /// </summary>
+    void SaveChanges();
+
+    /// <summary>
+    /// Begins a new database transaction asynchronously.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task BeginTransactionAsync();
+
+    /// <summary>
+    /// Begins a new database transaction synchronously.
+    /// </summary>
+    void BeginTransaction();
+
+    /// <summary>
+    /// Commits the active transaction asynchronously.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task CommitAsync();
+
+    /// <summary>
+    /// Commits the active transaction synchronously.
+    /// </summary>
+    void Commit();
+
+    /// <summary>
+    /// Rolls back the active transaction asynchronously.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task RollbackAsync();
+
+    /// <summary>
+    /// Rolls back the active transaction synchronously.
+    /// </summary>
+    void Rollback();
 }

@@ -33,6 +33,8 @@ public class CreateProductRequestHandler(
     {
         try
         {
+            await unitOfWork.BeginTransactionAsync();
+
             string? userId = currentUserService.UserId;
             if (userId is null)
             {
@@ -58,7 +60,7 @@ public class CreateProductRequestHandler(
             entity.CreatedByUserId = userId;
 
             await productRepo.AddAsync(entity);
-            await unitOfWork.SaveChangesAsync();
+            await unitOfWork.CommitAsync();
 
             return ApiResponse<object>.Success(new object());
         }

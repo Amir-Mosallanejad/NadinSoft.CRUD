@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore.Storage;
 using NadinSoft.CRUD.Domain.Entities;
 using NadinSoft.CRUD.Domain.Repository;
 using NadinSoft.CRUD.Infrastructure.Data;
@@ -19,6 +20,11 @@ public class UnitOfWork : IUnitOfWork
     /// Stores already created repositories by entity type to ensure reusability.
     /// </summary>
     private readonly Dictionary<Type, object> _repositories = new();
+
+    /// <summary>
+    /// Holds the current database transaction if one has been started.
+    /// </summary>
+    private IDbContextTransaction? _currentTransaction;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UnitOfWork"/> class.
@@ -48,6 +54,96 @@ public class UnitOfWork : IUnitOfWork
     public async Task SaveChangesAsync()
     {
         await _context.SaveChangesAsync();
+    }
+
+    /// <inheritdoc />
+    public void SaveChanges()
+    {
+        _context.SaveChanges();
+    }
+
+    /// <inheritdoc />
+    public async Task BeginTransactionAsync()
+    {
+        if (_currentTransaction != null)
+        {
+            return;
+        }
+
+        _currentTransaction = await _context.Database.BeginTransactionAsync();
+    }
+
+    /// <inheritdoc />
+    public void BeginTransaction()
+    {
+        if (_currentTransaction != null)
+        {
+            return;
+        }
+
+        _currentTransaction = _context.Database.BeginTransaction();
+    }
+
+    /// <inheritdoc />
+    public async Task CommitAsync()
+    {
+        try
+        {
+            await _context.SaveChangesAsync();
+            if (_currentTransaction != null)
+            {
+                await _currentTransaction.CommitAsync();
+                await _currentTransaction.DisposeAsync();
+                _currentTransaction = null;
+            }
+        }
+        catch
+        {
+            await RollbackAsync();
+            throw;
+        }
+    }
+
+    /// <inheritdoc />
+    public void Commit()
+    {
+        try
+        {
+            _context.SaveChanges();
+            if (_currentTransaction != null)
+            {
+                _currentTransaction.Commit();
+                _currentTransaction.Dispose();
+                _currentTransaction = null;
+            }
+        }
+        catch
+        {
+            Rollback();
+            throw;
+        }
+    }
+
+    /// <inheritdoc />
+    public async Task RollbackAsync()
+    {
+        if (_currentTransaction != null)
+        {
+            await _currentTransaction.RollbackAsync();
+            await _currentTransaction.DisposeAsync();
+            _currentTransaction = null;
+        }
+    }
+
+    /// <inheritdoc />
+    public void Rollback()
+    {
+        if (_currentTransaction != null)
+        {
+            _currentTransaction.Rollback();
+            _currentTransaction.Dispose();
+            _currentTransaction = null;
+        }
     }
 
     /// <inheritdoc />

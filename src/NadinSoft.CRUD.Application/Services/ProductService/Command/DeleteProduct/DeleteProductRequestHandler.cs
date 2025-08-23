@@ -33,6 +33,8 @@ public class DeleteProductRequestHandler(
     {
         try
         {
+            await unitOfWork.BeginTransactionAsync();
+
             string? userId = currentUserService.UserId;
             if (userId is null)
             {
@@ -60,7 +62,7 @@ public class DeleteProductRequestHandler(
             }
 
             productRepo.Remove(product);
-            await unitOfWork.SaveChangesAsync();
+            await unitOfWork.CommitAsync();
 
             return ApiResponse<object>.Success(new object());
         }
