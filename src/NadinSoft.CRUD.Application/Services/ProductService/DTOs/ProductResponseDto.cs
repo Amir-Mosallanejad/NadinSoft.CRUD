@@ -1,6 +1,7 @@
 using NadinSoft.CRUD.Domain.Entities;
 
 namespace NadinSoft.CRUD.Application.Services.ProductService.DTOs;
+
 /// <summary>
 /// Represents the data returned for a <see cref="Product"/> in responses.
 /// </summary>
@@ -18,4 +19,5 @@ public record ProductResponseDto(
     string ManufacturePhone,
     string ManufactureEmail,
     bool IsAvailable,
+    bool IsValid,
     string CreatedByUserId);

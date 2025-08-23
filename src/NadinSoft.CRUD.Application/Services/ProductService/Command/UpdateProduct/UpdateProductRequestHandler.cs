@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using NadinSoft.CRUD.Application.Common.DTOs;
 using NadinSoft.CRUD.Application.Common.Interfaces;
 using NadinSoft.CRUD.Application.Common.ResourceKeys;
+using NadinSoft.CRUD.Application.Events.ProductValidationChanged;
 using NadinSoft.CRUD.Domain.Entities;
 using NadinSoft.CRUD.Domain.Repository;
 
@@ -18,7 +19,8 @@ public class UpdateProductRequestHandler(
     ICurrentUserService currentUserService,
     IMapper mapper,
     ILogger<UpdateProductRequestHandler> logger,
-    ILocalizationService localizationService)
+    ILocalizationService localizationService,
+    IMediator mediator)
     : IRequestHandler<UpdateProductRequest, ApiResponse<object>>
 {
     /// <summary>
@@ -67,10 +69,24 @@ public class UpdateProductRequestHandler(
                     localizationService.GetApiMessageResource(ApiMessageResourceKey.NotOwnerOfProductUpdate));
             }
 
+            bool currentProductStatus = product.IsValid;
+
             mapper.Map(request.Dto, product);
             product.CreatedByUserId = userId.Value;
 
             productRepo.Update(product);
+
+            if (currentProductStatus != request.Dto.IsValid)
+            {
+                ProductValidationChangedEvent validationChangedEvent = new(
+                    product.Id,
+                    userId.Value,
+                    currentProductStatus,
+                    request.Dto.IsValid);
+
+                await mediator.Publish(validationChangedEvent, cancellationToken);
+            }
+
             await unitOfWork.CommitAsync();
 
             return ApiResponse<object>.Success(new object());

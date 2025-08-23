@@ -28,7 +28,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
     /// <summary>
     /// Gets or sets the <see cref="DbSet{TEntity}"/> representing products validation histories in the database.
     /// </summary>
-    public DbSet<ProductValidationHistory> ProductValidationHistories { get; set; }
+    public DbSet<ProductValidationHistory> ProductValidationHistory { get; set; }
 
     /// <summary>
     /// Configures the model by applying entity configurations from the current assembly.
