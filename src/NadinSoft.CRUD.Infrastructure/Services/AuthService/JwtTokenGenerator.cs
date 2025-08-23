@@ -36,7 +36,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator
     {
         Claim[] claims = new[]
         {
-            new Claim(ClaimTypes.NameIdentifier, user.Id), new Claim(ClaimTypes.Email, user.Email!),
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()), new Claim(ClaimTypes.Email, user.Email!),
         };
 
         SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Authentication:Key"]!));

@@ -6,7 +6,7 @@ namespace NadinSoft.CRUD.Domain.Entities;
 /// Represents an application user with additional properties and relationships.
 /// Inherits from <see cref="IdentityUser"/>.
 /// </summary>
-public class ApplicationUser : IdentityUser
+public class ApplicationUser : IdentityUser<Guid>
 {
     /// <summary>
     /// Gets or sets the username used to log in to the application.

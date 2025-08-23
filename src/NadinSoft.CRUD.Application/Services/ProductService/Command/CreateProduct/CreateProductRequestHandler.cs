@@ -35,7 +35,7 @@ public class CreateProductRequestHandler(
         {
             await unitOfWork.BeginTransactionAsync();
 
-            string? userId = currentUserService.UserId;
+            Guid? userId = currentUserService.UserId;
             if (userId is null)
             {
                 return ApiResponse<object>.Fail(
@@ -57,7 +57,7 @@ public class CreateProductRequestHandler(
             }
 
             Product entity = mapper.Map<Product>(request.Dto);
-            entity.CreatedByUserId = userId;
+            entity.CreatedByUserId = userId.Value;
 
             await productRepo.AddAsync(entity);
             await unitOfWork.CommitAsync();

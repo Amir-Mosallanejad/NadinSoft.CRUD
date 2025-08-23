@@ -37,7 +37,7 @@ public class UpdateProductRequestHandler(
         {
             await unitOfWork.BeginTransactionAsync();
 
-            string? userId = currentUserService.UserId;
+            Guid? userId = currentUserService.UserId;
             if (userId is null)
             {
                 return ApiResponse<object>.Fail(
@@ -56,16 +56,19 @@ public class UpdateProductRequestHandler(
                     localizationService.GetApiMessageResource(ApiMessageResourceKey.ProductNotFound));
             }
 
-            if (product.CreatedByUserId != userId)
+            if (product.CreatedByUserId != userId.Value)
             {
-                logger.UnauthorizedUpdateAttemptLogger(userId, product.Id, product.CreatedByUserId);
+                logger.UnauthorizedUpdateAttemptLogger(
+                    userId.Value.ToString(),
+                    product.Id,
+                    product.CreatedByUserId.ToString());
 
                 return ApiResponse<object>.Fail(
                     localizationService.GetApiMessageResource(ApiMessageResourceKey.NotOwnerOfProductUpdate));
             }
 
             mapper.Map(request.Dto, product);
-            product.CreatedByUserId = userId;
+            product.CreatedByUserId = userId.Value;
 
             productRepo.Update(product);
             await unitOfWork.CommitAsync();

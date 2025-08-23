@@ -27,5 +27,12 @@ public class CurrentUserService : ICurrentUserService
     /// Gets the user identifier of the currently authenticated user.
     /// Returns <c>null</c> if no user is authenticated.
     /// </summary>
-    public string? UserId => _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    public Guid? UserId
+    {
+        get
+        {
+            string? id = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            return string.IsNullOrWhiteSpace(id) ? null : Guid.Parse(id);
+        }
+    }
 }

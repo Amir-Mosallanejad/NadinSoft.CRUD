@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace NadinSoft.CRUD.Domain.Entities;
 
 /// <summary>
@@ -52,10 +50,9 @@ public class Product : BaseEntity
     /// Gets or sets the identifier of the user who created the product.
     /// </summary>
     /// <value>
-    /// A string containing the creator's user ID.
+    /// A guid containing the creator's user ID.
     /// </value>
-    [MaxLength(150)]
-    public string CreatedByUserId { get; set; } = null!;
+    public Guid CreatedByUserId { get; set; }
 
     /// <summary>
     /// Gets or sets the user who created the product.

@@ -11,5 +11,5 @@ public interface ICurrentUserService
     /// <value>
     /// The user's ID as a string, or <c>null</c> if no user is authenticated.
     /// </value>
-    string? UserId { get; }
+    Guid? UserId { get; }
 }

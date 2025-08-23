@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using NadinSoft.CRUD.Domain.Entities;
@@ -8,7 +9,7 @@ namespace NadinSoft.CRUD.Infrastructure.Data;
 /// Represents the Entity Framework Core database context for the application,
 /// including identity and product-related entities.
 /// </summary>
-public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ApplicationDbContext"/> class with the specified options.
