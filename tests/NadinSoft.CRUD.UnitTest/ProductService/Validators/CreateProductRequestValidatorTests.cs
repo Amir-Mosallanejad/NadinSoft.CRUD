@@ -54,6 +54,7 @@ public class CreateProductRequestValidatorTests
             DateTime.UtcNow,
             "+989121234567",
             "test@mail.com",
+            true,
             true);
         CreateProductRequest request = new CreateProductRequest(dto);
         TestValidationResult<CreateProductRequest>? result = _validator.TestValidate(request);
@@ -71,6 +72,7 @@ public class CreateProductRequestValidatorTests
             DateTime.UtcNow,
             "+989121234567",
             "test@mail.com",
+            true,
             true);
         CreateProductRequest request = new CreateProductRequest(dto);
         TestValidationResult<CreateProductRequest>? result = _validator.TestValidate(request);
@@ -88,6 +90,7 @@ public class CreateProductRequestValidatorTests
             DateTime.UtcNow.AddDays(1),
             "+989121234567",
             "test@mail.com",
+            true,
             true);
         CreateProductRequest request = new CreateProductRequest(dto);
         TestValidationResult<CreateProductRequest>? result = _validator.TestValidate(request);
@@ -105,6 +108,7 @@ public class CreateProductRequestValidatorTests
             DateTime.UtcNow,
             "123-invalid",
             "test@mail.com",
+            true,
             true);
         CreateProductRequest request = new CreateProductRequest(dto);
         TestValidationResult<CreateProductRequest>? result = _validator.TestValidate(request);
@@ -122,6 +126,7 @@ public class CreateProductRequestValidatorTests
             DateTime.UtcNow,
             "+989121234567",
             "invalid-email",
+            true,
             true);
         CreateProductRequest request = new CreateProductRequest(dto);
         TestValidationResult<CreateProductRequest>? result = _validator.TestValidate(request);
@@ -139,6 +144,7 @@ public class CreateProductRequestValidatorTests
             DateTime.UtcNow.AddSeconds(-1),
             "+989121234567",
             "valid@mail.com",
+            true,
             true);
         CreateProductRequest request = new CreateProductRequest(dto);
         TestValidationResult<CreateProductRequest>? result = _validator.TestValidate(request);

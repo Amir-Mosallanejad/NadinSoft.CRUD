@@ -57,6 +57,7 @@ public class UpdateProductRequestValidatorTests
             DateTime.UtcNow,
             "+989121234567",
             "mail@test.com",
+            true,
             true);
         UpdateProductRequest model = new UpdateProductRequest(dto);
 
@@ -76,6 +77,7 @@ public class UpdateProductRequestValidatorTests
             DateTime.UtcNow,
             "+989121234567",
             "mail@test.com",
+            true,
             true);
         UpdateProductRequest model = new UpdateProductRequest(dto);
 
@@ -95,6 +97,7 @@ public class UpdateProductRequestValidatorTests
             DateTime.UtcNow,
             "+989121234567",
             "mail@test.com",
+            true,
             true);
         UpdateProductRequest model = new UpdateProductRequest(dto);
 
@@ -114,6 +117,7 @@ public class UpdateProductRequestValidatorTests
             DateTime.UtcNow.AddDays(1),
             "+989121234567",
             "mail@test.com",
+            true,
             true);
         UpdateProductRequest model = new UpdateProductRequest(dto);
 
@@ -133,6 +137,7 @@ public class UpdateProductRequestValidatorTests
             DateTime.UtcNow,
             "+989121234567",
             "invalid-email",
+            true,
             true);
         UpdateProductRequest model = new UpdateProductRequest(dto);
 
@@ -152,6 +157,7 @@ public class UpdateProductRequestValidatorTests
             DateTime.UtcNow.AddSeconds(-1),
             "+989121234567",
             "valid@email.com",
+            true,
             true);
         UpdateProductRequest model = new UpdateProductRequest(dto);
 
@@ -171,6 +177,7 @@ public class UpdateProductRequestValidatorTests
             DateTime.UtcNow,
             "invalid",
             "mail@test.com",
+            true,
             true);
         UpdateProductRequest model = new UpdateProductRequest(dto);
 

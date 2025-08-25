@@ -20,4 +20,4 @@ public record ProductResponseDto(
     string ManufactureEmail,
     bool IsAvailable,
     bool IsValid,
-    string CreatedByUserId);
+    Guid CreatedByUserId);
