@@ -1,6 +1,7 @@
 using NadinSoft.CRUD.Domain.Entities;
 
 namespace NadinSoft.CRUD.Application.Services.ProductService.Command.UpdateProduct;
+
 /// <summary>
 /// Represents the data required to update an existing <see cref="Product"/>.
 /// </summary>
@@ -18,4 +19,5 @@ public record UpdateProductRequestDto(
     DateTime ProduceDate,
     string ManufacturePhone,
     string ManufactureEmail,
-    bool IsAvailable);
+    bool IsAvailable,
+    bool IsValid);

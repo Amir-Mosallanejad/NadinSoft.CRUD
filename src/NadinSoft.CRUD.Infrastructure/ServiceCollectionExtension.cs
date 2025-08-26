@@ -54,7 +54,7 @@ public static class ServiceCollectionExtension
         service.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
         service.AddScoped<ICurrentUserService, CurrentUserService>();
         service.AddScoped<ILocalizationService, LocalizationService>();
-        service.AddIdentity<ApplicationUser, IdentityRole>()
+        service.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
 

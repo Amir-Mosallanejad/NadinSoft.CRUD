@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NadinSoft.CRUD.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using NadinSoft.CRUD.Infrastructure.Data;
 namespace NadinSoft.CRUD.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250823110448_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -231,9 +234,6 @@ namespace NadinSoft.CRUD.Infrastructure.Migrations
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsValid")
-                        .HasColumnType("bit");
-
                     b.Property<string>("ManufactureEmail")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -260,36 +260,6 @@ namespace NadinSoft.CRUD.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("NadinSoft.CRUD.Domain.Entities.ProductValidationHistory", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("ModifyDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("NewValue")
-                        .HasColumnType("bit");
-
-                    b.Property<bool?>("OldValue")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ProductValidationHistory");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -354,35 +324,9 @@ namespace NadinSoft.CRUD.Infrastructure.Migrations
                     b.Navigation("CreatedByUser");
                 });
 
-            modelBuilder.Entity("NadinSoft.CRUD.Domain.Entities.ProductValidationHistory", b =>
-                {
-                    b.HasOne("NadinSoft.CRUD.Domain.Entities.Product", "Product")
-                        .WithMany("ValidationHistories")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("NadinSoft.CRUD.Domain.Entities.ApplicationUser", "User")
-                        .WithMany("ProductValidationHistories")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("NadinSoft.CRUD.Domain.Entities.ApplicationUser", b =>
                 {
-                    b.Navigation("ProductValidationHistories");
-
                     b.Navigation("Products");
-                });
-
-            modelBuilder.Entity("NadinSoft.CRUD.Domain.Entities.Product", b =>
-                {
-                    b.Navigation("ValidationHistories");
                 });
 #pragma warning restore 612, 618
         }

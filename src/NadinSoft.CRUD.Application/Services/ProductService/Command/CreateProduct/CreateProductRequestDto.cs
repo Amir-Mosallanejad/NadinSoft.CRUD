@@ -16,4 +16,5 @@ public record CreateProductRequestDto(
     DateTime ProduceDate,
     string ManufacturePhone,
     string ManufactureEmail,
-    bool IsAvailable);
+    bool IsAvailable,
+    bool IsValid);

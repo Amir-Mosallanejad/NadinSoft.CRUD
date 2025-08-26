@@ -35,7 +35,7 @@ public class DeleteProductRequestHandler(
         {
             await unitOfWork.BeginTransactionAsync();
 
-            string? userId = currentUserService.UserId;
+            Guid? userId = currentUserService.UserId;
             if (userId is null)
             {
                 return ApiResponse<object>.Fail(
@@ -53,9 +53,12 @@ public class DeleteProductRequestHandler(
                     localizationService.GetApiMessageResource(ApiMessageResourceKey.ProductNotFound));
             }
 
-            if (product.CreatedByUserId != userId)
+            if (product.CreatedByUserId != userId.Value)
             {
-                logger.UnauthorizedDeleteAttemptLogger(userId, product.Id, product.CreatedByUserId);
+                logger.UnauthorizedDeleteAttemptLogger(
+                    userId.Value.ToString(),
+                    product.Id,
+                    product.CreatedByUserId.ToString());
 
                 return ApiResponse<object>.Fail(
                     localizationService.GetApiMessageResource(ApiMessageResourceKey.NotOwnerOfProductDelete));

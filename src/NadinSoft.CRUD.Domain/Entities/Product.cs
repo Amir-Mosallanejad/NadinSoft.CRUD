@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace NadinSoft.CRUD.Domain.Entities;
 
 /// <summary>
@@ -49,13 +47,20 @@ public class Product : BaseEntity
     public bool IsAvailable { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether the product is valid.
+    /// </summary>
+    /// <value>
+    /// <c>true</c> if the product is valid; otherwise, <c>false</c>.
+    /// </value>
+    public bool IsValid { get; set; }
+
+    /// <summary>
     /// Gets or sets the identifier of the user who created the product.
     /// </summary>
     /// <value>
-    /// A string containing the creator's user ID.
+    /// A guid containing the creator's user ID.
     /// </value>
-    [MaxLength(150)]
-    public string CreatedByUserId { get; set; } = null!;
+    public Guid CreatedByUserId { get; set; }
 
     /// <summary>
     /// Gets or sets the user who created the product.
@@ -64,4 +69,11 @@ public class Product : BaseEntity
     /// An instance of <see cref="ApplicationUser"/> representing the creator.
     /// </value>
     public ApplicationUser CreatedByUser { get; set; } = null!;
+
+    /// <summary>
+    /// Gets or sets the collection of product validation history records
+    /// associated with the product.
+    /// </summary>
+    public ICollection<ProductValidationHistory> ValidationHistories { get; set; } =
+        new List<ProductValidationHistory>();
 }

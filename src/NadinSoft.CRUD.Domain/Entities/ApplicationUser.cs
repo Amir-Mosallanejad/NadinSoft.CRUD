@@ -6,7 +6,7 @@ namespace NadinSoft.CRUD.Domain.Entities;
 /// Represents an application user with additional properties and relationships.
 /// Inherits from <see cref="IdentityUser"/>.
 /// </summary>
-public class ApplicationUser : IdentityUser
+public class ApplicationUser : IdentityUser<Guid>
 {
     /// <summary>
     /// Gets or sets the username used to log in to the application.
@@ -31,4 +31,11 @@ public class ApplicationUser : IdentityUser
     /// A collection of <see cref="Product"/> entities owned or created by the user.
     /// </value>
     public ICollection<Product> Products { get; set; } = new List<Product>();
+
+    /// <summary>
+    /// Gets or sets the collection of product validation history records
+    /// associated with the product.
+    /// </summary>
+    public ICollection<ProductValidationHistory> ProductValidationHistories { get; set; } =
+        new List<ProductValidationHistory>();
 }

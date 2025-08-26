@@ -72,7 +72,8 @@ public class GetAllProductsRequestHandlerTests
             ManufacturePhone = "+989121234567",
             ManufactureEmail = "milk@factory.com",
             IsAvailable = true,
-            CreatedByUserId = "user-1",
+            IsValid = true,
+            CreatedByUserId = Guid.NewGuid(),
         };
 
         Product product2 = new Product
@@ -83,7 +84,8 @@ public class GetAllProductsRequestHandlerTests
             ManufacturePhone = "+989121234568",
             ManufactureEmail = "bread@factory.com",
             IsAvailable = false,
-            CreatedByUserId = "user-2",
+            IsValid = true,
+            CreatedByUserId = Guid.NewGuid(),
         };
 
         ProductResponseDto dto1 = new ProductResponseDto(
@@ -93,6 +95,7 @@ public class GetAllProductsRequestHandlerTests
             product1.ManufacturePhone,
             product1.ManufactureEmail,
             product1.IsAvailable,
+            product1.IsValid,
             product1.CreatedByUserId);
 
         ProductResponseDto dto2 = new ProductResponseDto(
@@ -102,6 +105,7 @@ public class GetAllProductsRequestHandlerTests
             product2.ManufacturePhone,
             product2.ManufactureEmail,
             product2.IsAvailable,
+            product2.IsValid,
             product2.CreatedByUserId);
 
         GetAllProductsRequest request = new GetAllProductsRequest

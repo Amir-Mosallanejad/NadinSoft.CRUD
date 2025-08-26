@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using NadinSoft.CRUD.Domain.Entities;
@@ -8,7 +9,7 @@ namespace NadinSoft.CRUD.Infrastructure.Data;
 /// Represents the Entity Framework Core database context for the application,
 /// including identity and product-related entities.
 /// </summary>
-public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ApplicationDbContext"/> class with the specified options.
@@ -23,6 +24,11 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     /// Gets or sets the <see cref="DbSet{TEntity}"/> representing products in the database.
     /// </summary>
     public DbSet<Product> Products { get; set; } = null!;
+
+    /// <summary>
+    /// Gets or sets the <see cref="DbSet{TEntity}"/> representing products validation histories in the database.
+    /// </summary>
+    public DbSet<ProductValidationHistory> ProductValidationHistory { get; set; }
 
     /// <summary>
     /// Configures the model by applying entity configurations from the current assembly.

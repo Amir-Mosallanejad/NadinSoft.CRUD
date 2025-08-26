@@ -1,5 +1,6 @@
 using AutoMapper;
 using FluentAssertions;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NadinSoft.CRUD.Application.Common.DTOs;
@@ -43,6 +44,13 @@ public class CreateProductRequestHandlerTests
     private readonly Mock<ILocalizationService> _localizationMock = new();
 
     /// <summary>
+    /// A mock implementation of <see cref="IMediator"/>
+    /// used for verifying that MediatR events, commands, or queries
+    /// are published or sent correctly during unit tests.
+    /// </summary>
+    private readonly Mock<IMediator> _mediatorMock = new();
+
+    /// <summary>
     /// Handler instance being tested.
     /// </summary>
     private readonly CreateProductRequestHandler _handler;
@@ -58,7 +66,8 @@ public class CreateProductRequestHandlerTests
             _currentUserMock.Object,
             _mapperMock.Object,
             _loggerMock.Object,
-            _localizationMock.Object);
+            _localizationMock.Object,
+            _mediatorMock.Object);
     }
 
     /// <summary>
@@ -69,7 +78,7 @@ public class CreateProductRequestHandlerTests
     public async Task ShouldReturnFailWhenUserIsUnauthorized()
     {
         // Arrange
-        _currentUserMock.Setup(x => x.UserId).Returns((string?)null);
+        _currentUserMock.Setup(x => x.UserId).Returns((Guid?)null);
         _localizationMock.Setup(x => x.GetApiMessageResource(ApiMessageResourceKey.UserUnauthorized))
             .Returns("User is unauthorized.");
         CreateProductRequest request =
@@ -79,6 +88,7 @@ public class CreateProductRequestHandlerTests
                     DateTime.UtcNow,
                     "+989121234567",
                     "test@mail.com",
+                    true,
                     true));
 
         // Act
@@ -102,10 +112,11 @@ public class CreateProductRequestHandlerTests
                 DateTime.UtcNow,
                 "+989121234567",
                 "test@mail.com",
+                true,
                 true);
         CreateProductRequest request = new CreateProductRequest(dto);
 
-        _currentUserMock.Setup(x => x.UserId).Returns("user-1");
+        _currentUserMock.Setup(x => x.UserId).Returns(Guid.NewGuid());
 
         _unitOfWorkMock.Setup(x => x.GetRepository<Product>().AnyAsync(It.IsAny<Expression<Func<Product, bool>>>()))
             .ReturnsAsync(true);
@@ -134,6 +145,7 @@ public class CreateProductRequestHandlerTests
                 DateTime.UtcNow,
                 "+989121234567",
                 "test@mail.com",
+                true,
                 true);
         CreateProductRequest request = new CreateProductRequest(dto);
         Product mappedEntity = new Product
@@ -141,7 +153,7 @@ public class CreateProductRequestHandlerTests
             Name = dto.Name,
         };
 
-        _currentUserMock.Setup(x => x.UserId).Returns("user-1");
+        _currentUserMock.Setup(x => x.UserId).Returns(Guid.NewGuid());
 
         _unitOfWorkMock.Setup(x => x.GetRepository<Product>().AnyAsync(It.IsAny<Expression<Func<Product, bool>>>()))
             .ReturnsAsync(false);
@@ -171,10 +183,11 @@ public class CreateProductRequestHandlerTests
                 DateTime.UtcNow,
                 "+989121234567",
                 "test@mail.com",
+                true,
                 true);
         CreateProductRequest request = new CreateProductRequest(dto);
 
-        _currentUserMock.Setup(x => x.UserId).Returns("user-1");
+        _currentUserMock.Setup(x => x.UserId).Returns(Guid.NewGuid());
 
         _unitOfWorkMock.Setup(x => x.GetRepository<Product>().AnyAsync(It.IsAny<Expression<Func<Product, bool>>>()))
             .ThrowsAsync(new InvalidOperationException("DB crash"));

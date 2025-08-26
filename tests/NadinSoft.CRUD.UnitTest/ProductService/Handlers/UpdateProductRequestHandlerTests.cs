@@ -1,5 +1,6 @@
 using AutoMapper;
 using FluentAssertions;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NadinSoft.CRUD.Application.Common.DTOs;
@@ -42,6 +43,13 @@ public class UpdateProductRequestHandlerTests
     private readonly Mock<ILocalizationService> _localizationMock = new();
 
     /// <summary>
+    /// A mock implementation of <see cref="IMediator"/>
+    /// used for verifying that MediatR events, commands, or queries
+    /// are published or sent correctly during unit tests.
+    /// </summary>
+    private readonly Mock<IMediator> _mediatorMock = new();
+
+    /// <summary>
     /// Handler instance being tested.
     /// </summary>
     private readonly UpdateProductRequestHandler _handler;
@@ -57,7 +65,8 @@ public class UpdateProductRequestHandlerTests
             _currentUserMock.Object,
             _mapperMock.Object,
             _loggerMock.Object,
-            _localizationMock.Object);
+            _localizationMock.Object,
+            _mediatorMock.Object);
     }
 
     /// <summary>
@@ -68,7 +77,7 @@ public class UpdateProductRequestHandlerTests
     public async Task ShouldReturnFailureIfUserNotAuthenticated()
     {
         // Arrange
-        _currentUserMock.Setup(c => c.UserId).Returns((string?)null);
+        _currentUserMock.Setup(c => c.UserId).Returns((Guid?)null);
         _localizationMock.Setup(x => x.GetApiMessageResource(ApiMessageResourceKey.UserUnauthorized))
             .Returns("User is unauthorized.");
 
@@ -79,6 +88,7 @@ public class UpdateProductRequestHandlerTests
                 DateTime.UtcNow,
                 "mail@mail.com",
                 "123",
+                true,
                 true));
 
         // Act
@@ -97,7 +107,7 @@ public class UpdateProductRequestHandlerTests
     public async Task ShouldReturnFailureIfProductNotFound()
     {
         // Arrange
-        string userId = "user-123";
+        Guid userId = Guid.NewGuid();
         _currentUserMock.Setup(c => c.UserId).Returns(userId);
         _localizationMock.Setup(x => x.GetApiMessageResource(ApiMessageResourceKey.ProductNotFound))
             .Returns("Product not found.");
@@ -109,6 +119,7 @@ public class UpdateProductRequestHandlerTests
                 DateTime.UtcNow,
                 "mail@mail.com",
                 "123",
+                true,
                 true));
 
         _unitOfWorkMock.Setup(r => r.GetRepository<Product>().GetByIdAsync(command.Dto.Id))
@@ -130,11 +141,11 @@ public class UpdateProductRequestHandlerTests
     public async Task ShouldReturnFailureIfUserIsNotOwner()
     {
         // Arrange
-        string userId = "user-123";
+        Guid userId = Guid.NewGuid();
         Product product = new Product
         {
             Id = Guid.NewGuid(),
-            CreatedByUserId = "other-user",
+            CreatedByUserId = Guid.NewGuid(),
         };
 
         _currentUserMock.Setup(c => c.UserId).Returns(userId);
@@ -149,6 +160,7 @@ public class UpdateProductRequestHandlerTests
                 DateTime.UtcNow,
                 "mail@mail.com",
                 "123",
+                true,
                 true));
 
         // Act
@@ -167,7 +179,7 @@ public class UpdateProductRequestHandlerTests
     public async Task ShouldUpdateProductSuccessfully()
     {
         // Arrange
-        string userId = "user-123";
+        Guid userId = Guid.NewGuid();
         Product product = new Product
         {
             Id = Guid.NewGuid(),
@@ -185,6 +197,7 @@ public class UpdateProductRequestHandlerTests
                 DateTime.UtcNow,
                 "mail@mail.com",
                 "123",
+                true,
                 true));
 
         // Act
