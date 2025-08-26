@@ -1,0 +1,66 @@
+using AutoMapper;
+using MediatR;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
+using NadinSoft.CRUD.Application.Common.DTOs;
+using NadinSoft.CRUD.Application.Common.Interfaces;
+using NadinSoft.CRUD.Application.Common.ResourceKeys;
+using NadinSoft.CRUD.Domain.Entities;
+
+namespace NadinSoft.CRUD.Application.Services.ApplicationUserService.Command.RegisterApplicationUser;
+
+/// <summary>
+/// Handles registration requests for <see cref="ApplicationUser"/> and creates a new user in the system.
+/// </summary>
+public class RegisterApplicationUserRequestHandler(
+    UserManager<ApplicationUser> userManager,
+    IMapper mapper,
+    ILogger<RegisterApplicationUserRequestHandler> logger,
+    ILocalizationService localizationService)
+    : IRequestHandler<RegisterApplicationUserRequest, ApiResponse<object>>
+{
+    /// <summary>
+    /// Handles the <see cref="RegisterApplicationUserRequest"/> by checking for existing users,
+    /// creating a new user if none exists, and returning the result.
+    /// </summary>
+    /// <param name="request">The registration request containing the user's email, password, and confirmation password.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>
+    /// An <see cref="ApiResponse{T}"/> indicating success or failure of the registration operation.
+    /// </returns>
+    public async Task<ApiResponse<object>> Handle(
+        RegisterApplicationUserRequest request,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            ApplicationUser? existingUser = await userManager.FindByEmailAsync(request.Email);
+            if (existingUser != null)
+            {
+                logger.ExistingEmailErrorLogger(request.Email);
+
+                return ApiResponse<object>.Fail(
+                    localizationService.GetApiMessageResource(ApiMessageResourceKey.EmailAlreadyExists));
+            }
+
+            ApplicationUser user = mapper.Map<ApplicationUser>(request);
+            IdentityResult result = await userManager.CreateAsync(user, request.Password);
+
+            if (!result.Succeeded)
+            {
+                string errorMessages = string.Join(" | ", result.Errors.Select(e => e.Description));
+                logger.RegistrationAttemptFailedLogger(request.Email, errorMessages);
+                return ApiResponse<object>.Fail(errorMessages);
+            }
+
+            return ApiResponse<object>.Success(new object());
+        }
+        catch (Exception exception)
+        {
+            logger.UnhandledErrorLogger(exception);
+
+            return ApiResponse<object>.Fail(
+                localizationService.GetApiMessageResource(ApiMessageResourceKey.UnexpectedError));
+        }
+    }
+}
